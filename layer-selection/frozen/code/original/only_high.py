@@ -10,7 +10,7 @@ import layer_lab as lab
 from phase_a import _AllMean  # noqa: F401  (same module family)
 
 SP = Path(sys.argv[1])
-OUT = Path(__file__).parent.parent / "results/only_high"
+OUT = Path(__file__).resolve().parents[2] / "results/only_high"
 OUT.mkdir(parents=True, exist_ok=True)
 lab.patch_eagle(SP / "EAGLE")
 lab.seed_all(0)

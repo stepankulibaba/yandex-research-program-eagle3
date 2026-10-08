@@ -13,7 +13,7 @@ import numpy as np
 import torch
 
 CODE = Path(__file__).resolve().parent
-ROOT = CODE.parent          # models/, EAGLE/, results/ sit next to code/
+ROOT = CODE.parent.parent   # frozen/: models/, EAGLE/, results/ (this file lives in code/original/)
 sys.path.insert(0, str(CODE))
 import layer_lab as lab  # noqa: E402
 

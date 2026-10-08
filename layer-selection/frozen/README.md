@@ -18,12 +18,28 @@
 - **«Заменить слой другим»** (например, 16 → 22 или N−3 → последний). Брали состояние другого слоя и масштабировали его так, чтобы средняя длина вектора совпала с исходным слоем: у глубоких слоёв векторы намного длиннее.
 - **«Урезать матрицу»** — оставляли только старшие компоненты её SVD (ранг H/2 или H/4).
 
-τ мерили настоящей генерацией EAGLE по протоколу статьи на 160 вопросах MT-bench и GSM8K, интервалы — парный bootstrap по вопросам. Код — `Edit` в стадии `eval_official` файла `code/run.py`.
+τ мерили настоящей генерацией EAGLE по протоколу статьи на 160 вопросах MT-bench и GSM8K, интервалы — парный bootstrap по вопросам. Код — [`code/ablations.py`](code/ablations.py) и класс `AblatedFC` в [`code/draft_inputs.py`](code/draft_inputs.py).
 
-## Что где
+## Опыты и код
 
-- `code/run.py` — все прогоны на H200: абляции по протоколу статьи, генерация данных, перебор слоёв, переобучение входа, языки.
-- `code/layer_lab.py` — общая библиотека для этих опытов.
-- `code/phase_a.py`, `code/phase_b.py` — те же опыты для Kaggle T4.
-- `results/h200/` — результаты и логи H200, `results/kaggle_*` — Kaggle.
+Каждый опыт — отдельный скрипт, запуск `python code/<скрипт> <модель>` (`dsl-8b` или `qwen3-1.7b`):
+
+| Скрипт | Что делает | Результат |
+|---|---|---|
+| [`ablations.py`](code/ablations.py) | τ официального драфта и что будет, если убрать, подменить слой или урезать матрицу | `eval_official.json` |
+| [`gen_data.py`](code/gen_data.py) | ответы самой модели на 8000 запросов — данные для обучения | `train_data.pt` |
+| [`analyze_layers.py`](code/analyze_layers.py) | что в каждом слое: масштаб, сходство слоёв, вклад в вход драфта, знание о токенах на 1–3 шага вперёд | `analysis.json` |
+| [`sweep_layers.py`](code/sweep_layers.py) | обучаем вход драфта на каждом слое по отдельности и в паре с N−3 | `sweep.json` |
+| [`train_fusions.py`](code/train_fusions.py) | обучаем разные входы (нормализация, другие тройки, смесь слоёв, MoE) и меряем τ с каждым | `fusion/phase_b.json` |
+| [`languages.py`](code/languages.py) | τ и скорость на шести языках | `lang/lang.json` |
+
+Общие модули: [`eagle_model.py`](code/eagle_model.py) — EAGLE с настраиваемым выбором слоёв, [`acceptance.py`](code/acceptance.py) — как меряем τ, [`target_states.py`](code/target_states.py) — состояния модели и один шаг драфта, [`draft_inputs.py`](code/draft_inputs.py) — варианты входа, [`layer_analysis.py`](code/layer_analysis.py) — анализ слоёв, [`config.py`](code/config.py) — пути и протокол.
+
+Рядом нужны `models/<модель>/{base,draft}` и клон EAGLE в `EAGLE/` (коммит `cb7e0841`). Результаты пишутся в `results/h200/<модель>/`.
+
+`code/original/` — код, на котором реально шли прогоны (H200 и Kaggle T4). Читаемая версия повторяет его один в один; сверка результатов на Qwen3-1.7B идёт.
+
+## Что ещё лежит
+
+- `results/h200/` — результаты и логи H200, `results/kaggle_*` — первый раунд на Kaggle T4.
 - `figures/` — графики (`code/make_figures*.py`).

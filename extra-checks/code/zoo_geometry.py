@@ -1,4 +1,6 @@
-"""Stage 1 geometry: how do public EAGLE-3 drafts for the same target differ, in quantities that are invariant
+"""Geometry of the 11 public drafts (python zoo_geometry.py -> results/zoo/zoo_geometry.json).
+
+How do public EAGLE-3 drafts for the same target differ, in quantities that are invariant
 to the internal symmetries of independently trained drafts (neuron / head permutations, residual rotations).
 
 Invariant views used

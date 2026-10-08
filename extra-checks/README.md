@@ -12,8 +12,8 @@
 
 ## Что где
 
-- `code/zoo.py` — загрузка драфтов разных форматов.
-- `code/zoo_eval.py` — сравнение 11 драфтов.
-- `code/zoo_geometry.py` — геометрия.
-- Языки — стадия `lang` в [`../layer-selection/frozen/code/run.py`](../layer-selection/frozen/code/run.py).
-- `results/` — результаты, `figures/` — графики.
+- [`code/zoo_eval.py`](code/zoo_eval.py) — сравнение 11 драфтов: `download` (Qwen3-8B и драфты с Hugging Face), `gen` (ответы модели), `eval` (τ каждого драфта). Команды `check` и `validate` сверяют наш офлайн-расчёт τ с самим EAGLE.
+- [`code/zoo.py`](code/zoo.py) — загрузка драфтов трёх форматов (EAGLE, speculators, DeepSeek) и их прогон на готовом тексте.
+- [`code/zoo_geometry.py`](code/zoo_geometry.py) — геометрия: какие направления признаков модели читают разные драфты.
+- Языки — [`languages.py`](../layer-selection/frozen/code/languages.py) в папке замороженного драфта.
+- `results/` — результаты, `figures/` — графики (`code/make_figures.py`).

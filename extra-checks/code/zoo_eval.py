@@ -1,8 +1,10 @@
-"""Stage 1: evaluate a zoo of public EAGLE-3 drafts for one target on identical target-generated texts.
+"""11 public EAGLE-3 drafts for one target (Qwen3-8B), compared on the same target-generated texts.
 
-python zoo_eval.py gen <mode>            # mode: nothink | think  -> texts_<mode>.pt (greedy target outputs)
-python zoo_eval.py eval                  # chain acceptance of every draft on every mode
-python zoo_eval.py check                 # numerical check of the evaluator against EAGLE's own draft code
+python zoo_eval.py download        # Qwen3-8B and the 11 drafts from Hugging Face -> target/, zoo/
+python zoo_eval.py gen <mode>      # mode: nothink | think -> results/zoo/texts_<mode>.pt (greedy answers of Qwen3-8B)
+python zoo_eval.py eval            # chain tau of every draft in both modes -> results/zoo/zoo_eval.json
+python zoo_eval.py check           # zoo.Draft vs EAGLE's own draft code: depth-1 predictions must agree
+python zoo_eval.py validate        # offline chain tau vs EAGLE's own chain decoding (Qwen3-1.7B)
 """
 import json
 import sys
@@ -20,12 +22,34 @@ import zoo  # noqa: E402
 TARGET = ROOT / "target/qwen3-8b"
 OUT = ROOT / "results/zoo"
 DEPTH = 6
+TARGET_REPO = "Qwen/Qwen3-8B"
+# name -> Hugging Face repo (downloaded into zoo/<name>); "dir"/"shift" reuse another download with other settings
 DRAFTS = {
-    "angelslim": {}, "tengyunw": {}, "thoughtworks": {}, "redhat": {}, "redhat_thinking": {},
-    "deepseek_ttt7": {}, "deepseek_ttt7_plus1": {"dir": "deepseek_ttt7", "shift": 1},
-    "io_e3_qwen3arch": {}, "io_e31_qwen3arch": {}, "io_e31_llamaarch": {}, "io_e31_qwen3arch_3e4": {},
-    "io_e31_fcnorm": {},
+    "angelslim": {"repo": "AngelSlim/Qwen3-8B_eagle3"},
+    "tengyunw": {"repo": "Tengyunw/qwen3_8b_eagle3"},
+    "thoughtworks": {"repo": "thoughtworks/Qwen3-8B-Eagle3"},
+    "redhat": {"repo": "RedHatAI/Qwen3-8B-speculator.eagle3"},
+    "redhat_thinking": {"repo": "RedHatAI/Qwen3-8B-Thinking-speculator.eagle3"},
+    "deepseek_ttt7": {"repo": "deepseek-ai/eagle3_qwen3_8b_ttt7"},
+    # DeepSeek's target_layer_ids count layer OUTPUTS; +1 converts them to our convention (layer inputs)
+    "deepseek_ttt7_plus1": {"dir": "deepseek_ttt7", "shift": 1},
+    "io_e3_qwen3arch": {"repo": "inference-optimization/Qwen3-8B-from-Qwen3-8B_regen-speculators.eagle3-qwen3arch-ckpt1"},
+    "io_e31_qwen3arch": {"repo": "inference-optimization/Qwen3-8B-from-Qwen3-8B_regen-speculators.eagle31-qwen3arch-ckpt1"},
+    "io_e31_llamaarch": {"repo": "inference-optimization/Qwen3-8B-from-Qwen3-8B_regen-speculators.eagle31-llamaarch-ckpt1"},
+    "io_e31_qwen3arch_3e4": {"repo": "inference-optimization/Qwen3-8B-from-Qwen3-8B_regen-speculators.eagle31-qwen3arch-3e4-ckpt1"},
+    "io_e31_fcnorm": {"repo": "inference-optimization/Qwen3-8B-from-Qwen3-8B_regen-speculators.eagle31-fcnorm-ckpt1"},
 }
+
+
+def download():
+    """Target and all drafts from Hugging Face into target/ and zoo/."""
+    from huggingface_hub import snapshot_download
+    snapshot_download(TARGET_REPO, local_dir=TARGET, allow_patterns=["*.json", "*.safetensors", "*.txt"])
+    for name, spec in DRAFTS.items():
+        if "repo" in spec:
+            snapshot_download(spec["repo"], local_dir=ROOT / "zoo" / name,
+                              allow_patterns=["*.json", "*.safetensors", "*.bin", "*.py"])
+            log(f"downloaded {name}")
 
 
 def log(msg):
@@ -154,28 +178,42 @@ def evaluate():
         (OUT / "zoo_eval.json").write_text(json.dumps(result, indent=2))
 
 
+# --- validation of the offline evaluator against EAGLE itself (Qwen3-1.7B + AngelSlim draft) ------------------------
+# These two commands use the frozen-study code (patched EAGLE, tau measurement) and its model folder:
+# layer-selection/frozen/models/qwen3-1.7b/{base,draft} and layer-selection/frozen/EAGLE.
+FROZEN_CODE = ROOT.parent / "layer-selection/frozen/code"
+
+
+def _frozen():
+    sys.path.insert(0, str(FROZEN_CODE))
+    import acceptance
+    import config
+    import eagle_model
+    import target_states
+    return config, eagle_model, acceptance, target_states
+
+
 def check():
-    """Depth-1 logits of zoo.Draft must match EAGLE's own cnets.Model on an AngelSlim draft (Qwen3-1.7B pair)."""
-    import run
-    import layer_lab as lab
-    model = run.load("qwen3-1.7b")
+    """Depth-1 predictions of zoo.Draft must match EAGLE's own draft code (cnets) on the same inputs."""
+    config, eagle_model, _, target_states = _frozen()
+    model = eagle_model.load_eagle("qwen3-1.7b")
     ea = model.ea_layer
     N = len(model.base_model.model.layers)
-    lab.set_capture(model, tuple(range(N + 1)))
+    eagle_model.set_capture(model, tuple(range(N + 1)))
     tok = model.get_tokenizer()
     ids = tok("The quick brown fox jumps over the lazy dog. " * 8, return_tensors="pt").input_ids[0].cuda()
-    states, _ = lab.target_forward(model, ids)
-    d = zoo.Draft(ROOT / "models/qwen3-1.7b/draft", N, target_embed=ea.embed_tokens.weight, name="angelslim_1.7b")
+    states, _ = target_states.target_forward(model, ids)
+    d = zoo.Draft(config.PAIRS["qwen3-1.7b"]["draft"], N, target_embed=ea.embed_tokens.weight, name="angelslim_1.7b")
     pred = d.chain(states, ids, 3)
-    tri = lab.default_triplet(N)
+    tri = eagle_model.default_triplet(N)
     g = states[:, list(tri)].flatten(1)[None].to(ea.fc.weight.dtype)
     nxt = torch.zeros_like(ids)
     nxt[:-1] = ids[1:]
     with torch.no_grad():
         h = ea.fc(g)
         out = ea.midlayer(input_emb=ea.embed_tokens(nxt[None]), hidden_states=h,
-                          attention_mask=lab.causal_mask(ids.shape[0], ids.device), position_ids=torch.arange(ids.shape[0], device=ids.device)[None],
-                          use_cache=False)[0]
+                          attention_mask=target_states.causal_mask(ids.shape[0], ids.device),
+                          position_ids=torch.arange(ids.shape[0], device=ids.device)[None], use_cache=False)[0]
         logits = ea.lm_head(ea.norm(out))[0]
     ref = logits.argmax(-1) + ea.d2t[logits.argmax(-1)]
     agree = (ref[:-1] == pred[0][:-1]).float().mean().item()
@@ -183,27 +221,28 @@ def check():
 
 
 def validate(n_prompts=12, depth=5):
-    """EAGLE chain decoding (top_k=1) vs the offline evaluator on the same greedy texts (Qwen3-1.7B pair)."""
-    import run
-    import layer_lab as lab
-    lab.patch_eagle(run.EAGLE)
-    p = run.PAIRS["qwen3-1.7b"]
-    model = lab.load_pair(str(p["base"]), str(p["draft"]), total_token=depth + 1, depth=depth, top_k=1,
-                          dtype=torch.bfloat16)
+    """tau of EAGLE decoding a single chain (top_k = 1) vs the offline evaluator on the same greedy texts."""
+    config, eagle_model, acceptance, target_states = _frozen()
+    eagle_model.patch_eagle()
+    from eagle.model.ea_model import EaModel
+    p = config.PAIRS["qwen3-1.7b"]
+    model = EaModel.from_pretrained(base_model_path=str(p["target"]), ea_model_path=str(p["draft"]),
+                                    total_token=depth + 1, depth=depth, top_k=1, torch_dtype=torch.bfloat16,
+                                    low_cpu_mem_usage=True, device_map="cuda:0", use_eagle3=True).eval()
     tok = model.get_tokenizer()
     N = len(model.base_model.model.layers)
-    prompts = lab.eval_prompts(run.EAGLE, tok, [["mt_bench", n_prompts // 2], ["gsm8k", n_prompts // 2]])
-    rows, outs = lab.run_tau(model, prompts, 256, gen_kwargs={"max_length": 2048})
+    prompts = eagle_model.benchmark_prompts(tok, [["mt_bench", n_prompts // 2], ["gsm8k", n_prompts // 2]])
+    rows, outs = acceptance.measure_acceptance(model, prompts, 256, gen_kwargs={"max_length": 2048})
     eagle_cycles = [a + 1 for r in rows for a in r["accepted"]]
     d = zoo.Draft(p["draft"], N, target_embed=model.ea_layer.embed_tokens.weight, name="angelslim_1.7b")
-    lab.set_capture(model, tuple(range(N + 1)))
+    eagle_model.set_capture(model, tuple(range(N + 1)))
     ours = []
     max_acc = max(max(r["accepted"]) for r in rows)
     for pr in prompts:
         ids = torch.cat([pr["ids"][0], outs[pr["id"]]]).cuda()
         mask = torch.zeros_like(ids)
         mask[pr["ids"].shape[1]:] = 1
-        states, logits = lab.target_forward(model, ids)
+        states, logits = target_states.target_forward(model, ids)
         greedy = logits.argmax(-1)
         pred = d.chain(states, ids, max_acc)
         lead = zoo.chain_lead_full(pred, greedy, max_acc)
@@ -216,13 +255,14 @@ def validate(n_prompts=12, depth=5):
 
 
 if __name__ == "__main__":
-    if sys.argv[1] == "validate":
-        validate()
-        sys.exit(0)
     cmd = sys.argv[1]
-    if cmd == "gen":
+    if cmd == "download":
+        download()
+    elif cmd == "gen":
         gen(sys.argv[2])
     elif cmd == "eval":
         evaluate()
     elif cmd == "check":
         check()
+    elif cmd == "validate":
+        validate()
