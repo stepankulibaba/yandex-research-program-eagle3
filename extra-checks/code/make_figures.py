@@ -7,7 +7,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parent.parent
 FIG = HERE / "figures"
 FIG.mkdir(parents=True, exist_ok=True)
 plt.rcParams.update({"font.size": 11, "axes.spines.top": False, "axes.spines.right": False})

@@ -1,4 +1,4 @@
-"""Report figures from the downloaded Kaggle results (results/a, results/b, results/b2)."""
+"""Report figures from the downloaded Kaggle results (results/kaggle_a, kaggle_b, kaggle_b2)."""
 import json
 from pathlib import Path
 
@@ -7,7 +7,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parent.parent
 RES = HERE / "results"
 FIG = HERE / "figures"
 FIG.mkdir(exist_ok=True)
@@ -18,7 +18,7 @@ def load(p):
     return json.loads(Path(p).read_text(encoding="utf-8"))
 
 
-a = load(RES / "a/out/phase_a.json")
+a = load(RES / "kaggle_a/out/phase_a.json")
 N, tri = a["n_layers"], a["triplet"]
 L = np.arange(N + 1)
 
@@ -68,7 +68,7 @@ fig.savefig(FIG / "a_ablations.png", dpi=140)
 
 
 def variant_plot(run, fname, title):
-    r = load(RES / run / "out/phase_b.json")
+    r = load(RES / f"kaggle_{run}" / "out/phase_b.json")
     off = r["tau"]["official"]["tau"]
     names = [n for n in r["variants"]]
     order = sorted(names, key=lambda n: r["tau"][n]["tau"])
@@ -106,6 +106,6 @@ axes[-1].set(xlabel="слой target", xticks=range(N + 1))
 fig.tight_layout()
 fig.savefig(FIG / "b_mix_weights.png", dpi=140)
 
-if (RES / "b2/out/phase_b.json").exists():
+if (RES / "kaggle_b2/out/phase_b.json").exists():
     variant_plot("b2", "b2_variants.png", "Раунд 2: фиксированные наборы слоёв (другие 8000 последовательностей)")
 print(sorted(p.name for p in FIG.iterdir()))

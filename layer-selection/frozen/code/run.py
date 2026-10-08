@@ -12,8 +12,9 @@ from pathlib import Path
 import numpy as np
 import torch
 
-ROOT = Path(__file__).resolve().parent
-sys.path.insert(0, str(ROOT))
+CODE = Path(__file__).resolve().parent
+ROOT = CODE.parent          # models/, EAGLE/, results/ sit next to code/
+sys.path.insert(0, str(CODE))
 import layer_lab as lab  # noqa: E402
 
 EAGLE = ROOT / "EAGLE"
@@ -33,7 +34,7 @@ def log(msg):
 
 
 def out_dir(pair):
-    d = ROOT / "results" / pair
+    d = ROOT / "results/h200" / pair
     d.mkdir(parents=True, exist_ok=True)
     return d
 

@@ -7,7 +7,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parent.parent
 RES = HERE / "results/h200"
 FIG = HERE / "figures/h200"
 FIG.mkdir(parents=True, exist_ok=True)

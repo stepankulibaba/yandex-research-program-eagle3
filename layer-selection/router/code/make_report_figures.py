@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import torch  # noqa: E402
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parent.parent
 R = HERE / "results/qwen3-1.7b"
 FIG = HERE / "figures"
 FIG.mkdir(parents=True, exist_ok=True)

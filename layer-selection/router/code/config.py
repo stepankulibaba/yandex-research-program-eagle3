@@ -1,7 +1,7 @@
 """Paths. Models are downloaded into models/<pair>/{target,draft} (see README)."""
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent   # models/, data/, results/, EAGLE/ sit next to code/
 DATA = ROOT / "data"
 RESULTS = ROOT / "results"
 EAGLE_REPO = ROOT / "EAGLE"        # git clone of SafeAILab/EAGLE, only its benchmark question files are used

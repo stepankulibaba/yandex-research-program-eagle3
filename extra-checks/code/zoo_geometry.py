@@ -16,8 +16,9 @@ from pathlib import Path
 
 import torch
 
-ROOT = Path(__file__).resolve().parent
-sys.path.insert(0, str(ROOT))
+CODE = Path(__file__).resolve().parent
+ROOT = CODE.parent          # target/, zoo/, EAGLE/, results/ sit next to code/
+sys.path.insert(0, str(CODE))
 import zoo  # noqa: E402
 import zoo_eval  # noqa: E402
 
