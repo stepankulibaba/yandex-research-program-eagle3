@@ -1,7 +1,7 @@
-"""Figures and numbers for the routed (unfrozen draft) report.
+"""Figures and numbers for the router report.
 
-python make_report_figures.py      (needs results/qwen3-1.7b/{history.json,final_eval.pt})
--> figures/r*_*.png and results/qwen3-1.7b/report_stats.json
+    python code/make_report_figures.py qwen3-1.7b | dsl-8b
+needs results/<pair>/{history.json,final_eval.pt}; writes figures/[<pair>/]r*_*.png and results/<pair>/report_stats.json
 """
 import json
 from collections import Counter
@@ -13,17 +13,23 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import torch  # noqa: E402
 
-HERE = Path(__file__).resolve().parent.parent
-R = HERE / "results/qwen3-1.7b"
-FIG = HERE / "figures"
+HERE = Path(__file__).resolve().parent.parent      # the router folder
+import sys
+PAIR = sys.argv[1] if len(sys.argv) > 1 else "qwen3-1.7b"
+R = HERE / "results" / PAIR
+FIG = HERE / "figures" / ("" if PAIR == "qwen3-1.7b" else PAIR)
 FIG.mkdir(parents=True, exist_ok=True)
 plt.rcParams.update({"font.size": 10, "axes.spines.top": False, "axes.spines.right": False})
 COL = {"fixed_raw": "#7A7A7A", "fixed_norm": "#2F6DB5", "fixed_alt": "#5FA8D3", "static_top3": "#2E7D4F",
        "static_top2": "#8BC79A", "token_top3": "#B23A48", "token_top2": "#E89A52"}
-LAB = {"fixed_raw": "оригинал (2, 14, 25)", "fixed_norm": "оригинал + норм.", "fixed_alt": "(14, 20, 25) + норм.",
+TRI = {"qwen3-1.7b": ("(2, 14, 25)", "(14, 20, 25)"), "dsl-8b": ("(2, 16, 29)", "(16, 22, 29)")}[PAIR]
+LAB = {"fixed_raw": f"оригинал {TRI[0]}", "fixed_norm": "оригинал + норм.", "fixed_alt": f"{TRI[1]} + норм.",
        "static_top3": "статический top-3", "static_top2": "статический top-2", "token_top3": "роутер top-3",
        "token_top2": "роутер top-2"}
-ORDER = ["fixed_raw", "fixed_norm", "fixed_alt", "static_top3", "static_top2", "token_top3", "token_top2"]
+SUF = "" if PAIR == "qwen3-1.7b" else "_s"
+for k in ("token_top3", "token_top2"):
+    COL[k + SUF], LAB[k + SUF] = COL[k], LAB[k]
+ORDER = ["fixed_raw", "fixed_norm", "fixed_alt", "static_top3", "static_top2", "token_top3" + SUF, "token_top2" + SUF]
 NOISE_END = 0.9      # epochs: noise decays over the first 30% of 3 epochs
 
 H = json.loads((R / "history.json").read_text())["evals"]
@@ -148,7 +154,7 @@ fig.savefig(FIG / "r2_static_choice.png", dpi=150)
 
 # ------------------------------------------------------------------ figure 3: token routers over training
 fig, ax = plt.subplots(1, 2, figsize=(13, 3.8))
-for a, n in zip(ax, ["token_top3", "token_top2"]):
+for a, n in zip(ax, [f"token_top3{SUF}", f"token_top2{SUF}"]):
     share = np.array([e["res"][n]["layer_share"] for e in H[1:]]).T
     im = a.imshow(share, aspect="auto", origin="lower", cmap="magma", vmin=0, vmax=.5,
                   extent=[ep[1] - .02, ep[-1] + .02, -.5, L - .5])
@@ -163,7 +169,7 @@ CAT = [("kind", "тип токена", ["space", "punct", "digit", "word_start",
        ("conf", "уверенность target", ["hi", "mid", "lo"]), ("pos", "позиция", ["<64", "<256", ">=256"]),
        ("bench", "задача", ["mt_bench", "gsm8k", "humaneval"])]
 fig, ax = plt.subplots(2, 4, figsize=(15, 6.4), sharey=True)
-for row, n in enumerate(["token_top3", "token_top2"]):
+for row, n in enumerate([f"token_top3{SUF}", f"token_top2{SUF}"]):
     for col, (c, title, groups) in enumerate(CAT):
         M = np.array([rstats[n]["by_cat"][c][g] for g in groups]).T
         ax[row, col].imshow(M[12:], aspect="auto", origin="lower", cmap="magma", vmin=0, vmax=.5,
@@ -178,7 +184,7 @@ fig.savefig(FIG / "r4_token_by_category.png", dpi=150)
 
 # ------------------------------------------------------------------ figure 5: final tau with CIs + acceptance by depth
 fig, ax = plt.subplots(1, 2, figsize=(13, 4.3), gridspec_kw={"width_ratios": [1.2, 1]})
-show = ORDER + ["token_top3@modal", "token_top2@modal"]
+show = ORDER + [f"token_top3{SUF}@modal", f"token_top2{SUF}@modal"]
 y = np.arange(len(show))[::-1]
 for yi, n in zip(y, show):
     d, ci = final[n]["d_raw"], final[n]["ci_raw"]
