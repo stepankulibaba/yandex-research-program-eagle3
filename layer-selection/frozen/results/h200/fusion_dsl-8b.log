@@ -1,0 +1,117 @@
+LlamaForCausalLM has generative capabilities, as `prepare_inputs_for_generation` is explicitly defined. However, it doesn't directly inherit from `GenerationMixin`. From 👉v4.50👈 onwards, `PreTrainedModel` will NOT inherit from `GenerationMixin`, and this model will lose the ability to call `generate` and other related functions.
+  - If you're using `trust_remote_code=True`, you can get rid of this warning by loading the model with an auto class. See https://huggingface.co/docs/transformers/en/model_doc/auto#auto-classes
+  - If you are the owner of the model architecture code, please modify your model class such that it inherits from `GenerationMixin` (after `PreTrainedModel`, otherwise you'll get an exception).
+  - If you are not the owner of the model architecture class, please contact the model code owner to update it.
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
+Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.39s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.26s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.28s/it]
+LlamaForCausalLM has generative capabilities, as `prepare_inputs_for_generation` is explicitly defined. However, it doesn't directly inherit from `GenerationMixin`. From 👉v4.50👈 onwards, `PreTrainedModel` will NOT inherit from `GenerationMixin`, and this model will lose the ability to call `generate` and other related functions.
+  - If you're using `trust_remote_code=True`, you can get rid of this warning by loading the model with an auto class. See https://huggingface.co/docs/transformers/en/model_doc/auto#auto-classes
+  - If you are the owner of the model architecture code, please modify your model class such that it inherits from `GenerationMixin` (after `PreTrainedModel`, otherwise you'll get an exception).
+  - If you are not the owner of the model architecture class, please contact the model code owner to update it.
+LlamaForCausalLM has generative capabilities, as `prepare_inputs_for_generation` is explicitly defined. However, it doesn't directly inherit from `GenerationMixin`. From 👉v4.50👈 onwards, `PreTrainedModel` will NOT inherit from `GenerationMixin`, and this model will lose the ability to call `generate` and other related functions.
+  - If you're using `trust_remote_code=True`, you can get rid of this warning by loading the model with an auto class. See https://huggingface.co/docs/transformers/en/model_doc/auto#auto-classes
+  - If you are the owner of the model architecture code, please modify your model class such that it inherits from `GenerationMixin` (after `PreTrainedModel`, otherwise you'll get an exception).
+  - If you are not the owner of the model architecture class, please contact the model code owner to update it.
+~/eagle-layers/EAGLE/eagle/model/ea_model.py:128: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ea_layer_state_dict = torch.load(load_model_path,
+22:51:16 official tau {'tau': 5.615684178375076, 'cycles': 13096, 'new_tokens': 73543, 'seconds': 833.3442643275484, 'tau_gsm8k': 6.087450414713307, 'tau_mt_bench': 5.269139072847682}
+22:51:29 official step0 {'loss': 0.7737390921856908, 'acc': 0.829348394150136, 'positions': 72774.0}
+23:07:01 official via adapter tau {'tau': 5.608698969858833, 'cycles': 13105, 'new_tokens': 73502, 'seconds': 931.8955114800483, 'tau_gsm8k': 6.084519733285276, 'tau_mt_bench': 5.25926416093171, 'mismatched_prompts': 44, 'tau_prefix': 5.7027975173158225, 'prefix_cycles': 11117}
+~/eagle-layers/phase_b.py:101: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  train_seqs = torch.load(cfg["train_data"])[: cfg["n_train_seqs"]]
+23:07:06 train sequences: 8000, tokens=4874019
+23:07:06 fc3_scratch: params=50331648 (upstream layers (2, 16, 29), no norm, random init)
+23:07:06 fc3_official_ft: params=50331648 (official fc fine-tuned with our recipe)
+23:07:06 fc3_norm: params=50343936 (upstream layers + per-source RMSNorm (EAGLE-3.1 style))
+23:07:06 fc3_last: params=50343936 (high slot = last layer output (N))
+23:07:06 fc4_norm: params=67125248 (four layers (2, 12, 22, 29); +33% fusion params)
+23:07:06 mix3_uniform: params=50344035 (3 slots, softmax over all layers, uniform init)
+23:07:06 mix3_init: params=50344035 (3 slots, softmax over all layers, init at upstream)
+23:07:06 router_mix: params=50749638 (token-wise router over layers (soft MoE over layers))
+23:07:06 lowrank_3072: params=50343936 (dense low-rank, same total params as fc)
+23:07:06 lowrank_1920: params=31469568 (dense low-rank, same active params as MoE)
+23:07:06 moe_lowrank: params=50393088 (shared rank 1536 + 4 experts rank 384, top-1)
+23:07:06 tri_16_22_29: params=50343936 (layers (16, 22, 29) + per-source RMSNorm; fc 3H->H)
+23:07:06 tri_2_22_29: params=50343936 (layers (2, 22, 29) + per-source RMSNorm; fc 3H->H)
+23:07:06 pair_22_29: params=33562624 (layers (22, 29) + per-source RMSNorm; fc 2H->H)
+23:07:06 single_29: params=16781312 (layers (29,) + per-source RMSNorm; fc 1H->H)
+23:07:06 single_32: params=16781312 (layers (32,) + per-source RMSNorm; fc 1H->H)
+23:07:06 moe_lowrank_bal: params=50393088 (as moe_lowrank, load-balance coefficient 0.1)
+23:08:19 step 25/1000 (73s) acc: fc3_scratch=0.209 fc3_official_ft=0.788 fc3_norm=0.189 fc3_last=0.231 fc4_norm=0.165 mix3_uniform=0.243 mix3_init=0.217 router_mix=0.197 lowrank_3072=0.131 lowrank_1920=0.148 moe_lowrank=0.222 tri_16_22_29=0.192 tri_2_22_29=0.199 pair_22_29=0.263 single_29=0.217 single_32=0.213 moe_lowrank_bal=0.217
+23:09:31 step 50/1000 (144s) acc: fc3_scratch=0.482 fc3_official_ft=0.788 fc3_norm=0.456 fc3_last=0.494 fc4_norm=0.430 mix3_uniform=0.514 mix3_init=0.498 router_mix=0.500 lowrank_3072=0.367 lowrank_1920=0.397 moe_lowrank=0.446 tri_16_22_29=0.494 tri_2_22_29=0.479 pair_22_29=0.521 single_29=0.470 single_32=0.447 moe_lowrank_bal=0.455
+23:10:42 step 75/1000 (216s) acc: fc3_scratch=0.589 fc3_official_ft=0.791 fc3_norm=0.566 fc3_last=0.573 fc4_norm=0.550 mix3_uniform=0.599 mix3_init=0.593 router_mix=0.586 lowrank_3072=0.492 lowrank_1920=0.519 moe_lowrank=0.529 tri_16_22_29=0.588 tri_2_22_29=0.576 pair_22_29=0.602 single_29=0.571 single_32=0.530 moe_lowrank_bal=0.538
+23:11:53 step 100/1000 (286s) acc: fc3_scratch=0.609 fc3_official_ft=0.781 fc3_norm=0.587 fc3_last=0.585 fc4_norm=0.578 mix3_uniform=0.614 mix3_init=0.609 router_mix=0.601 lowrank_3072=0.523 lowrank_1920=0.543 moe_lowrank=0.545 tri_16_22_29=0.607 tri_2_22_29=0.596 pair_22_29=0.616 single_29=0.593 single_32=0.551 moe_lowrank_bal=0.550
+23:13:03 step 125/1000 (356s) acc: fc3_scratch=0.638 fc3_official_ft=0.781 fc3_norm=0.611 fc3_last=0.609 fc4_norm=0.605 mix3_uniform=0.632 mix3_init=0.633 router_mix=0.621 lowrank_3072=0.552 lowrank_1920=0.571 moe_lowrank=0.572 tri_16_22_29=0.627 tri_2_22_29=0.621 pair_22_29=0.636 single_29=0.620 single_32=0.582 moe_lowrank_bal=0.576
+23:14:13 step 150/1000 (427s) acc: fc3_scratch=0.654 fc3_official_ft=0.785 fc3_norm=0.628 fc3_last=0.623 fc4_norm=0.620 mix3_uniform=0.648 mix3_init=0.649 router_mix=0.636 lowrank_3072=0.575 lowrank_1920=0.588 moe_lowrank=0.587 tri_16_22_29=0.643 tri_2_22_29=0.635 pair_22_29=0.649 single_29=0.642 single_32=0.601 moe_lowrank_bal=0.591
+23:15:26 step 175/1000 (499s) acc: fc3_scratch=0.662 fc3_official_ft=0.783 fc3_norm=0.636 fc3_last=0.630 fc4_norm=0.627 mix3_uniform=0.653 mix3_init=0.654 router_mix=0.642 lowrank_3072=0.583 lowrank_1920=0.598 moe_lowrank=0.595 tri_16_22_29=0.648 tri_2_22_29=0.642 pair_22_29=0.658 single_29=0.647 single_32=0.609 moe_lowrank_bal=0.595
+23:16:38 step 200/1000 (571s) acc: fc3_scratch=0.670 fc3_official_ft=0.782 fc3_norm=0.643 fc3_last=0.636 fc4_norm=0.637 mix3_uniform=0.660 mix3_init=0.660 router_mix=0.651 lowrank_3072=0.594 lowrank_1920=0.608 moe_lowrank=0.607 tri_16_22_29=0.654 tri_2_22_29=0.649 pair_22_29=0.663 single_29=0.656 single_32=0.616 moe_lowrank_bal=0.606
+23:17:46 step 225/1000 (640s) acc: fc3_scratch=0.679 fc3_official_ft=0.785 fc3_norm=0.651 fc3_last=0.646 fc4_norm=0.645 mix3_uniform=0.669 mix3_init=0.667 router_mix=0.656 lowrank_3072=0.601 lowrank_1920=0.616 moe_lowrank=0.615 tri_16_22_29=0.662 tri_2_22_29=0.657 pair_22_29=0.671 single_29=0.665 single_32=0.633 moe_lowrank_bal=0.616
+23:18:57 step 250/1000 (711s) acc: fc3_scratch=0.680 fc3_official_ft=0.783 fc3_norm=0.650 fc3_last=0.647 fc4_norm=0.645 mix3_uniform=0.669 mix3_init=0.668 router_mix=0.657 lowrank_3072=0.602 lowrank_1920=0.615 moe_lowrank=0.616 tri_16_22_29=0.660 tri_2_22_29=0.656 pair_22_29=0.668 single_29=0.665 single_32=0.632 moe_lowrank_bal=0.615
+23:20:08 step 275/1000 (781s) acc: fc3_scratch=0.699 fc3_official_ft=0.793 fc3_norm=0.671 fc3_last=0.666 fc4_norm=0.667 mix3_uniform=0.687 mix3_init=0.687 router_mix=0.677 lowrank_3072=0.625 lowrank_1920=0.638 moe_lowrank=0.638 tri_16_22_29=0.680 tri_2_22_29=0.676 pair_22_29=0.688 single_29=0.685 single_32=0.653 moe_lowrank_bal=0.639
+23:21:19 step 300/1000 (852s) acc: fc3_scratch=0.689 fc3_official_ft=0.783 fc3_norm=0.664 fc3_last=0.659 fc4_norm=0.656 mix3_uniform=0.677 mix3_init=0.680 router_mix=0.668 lowrank_3072=0.616 lowrank_1920=0.630 moe_lowrank=0.626 tri_16_22_29=0.672 tri_2_22_29=0.668 pair_22_29=0.681 single_29=0.677 single_32=0.646 moe_lowrank_bal=0.629
+23:22:28 step 325/1000 (922s) acc: fc3_scratch=0.696 fc3_official_ft=0.786 fc3_norm=0.667 fc3_last=0.663 fc4_norm=0.662 mix3_uniform=0.681 mix3_init=0.683 router_mix=0.672 lowrank_3072=0.624 lowrank_1920=0.637 moe_lowrank=0.636 tri_16_22_29=0.678 tri_2_22_29=0.673 pair_22_29=0.685 single_29=0.680 single_32=0.651 moe_lowrank_bal=0.636
+23:23:39 step 350/1000 (992s) acc: fc3_scratch=0.699 fc3_official_ft=0.787 fc3_norm=0.675 fc3_last=0.667 fc4_norm=0.668 mix3_uniform=0.686 mix3_init=0.687 router_mix=0.679 lowrank_3072=0.629 lowrank_1920=0.641 moe_lowrank=0.640 tri_16_22_29=0.683 tri_2_22_29=0.678 pair_22_29=0.689 single_29=0.687 single_32=0.656 moe_lowrank_bal=0.641
+23:24:51 step 375/1000 (1064s) acc: fc3_scratch=0.701 fc3_official_ft=0.788 fc3_norm=0.678 fc3_last=0.673 fc4_norm=0.671 mix3_uniform=0.689 mix3_init=0.691 router_mix=0.682 lowrank_3072=0.632 lowrank_1920=0.644 moe_lowrank=0.643 tri_16_22_29=0.685 tri_2_22_29=0.682 pair_22_29=0.691 single_29=0.688 single_32=0.658 moe_lowrank_bal=0.644
+23:26:03 step 400/1000 (1137s) acc: fc3_scratch=0.716 fc3_official_ft=0.795 fc3_norm=0.693 fc3_last=0.687 fc4_norm=0.686 mix3_uniform=0.703 mix3_init=0.705 router_mix=0.695 lowrank_3072=0.650 lowrank_1920=0.663 moe_lowrank=0.661 tri_16_22_29=0.698 tri_2_22_29=0.694 pair_22_29=0.706 single_29=0.702 single_32=0.672 moe_lowrank_bal=0.661
+23:27:15 step 425/1000 (1208s) acc: fc3_scratch=0.705 fc3_official_ft=0.785 fc3_norm=0.680 fc3_last=0.676 fc4_norm=0.676 mix3_uniform=0.692 mix3_init=0.694 router_mix=0.685 lowrank_3072=0.640 lowrank_1920=0.651 moe_lowrank=0.650 tri_16_22_29=0.689 tri_2_22_29=0.684 pair_22_29=0.694 single_29=0.692 single_32=0.662 moe_lowrank_bal=0.648
+23:28:24 step 450/1000 (1278s) acc: fc3_scratch=0.713 fc3_official_ft=0.786 fc3_norm=0.690 fc3_last=0.682 fc4_norm=0.683 mix3_uniform=0.698 mix3_init=0.701 router_mix=0.692 lowrank_3072=0.649 lowrank_1920=0.659 moe_lowrank=0.656 tri_16_22_29=0.694 tri_2_22_29=0.691 pair_22_29=0.702 single_29=0.698 single_32=0.668 moe_lowrank_bal=0.659
+23:28:58 step 475/1000 (1311s) acc: fc3_scratch=0.711 fc3_official_ft=0.784 fc3_norm=0.688 fc3_last=0.684 fc4_norm=0.683 mix3_uniform=0.701 mix3_init=0.700 router_mix=0.692 lowrank_3072=0.650 lowrank_1920=0.661 moe_lowrank=0.659 tri_16_22_29=0.694 tri_2_22_29=0.690 pair_22_29=0.702 single_29=0.698 single_32=0.671 moe_lowrank_bal=0.659
+23:29:29 step 500/1000 (1343s) acc: fc3_scratch=0.716 fc3_official_ft=0.789 fc3_norm=0.692 fc3_last=0.686 fc4_norm=0.687 mix3_uniform=0.702 mix3_init=0.703 router_mix=0.696 lowrank_3072=0.658 lowrank_1920=0.666 moe_lowrank=0.664 tri_16_22_29=0.698 tri_2_22_29=0.696 pair_22_29=0.707 single_29=0.703 single_32=0.670 moe_lowrank_bal=0.665
+23:30:00 step 525/1000 (1374s) acc: fc3_scratch=0.713 fc3_official_ft=0.784 fc3_norm=0.689 fc3_last=0.686 fc4_norm=0.685 mix3_uniform=0.700 mix3_init=0.701 router_mix=0.693 lowrank_3072=0.655 lowrank_1920=0.664 moe_lowrank=0.662 tri_16_22_29=0.695 tri_2_22_29=0.693 pair_22_29=0.702 single_29=0.700 single_32=0.672 moe_lowrank_bal=0.662
+23:30:32 step 550/1000 (1405s) acc: fc3_scratch=0.717 fc3_official_ft=0.785 fc3_norm=0.695 fc3_last=0.690 fc4_norm=0.692 mix3_uniform=0.705 mix3_init=0.704 router_mix=0.698 lowrank_3072=0.661 lowrank_1920=0.669 moe_lowrank=0.667 tri_16_22_29=0.700 tri_2_22_29=0.696 pair_22_29=0.706 single_29=0.705 single_32=0.676 moe_lowrank_bal=0.669
+23:31:03 step 575/1000 (1437s) acc: fc3_scratch=0.710 fc3_official_ft=0.778 fc3_norm=0.688 fc3_last=0.682 fc4_norm=0.683 mix3_uniform=0.697 mix3_init=0.700 router_mix=0.690 lowrank_3072=0.655 lowrank_1920=0.663 moe_lowrank=0.660 tri_16_22_29=0.694 tri_2_22_29=0.689 pair_22_29=0.699 single_29=0.695 single_32=0.667 moe_lowrank_bal=0.661
+23:31:34 step 600/1000 (1468s) acc: fc3_scratch=0.725 fc3_official_ft=0.786 fc3_norm=0.702 fc3_last=0.698 fc4_norm=0.699 mix3_uniform=0.712 mix3_init=0.714 router_mix=0.706 lowrank_3072=0.674 lowrank_1920=0.681 moe_lowrank=0.679 tri_16_22_29=0.710 tri_2_22_29=0.705 pair_22_29=0.715 single_29=0.711 single_32=0.682 moe_lowrank_bal=0.678
+23:32:05 step 625/1000 (1498s) acc: fc3_scratch=0.737 fc3_official_ft=0.798 fc3_norm=0.717 fc3_last=0.713 fc4_norm=0.714 mix3_uniform=0.726 mix3_init=0.728 router_mix=0.720 lowrank_3072=0.689 lowrank_1920=0.697 moe_lowrank=0.695 tri_16_22_29=0.724 tri_2_22_29=0.720 pair_22_29=0.729 single_29=0.724 single_32=0.698 moe_lowrank_bal=0.695
+23:32:37 step 650/1000 (1531s) acc: fc3_scratch=0.726 fc3_official_ft=0.786 fc3_norm=0.703 fc3_last=0.700 fc4_norm=0.699 mix3_uniform=0.713 mix3_init=0.714 router_mix=0.708 lowrank_3072=0.677 lowrank_1920=0.685 moe_lowrank=0.682 tri_16_22_29=0.711 tri_2_22_29=0.705 pair_22_29=0.715 single_29=0.712 single_32=0.684 moe_lowrank_bal=0.682
+23:33:08 step 675/1000 (1561s) acc: fc3_scratch=0.736 fc3_official_ft=0.793 fc3_norm=0.716 fc3_last=0.711 fc4_norm=0.713 mix3_uniform=0.726 mix3_init=0.727 router_mix=0.719 lowrank_3072=0.693 lowrank_1920=0.699 moe_lowrank=0.696 tri_16_22_29=0.723 tri_2_22_29=0.718 pair_22_29=0.726 single_29=0.723 single_32=0.695 moe_lowrank_bal=0.696
+23:33:39 step 700/1000 (1592s) acc: fc3_scratch=0.725 fc3_official_ft=0.784 fc3_norm=0.705 fc3_last=0.702 fc4_norm=0.702 mix3_uniform=0.713 mix3_init=0.716 router_mix=0.710 lowrank_3072=0.680 lowrank_1920=0.689 moe_lowrank=0.685 tri_16_22_29=0.712 tri_2_22_29=0.706 pair_22_29=0.716 single_29=0.711 single_32=0.687 moe_lowrank_bal=0.684
+23:34:10 step 725/1000 (1624s) acc: fc3_scratch=0.729 fc3_official_ft=0.787 fc3_norm=0.709 fc3_last=0.706 fc4_norm=0.705 mix3_uniform=0.718 mix3_init=0.720 router_mix=0.712 lowrank_3072=0.687 lowrank_1920=0.693 moe_lowrank=0.690 tri_16_22_29=0.716 tri_2_22_29=0.710 pair_22_29=0.719 single_29=0.715 single_32=0.687 moe_lowrank_bal=0.692
+23:34:41 step 750/1000 (1655s) acc: fc3_scratch=0.736 fc3_official_ft=0.791 fc3_norm=0.717 fc3_last=0.714 fc4_norm=0.715 mix3_uniform=0.726 mix3_init=0.728 router_mix=0.720 lowrank_3072=0.699 lowrank_1920=0.704 moe_lowrank=0.700 tri_16_22_29=0.724 tri_2_22_29=0.719 pair_22_29=0.728 single_29=0.723 single_32=0.697 moe_lowrank_bal=0.700
+23:35:14 step 775/1000 (1687s) acc: fc3_scratch=0.742 fc3_official_ft=0.794 fc3_norm=0.725 fc3_last=0.719 fc4_norm=0.722 mix3_uniform=0.731 mix3_init=0.733 router_mix=0.726 lowrank_3072=0.706 lowrank_1920=0.709 moe_lowrank=0.707 tri_16_22_29=0.729 tri_2_22_29=0.726 pair_22_29=0.734 single_29=0.728 single_32=0.701 moe_lowrank_bal=0.708
+23:35:45 step 800/1000 (1719s) acc: fc3_scratch=0.737 fc3_official_ft=0.790 fc3_norm=0.718 fc3_last=0.714 fc4_norm=0.715 mix3_uniform=0.727 mix3_init=0.728 router_mix=0.722 lowrank_3072=0.700 lowrank_1920=0.705 moe_lowrank=0.702 tri_16_22_29=0.724 tri_2_22_29=0.720 pair_22_29=0.728 single_29=0.723 single_32=0.698 moe_lowrank_bal=0.703
+23:36:16 step 825/1000 (1750s) acc: fc3_scratch=0.724 fc3_official_ft=0.779 fc3_norm=0.707 fc3_last=0.702 fc4_norm=0.705 mix3_uniform=0.714 mix3_init=0.717 router_mix=0.711 lowrank_3072=0.689 lowrank_1920=0.694 moe_lowrank=0.690 tri_16_22_29=0.714 tri_2_22_29=0.709 pair_22_29=0.716 single_29=0.710 single_32=0.685 moe_lowrank_bal=0.690
+23:36:48 step 850/1000 (1782s) acc: fc3_scratch=0.740 fc3_official_ft=0.792 fc3_norm=0.723 fc3_last=0.720 fc4_norm=0.719 mix3_uniform=0.730 mix3_init=0.732 router_mix=0.725 lowrank_3072=0.709 lowrank_1920=0.711 moe_lowrank=0.709 tri_16_22_29=0.730 tri_2_22_29=0.725 pair_22_29=0.733 single_29=0.726 single_32=0.700 moe_lowrank_bal=0.709
+23:37:19 step 875/1000 (1812s) acc: fc3_scratch=0.755 fc3_official_ft=0.804 fc3_norm=0.738 fc3_last=0.734 fc4_norm=0.736 mix3_uniform=0.746 mix3_init=0.748 router_mix=0.741 lowrank_3072=0.724 lowrank_1920=0.728 moe_lowrank=0.726 tri_16_22_29=0.745 tri_2_22_29=0.740 pair_22_29=0.748 single_29=0.742 single_32=0.718 moe_lowrank_bal=0.725
+23:37:50 step 900/1000 (1844s) acc: fc3_scratch=0.746 fc3_official_ft=0.795 fc3_norm=0.729 fc3_last=0.726 fc4_norm=0.727 mix3_uniform=0.737 mix3_init=0.739 router_mix=0.733 lowrank_3072=0.715 lowrank_1920=0.718 moe_lowrank=0.716 tri_16_22_29=0.735 tri_2_22_29=0.730 pair_22_29=0.737 single_29=0.733 single_32=0.706 moe_lowrank_bal=0.716
+23:38:21 step 925/1000 (1874s) acc: fc3_scratch=0.749 fc3_official_ft=0.799 fc3_norm=0.734 fc3_last=0.729 fc4_norm=0.731 mix3_uniform=0.739 mix3_init=0.742 router_mix=0.734 lowrank_3072=0.719 lowrank_1920=0.721 moe_lowrank=0.719 tri_16_22_29=0.739 tri_2_22_29=0.734 pair_22_29=0.741 single_29=0.736 single_32=0.711 moe_lowrank_bal=0.718
+23:38:51 step 950/1000 (1905s) acc: fc3_scratch=0.753 fc3_official_ft=0.800 fc3_norm=0.735 fc3_last=0.731 fc4_norm=0.734 mix3_uniform=0.743 mix3_init=0.744 router_mix=0.739 lowrank_3072=0.721 lowrank_1920=0.724 moe_lowrank=0.722 tri_16_22_29=0.742 tri_2_22_29=0.738 pair_22_29=0.744 single_29=0.738 single_32=0.712 moe_lowrank_bal=0.722
+23:39:22 step 975/1000 (1936s) acc: fc3_scratch=0.741 fc3_official_ft=0.793 fc3_norm=0.725 fc3_last=0.721 fc4_norm=0.721 mix3_uniform=0.732 mix3_init=0.733 router_mix=0.727 lowrank_3072=0.711 lowrank_1920=0.713 moe_lowrank=0.712 tri_16_22_29=0.730 tri_2_22_29=0.725 pair_22_29=0.734 single_29=0.728 single_32=0.703 moe_lowrank_bal=0.711
+23:39:54 step 1000/1000 (1967s) acc: fc3_scratch=0.740 fc3_official_ft=0.792 fc3_norm=0.724 fc3_last=0.720 fc4_norm=0.721 mix3_uniform=0.731 mix3_init=0.733 router_mix=0.727 lowrank_3072=0.710 lowrank_1920=0.715 moe_lowrank=0.711 tri_16_22_29=0.729 tri_2_22_29=0.725 pair_22_29=0.732 single_29=0.726 single_32=0.700 moe_lowrank_bal=0.711
+23:40:00 fc3_scratch step0 {'loss': 0.9490512442991936, 'acc': 0.789663892940326, 'positions': 72774.0}
+23:40:06 fc3_official_ft step0 {'loss': 0.7653397224192572, 'acc': 0.8319042522244099, 'positions': 72774.0}
+23:40:12 fc3_norm step0 {'loss': 1.029101892607549, 'acc': 0.7755104849846466, 'positions': 72774.0}
+23:40:18 fc3_last step0 {'loss': 1.044718791749975, 'acc': 0.7692719936374126, 'positions': 72774.0}
+23:40:24 fc4_norm step0 {'loss': 1.0466219225621602, 'acc': 0.7730370736883508, 'positions': 72774.0}
+23:40:30 mix3_uniform step0 {'loss': 0.9935796706902111, 'acc': 0.7829169761681788, 'positions': 72774.0}
+23:40:36 mix3_init step0 {'loss': 0.9854687028349643, 'acc': 0.7846208799495364, 'positions': 72774.0}
+23:40:48 router_mix step0 {'loss': 1.0159332934201564, 'acc': 0.7784098702880291, 'positions': 72774.0}
+23:40:54 lowrank_3072 step0 {'loss': 1.092290388936474, 'acc': 0.7626350078638917, 'positions': 72774.0}
+23:41:00 lowrank_1920 step0 {'loss': 1.0783393203153173, 'acc': 0.7639816437354467, 'positions': 72774.0}
+23:41:12 moe_lowrank step0 {'loss': 1.094595096406446, 'acc': 0.76237392481805, 'positions': 72774.0}
+23:41:18 tri_16_22_29 step0 {'loss': 1.0076093717311618, 'acc': 0.7811581064681606, 'positions': 72774.0}
+23:41:24 tri_2_22_29 step0 {'loss': 1.0218944464532156, 'acc': 0.778547283381082, 'positions': 72774.0}
+23:41:30 pair_22_29 step0 {'loss': 0.9874089845869106, 'acc': 0.783013164915197, 'positions': 72774.0}
+23:41:36 single_29 step0 {'loss': 0.9990933025252984, 'acc': 0.7791106707490469, 'positions': 72774.0}
+23:41:42 single_32 step0 {'loss': 1.1163997828889163, 'acc': 0.7504603291909601, 'positions': 72774.0}
+23:41:54 moe_lowrank_bal step0 {'loss': 1.0946303369392876, 'acc': 0.7618792430002521, 'positions': 72774.0}
+23:49:17 fc3_scratch tau 4.840 ci=[-0.8153841912106757, -0.7383204101289966]
+23:55:42 fc3_official_ft tau 5.596 ci=[-0.04215649287601873, 0.0017934518510405232]
+00:03:59 fc3_norm tau 4.312 ci=[-1.34759113899105, -1.263479381772776]
+00:12:15 fc3_last tau 4.332 ci=[-1.326702588911448, -1.2426689532413817]
+00:21:33 fc4_norm tau 3.841 ci=[-1.8399372858532828, -1.7115311441952281]
+00:29:24 mix3_uniform tau 4.593 ci=[-1.06160068828601, -0.9865972881200121]
+00:37:13 mix3_init tau 4.594 ci=[-1.0575002838263343, -0.9875751090069912]
+00:45:39 router_mix tau 4.256 ci=[-1.404737422606152, -1.3154694514375986]
+00:54:23 lowrank_3072 tau 4.099 ci=[-1.5614703130283023, -1.4722464868478427]
+01:02:39 lowrank_1920 tau 4.339 ci=[-1.3174740802264648, -1.2366742140289742]
+01:11:21 moe_lowrank tau 4.153 ci=[-1.5068467576775415, -1.42032249392727]
+01:19:51 tri_16_22_29 tau 4.208 ci=[-1.4589044002833975, -1.3575139849243258]
+01:28:21 tri_2_22_29 tau 4.209 ci=[-1.4541159339841025, -1.361968164374602]
+01:36:16 pair_22_29 tau 4.521 ci=[-1.1309778149426204, -1.0561589055741976]
+01:44:08 single_29 tau 4.613 ci=[-1.042578456904013, -0.962596152149912]
+01:52:34 single_32 tau 4.299 ci=[-1.3732593434008205, -1.2610748846274664]
+02:01:26 moe_lowrank_bal tau 4.143 ci=[-1.5142621742457614, -1.432497394071005]
+02:01:26 phase B finished

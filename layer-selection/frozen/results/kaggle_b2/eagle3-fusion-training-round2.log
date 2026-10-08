@@ -1,0 +1,147 @@
+[{"stream_name":"stderr","time":6.998099203,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":6.998145649,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":6.998149745,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":6.998152375,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":7.582805171,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":7.582846279,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":7.582852492,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":7.582857002,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":11.004922607,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.9/40.9 kB 1.1 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":11.207186745,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.9/40.9 kB 1.1 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":12.292992103,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.8/10.8 MB 92.1 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":12.328138335,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 566.4/566.4 kB 27.6 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":12.384934381,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 83.2 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":12.495373771,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.8/10.8 MB 92.1 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":12.495401645,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 566.4/566.4 kB 27.6 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":12.495406995,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 83.2 MB/s eta 0:00:00\n"}
+,{"stream_name":"stderr","time":26.466877,"data":"ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\n"}
+,{"stream_name":"stderr","time":26.466906099,"data":"gradio 6.26.0 requires huggingface-hub\u003c2.0,\u003e=1.16.0, but you have huggingface-hub 0.36.2 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.466911048,"data":"diffusers 0.40.0 requires huggingface-hub\u003c2.0,\u003e=1.23.0, but you have huggingface-hub 0.36.2 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.669096968,"data":"ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\n"}
+,{"stream_name":"stderr","time":26.669122252,"data":"gradio 6.26.0 requires huggingface-hub\u003c2.0,\u003e=1.16.0, but you have huggingface-hub 0.36.2 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.669127742,"data":"diffusers 0.40.0 requires huggingface-hub\u003c2.0,\u003e=1.23.0, but you have huggingface-hub 0.36.2 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.669148803,"data":"\n"}
+,{"stream_name":"stderr","time":26.66915159,"data":"ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\n"}
+,{"stream_name":"stderr","time":26.669154082,"data":"gradio 6.26.0 requires huggingface-hub\u003c2.0,\u003e=1.16.0, but you have huggingface-hub 0.36.2 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.669156702,"data":"diffusers 0.40.0 requires huggingface-hub\u003c2.0,\u003e=1.23.0, but you have huggingface-hub 0.36.2 which is incompatible.\n"}
+,{"stream_name":"stdout","time":37.540089654,"data":"{\n"}
+,{"stream_name":"stdout","time":37.540113003,"data":"  \"gpu\": \"Tesla T4\",\n"}
+,{"stream_name":"stdout","time":37.54011733,"data":"  \"torch\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":37.540121256,"data":"  \"transformers\": \"4.53.2\",\n"}
+,{"stream_name":"stdout","time":37.540124994,"data":"  \"python\": \"3.13.15\",\n"}
+,{"stream_name":"stdout","time":37.540128694,"data":"  \"eagle_commit\": \"cb7e0841fe0c206c6ed74a197ad5e2a1f13f5a2b\",\n"}
+,{"stream_name":"stdout","time":37.540132338,"data":"  \"sources_sha256\": {\n"}
+,{"stream_name":"stdout","time":37.540135546,"data":"    \"layer_lab.py\": \"d1004b96857652e4731dc30b9e1af74b699eee4a69b83bcaba8e18c10afb82ac\",\n"}
+,{"stream_name":"stdout","time":37.540139667,"data":"    \"phase_a.py\": \"e010130c7fba2d5c099a6b941daf78c49c1571cdfbe470d41794c2441a63dd82\",\n"}
+,{"stream_name":"stdout","time":37.540143508,"data":"    \"phase_b.py\": \"5c799826eb4ec31f7debb0dff3f553d8a5f07d9162234a298829049c8bb8238b\"\n"}
+,{"stream_name":"stdout","time":37.540147378,"data":"  }\n"}
+,{"stream_name":"stdout","time":37.540150763,"data":"}\n"}
+,{"stream_name":"stdout","time":221.504197325,"data":"13:44:53 official tau {'tau': 3.4072164948453607, 'cycles': 1746, 'new_tokens': 5949, 'seconds': 124.23709076100016, 'tau_gsm8k': 3.7517985611510793, 'tau_humaneval': 3.860294117647059, 'tau_mt_bench': 3.2240802675585285}\n"}
+,{"stream_name":"stdout","time":345.082168031,"data":"13:46:57 official repeat (run-to-run determinism) {'tau': 3.4072164948453607, 'cycles': 1746, 'new_tokens': 5949, 'seconds': 123.55868554300008, 'tau_gsm8k': 3.7517985611510793, 'tau_humaneval': 3.860294117647059, 'tau_mt_bench': 3.2240802675585285, 'mismatched_prompts': 0, 'tau_prefix': 3.4072164948453607, 'prefix_cycles': 1746}\n"}
+,{"stream_name":"stdout","time":349.030841063,"data":"13:47:01 official step0 {'loss': 1.5361621790095101, 'acc': 0.6555149007610046, 'positions': 5739.0}\n"}
+,{"stream_name":"stdout","time":473.081350367,"data":"13:49:05 official via adapter tau {'tau': 3.4011428571428572, 'cycles': 1750, 'new_tokens': 5952, 'seconds': 124.0304539720006, 'tau_gsm8k': 3.718861209964413, 'tau_humaneval': 3.8424908424908426, 'tau_mt_bench': 3.225752508361204, 'mismatched_prompts': 3, 'tau_prefix': 3.410756501182033, 'prefix_cycles': 1692}\n"}
+,{"stream_name":"stdout","time":515.461233408,"data":"13:49:47 train sequences: 8000, tokens=3725671\n"}
+,{"stream_name":"stdout","time":515.475186488,"data":"13:49:47 fc3_official_ft: params=12582912 (official fc fine-tuned with our recipe)\n"}
+,{"stream_name":"stdout","time":515.490449953,"data":"13:49:47 fc3_norm: params=12589056 (upstream layers + per-source RMSNorm (EAGLE-3.1 style))\n"}
+,{"stream_name":"stdout","time":515.505767568,"data":"13:49:47 mix3_init: params=12589143 (3 slots, softmax over all layers, init at upstream)\n"}
+,{"stream_name":"stdout","time":515.521531994,"data":"13:49:47 tri_2_20_25: params=12589056 (layers (2, 20, 25) + per-source RMSNorm; fc 3H-\u003eH)\n"}
+,{"stream_name":"stdout","time":515.537287513,"data":"13:49:47 tri_14_20_25: params=12589056 (layers (14, 20, 25) + per-source RMSNorm; fc 3H-\u003eH)\n"}
+,{"stream_name":"stdout","time":515.552425288,"data":"13:49:48 tri_11_20_25: params=12589056 (layers (11, 20, 25) + per-source RMSNorm; fc 3H-\u003eH)\n"}
+,{"stream_name":"stdout","time":515.567653052,"data":"13:49:48 tri_19_22_25: params=12589056 (layers (19, 22, 25) + per-source RMSNorm; fc 3H-\u003eH)\n"}
+,{"stream_name":"stdout","time":515.577976311,"data":"13:49:48 pair_20_25: params=8392704 (layers (20, 25) + per-source RMSNorm; fc 2H-\u003eH)\n"}
+,{"stream_name":"stdout","time":515.582646876,"data":"13:49:48 single_25: params=4196352 (layers (25,) + per-source RMSNorm; fc 1H-\u003eH)\n"}
+,{"stream_name":"stdout","time":588.755706018,"data":"13:51:01 step 25/1000 (73s) acc: fc3_official_ft=0.560 fc3_norm=0.092 mix3_init=0.102 tri_2_20_25=0.096 tri_14_20_25=0.095 tri_11_20_25=0.105 tri_19_22_25=0.102 pair_20_25=0.086 single_25=0.065\n"}
+,{"stream_name":"stdout","time":665.347741024,"data":"13:52:17 step 50/1000 (150s) acc: fc3_official_ft=0.590 fc3_norm=0.234 mix3_init=0.242 tri_2_20_25=0.257 tri_14_20_25=0.278 tri_11_20_25=0.248 tri_19_22_25=0.273 pair_20_25=0.251 single_25=0.179\n"}
+,{"stream_name":"stdout","time":746.052164889,"data":"13:53:38 step 75/1000 (230s) acc: fc3_official_ft=0.594 fc3_norm=0.341 mix3_init=0.349 tri_2_20_25=0.370 tri_14_20_25=0.376 tri_11_20_25=0.360 tri_19_22_25=0.380 pair_20_25=0.361 single_25=0.267\n"}
+,{"stream_name":"stdout","time":826.229484027,"data":"13:54:58 step 100/1000 (311s) acc: fc3_official_ft=0.613 fc3_norm=0.405 mix3_init=0.414 tri_2_20_25=0.434 tri_14_20_25=0.441 tri_11_20_25=0.431 tri_19_22_25=0.438 pair_20_25=0.422 single_25=0.334\n"}
+,{"stream_name":"stdout","time":906.576719654,"data":"13:56:19 step 125/1000 (391s) acc: fc3_official_ft=0.594 fc3_norm=0.410 mix3_init=0.422 tri_2_20_25=0.437 tri_14_20_25=0.444 tri_11_20_25=0.439 tri_19_22_25=0.443 pair_20_25=0.436 single_25=0.366\n"}
+,{"stream_name":"stdout","time":985.444387864,"data":"13:57:37 step 150/1000 (470s) acc: fc3_official_ft=0.615 fc3_norm=0.447 mix3_init=0.459 tri_2_20_25=0.473 tri_14_20_25=0.476 tri_11_20_25=0.473 tri_19_22_25=0.482 pair_20_25=0.468 single_25=0.405\n"}
+,{"stream_name":"stdout","time":1065.372567438,"data":"13:58:57 step 175/1000 (550s) acc: fc3_official_ft=0.611 fc3_norm=0.453 mix3_init=0.469 tri_2_20_25=0.485 tri_14_20_25=0.483 tri_11_20_25=0.477 tri_19_22_25=0.489 pair_20_25=0.474 single_25=0.418\n"}
+,{"stream_name":"stdout","time":1145.202647674,"data":"14:00:17 step 200/1000 (630s) acc: fc3_official_ft=0.606 fc3_norm=0.457 mix3_init=0.474 tri_2_20_25=0.483 tri_14_20_25=0.485 tri_11_20_25=0.486 tri_19_22_25=0.492 pair_20_25=0.480 single_25=0.424\n"}
+,{"stream_name":"stdout","time":1226.433261942,"data":"14:01:38 step 225/1000 (711s) acc: fc3_official_ft=0.612 fc3_norm=0.474 mix3_init=0.494 tri_2_20_25=0.502 tri_14_20_25=0.507 tri_11_20_25=0.504 tri_19_22_25=0.514 pair_20_25=0.502 single_25=0.442\n"}
+,{"stream_name":"stdout","time":1309.364322931,"data":"14:03:01 step 250/1000 (794s) acc: fc3_official_ft=0.624 fc3_norm=0.497 mix3_init=0.514 tri_2_20_25=0.521 tri_14_20_25=0.527 tri_11_20_25=0.524 tri_19_22_25=0.529 pair_20_25=0.518 single_25=0.460\n"}
+,{"stream_name":"stdout","time":1387.977911558,"data":"14:04:20 step 275/1000 (872s) acc: fc3_official_ft=0.614 fc3_norm=0.492 mix3_init=0.513 tri_2_20_25=0.519 tri_14_20_25=0.521 tri_11_20_25=0.518 tri_19_22_25=0.525 pair_20_25=0.515 single_25=0.456\n"}
+,{"stream_name":"stdout","time":1472.021930907,"data":"14:05:44 step 300/1000 (956s) acc: fc3_official_ft=0.613 fc3_norm=0.495 mix3_init=0.518 tri_2_20_25=0.522 tri_14_20_25=0.529 tri_11_20_25=0.523 tri_19_22_25=0.532 pair_20_25=0.521 single_25=0.467\n"}
+,{"stream_name":"stdout","time":1549.937482476,"data":"14:07:02 step 325/1000 (1034s) acc: fc3_official_ft=0.613 fc3_norm=0.498 mix3_init=0.521 tri_2_20_25=0.526 tri_14_20_25=0.529 tri_11_20_25=0.525 tri_19_22_25=0.531 pair_20_25=0.522 single_25=0.472\n"}
+,{"stream_name":"stdout","time":1632.690041043,"data":"14:08:25 step 350/1000 (1117s) acc: fc3_official_ft=0.625 fc3_norm=0.518 mix3_init=0.542 tri_2_20_25=0.543 tri_14_20_25=0.549 tri_11_20_25=0.548 tri_19_22_25=0.551 pair_20_25=0.540 single_25=0.489\n"}
+,{"stream_name":"stdout","time":1714.728119492,"data":"14:09:47 step 375/1000 (1199s) acc: fc3_official_ft=0.612 fc3_norm=0.511 mix3_init=0.536 tri_2_20_25=0.540 tri_14_20_25=0.540 tri_11_20_25=0.541 tri_19_22_25=0.546 pair_20_25=0.538 single_25=0.487\n"}
+,{"stream_name":"stdout","time":1792.437594453,"data":"14:11:04 step 400/1000 (1277s) acc: fc3_official_ft=0.617 fc3_norm=0.521 mix3_init=0.543 tri_2_20_25=0.547 tri_14_20_25=0.550 tri_11_20_25=0.547 tri_19_22_25=0.552 pair_20_25=0.543 single_25=0.492\n"}
+,{"stream_name":"stdout","time":1873.713599554,"data":"14:12:26 step 425/1000 (1358s) acc: fc3_official_ft=0.624 fc3_norm=0.528 mix3_init=0.552 tri_2_20_25=0.553 tri_14_20_25=0.555 tri_11_20_25=0.554 tri_19_22_25=0.559 pair_20_25=0.550 single_25=0.501\n"}
+,{"stream_name":"stdout","time":1953.503390843,"data":"14:13:45 step 450/1000 (1438s) acc: fc3_official_ft=0.618 fc3_norm=0.525 mix3_init=0.550 tri_2_20_25=0.552 tri_14_20_25=0.553 tri_11_20_25=0.552 tri_19_22_25=0.557 pair_20_25=0.544 single_25=0.494\n"}
+,{"stream_name":"stdout","time":2038.674778797,"data":"14:15:11 step 475/1000 (1523s) acc: fc3_official_ft=0.620 fc3_norm=0.531 mix3_init=0.555 tri_2_20_25=0.559 tri_14_20_25=0.559 tri_11_20_25=0.558 tri_19_22_25=0.564 pair_20_25=0.557 single_25=0.505\n"}
+,{"stream_name":"stdout","time":2121.37677708,"data":"14:16:33 step 500/1000 (1606s) acc: fc3_official_ft=0.635 fc3_norm=0.550 mix3_init=0.571 tri_2_20_25=0.576 tri_14_20_25=0.575 tri_11_20_25=0.574 tri_19_22_25=0.580 pair_20_25=0.573 single_25=0.520\n"}
+,{"stream_name":"stdout","time":2198.502339837,"data":"14:17:50 step 525/1000 (1683s) acc: fc3_official_ft=0.619 fc3_norm=0.529 mix3_init=0.554 tri_2_20_25=0.555 tri_14_20_25=0.558 tri_11_20_25=0.555 tri_19_22_25=0.562 pair_20_25=0.551 single_25=0.505\n"}
+,{"stream_name":"stdout","time":2277.167540514,"data":"14:19:09 step 550/1000 (1762s) acc: fc3_official_ft=0.630 fc3_norm=0.547 mix3_init=0.570 tri_2_20_25=0.570 tri_14_20_25=0.570 tri_11_20_25=0.570 tri_19_22_25=0.576 pair_20_25=0.565 single_25=0.519\n"}
+,{"stream_name":"stdout","time":2355.193183205,"data":"14:20:27 step 575/1000 (1840s) acc: fc3_official_ft=0.629 fc3_norm=0.552 mix3_init=0.578 tri_2_20_25=0.573 tri_14_20_25=0.577 tri_11_20_25=0.578 tri_19_22_25=0.581 pair_20_25=0.569 single_25=0.526\n"}
+,{"stream_name":"stdout","time":2435.289994366,"data":"14:21:47 step 600/1000 (1920s) acc: fc3_official_ft=0.631 fc3_norm=0.548 mix3_init=0.571 tri_2_20_25=0.573 tri_14_20_25=0.574 tri_11_20_25=0.574 tri_19_22_25=0.578 pair_20_25=0.569 single_25=0.518\n"}
+,{"stream_name":"stdout","time":2509.443829398,"data":"14:23:01 step 625/1000 (1994s) acc: fc3_official_ft=0.628 fc3_norm=0.545 mix3_init=0.571 tri_2_20_25=0.570 tri_14_20_25=0.572 tri_11_20_25=0.572 tri_19_22_25=0.576 pair_20_25=0.564 single_25=0.516\n"}
+,{"stream_name":"stdout","time":2587.089564275,"data":"14:24:19 step 650/1000 (2072s) acc: fc3_official_ft=0.616 fc3_norm=0.537 mix3_init=0.564 tri_2_20_25=0.563 tri_14_20_25=0.563 tri_11_20_25=0.563 tri_19_22_25=0.570 pair_20_25=0.557 single_25=0.512\n"}
+,{"stream_name":"stdout","time":2670.401140804,"data":"14:25:42 step 675/1000 (2155s) acc: fc3_official_ft=0.631 fc3_norm=0.557 mix3_init=0.583 tri_2_20_25=0.583 tri_14_20_25=0.586 tri_11_20_25=0.584 tri_19_22_25=0.590 pair_20_25=0.579 single_25=0.534\n"}
+,{"stream_name":"stdout","time":2746.667789712,"data":"14:26:59 step 700/1000 (2231s) acc: fc3_official_ft=0.630 fc3_norm=0.555 mix3_init=0.577 tri_2_20_25=0.578 tri_14_20_25=0.580 tri_11_20_25=0.579 tri_19_22_25=0.584 pair_20_25=0.572 single_25=0.529\n"}
+,{"stream_name":"stdout","time":2830.927643086,"data":"14:28:23 step 725/1000 (2315s) acc: fc3_official_ft=0.634 fc3_norm=0.559 mix3_init=0.584 tri_2_20_25=0.585 tri_14_20_25=0.585 tri_11_20_25=0.586 tri_19_22_25=0.589 pair_20_25=0.580 single_25=0.530\n"}
+,{"stream_name":"stdout","time":2911.707058107,"data":"14:29:44 step 750/1000 (2396s) acc: fc3_official_ft=0.627 fc3_norm=0.556 mix3_init=0.577 tri_2_20_25=0.580 tri_14_20_25=0.578 tri_11_20_25=0.581 tri_19_22_25=0.584 pair_20_25=0.573 single_25=0.525\n"}
+,{"stream_name":"stdout","time":2989.098548265,"data":"14:31:01 step 775/1000 (2474s) acc: fc3_official_ft=0.637 fc3_norm=0.570 mix3_init=0.596 tri_2_20_25=0.593 tri_14_20_25=0.594 tri_11_20_25=0.595 tri_19_22_25=0.598 pair_20_25=0.589 single_25=0.540\n"}
+,{"stream_name":"stdout","time":3069.726635819,"data":"14:32:22 step 800/1000 (2554s) acc: fc3_official_ft=0.628 fc3_norm=0.555 mix3_init=0.579 tri_2_20_25=0.581 tri_14_20_25=0.581 tri_11_20_25=0.580 tri_19_22_25=0.585 pair_20_25=0.574 single_25=0.524\n"}
+,{"stream_name":"stdout","time":3148.73417057,"data":"14:33:41 step 825/1000 (2633s) acc: fc3_official_ft=0.629 fc3_norm=0.562 mix3_init=0.583 tri_2_20_25=0.578 tri_14_20_25=0.583 tri_11_20_25=0.584 tri_19_22_25=0.589 pair_20_25=0.579 single_25=0.532\n"}
+,{"stream_name":"stdout","time":3228.990897582,"data":"14:35:01 step 850/1000 (2713s) acc: fc3_official_ft=0.643 fc3_norm=0.572 mix3_init=0.595 tri_2_20_25=0.594 tri_14_20_25=0.594 tri_11_20_25=0.595 tri_19_22_25=0.599 pair_20_25=0.590 single_25=0.544\n"}
+,{"stream_name":"stdout","time":3305.793066449,"data":"14:36:18 step 875/1000 (2790s) acc: fc3_official_ft=0.643 fc3_norm=0.575 mix3_init=0.597 tri_2_20_25=0.598 tri_14_20_25=0.598 tri_11_20_25=0.599 tri_19_22_25=0.603 pair_20_25=0.595 single_25=0.548\n"}
+,{"stream_name":"stdout","time":3381.293599396,"data":"14:37:33 step 900/1000 (2866s) acc: fc3_official_ft=0.632 fc3_norm=0.560 mix3_init=0.582 tri_2_20_25=0.582 tri_14_20_25=0.584 tri_11_20_25=0.585 tri_19_22_25=0.590 pair_20_25=0.579 single_25=0.534\n"}
+,{"stream_name":"stdout","time":3456.602515016,"data":"14:38:49 step 925/1000 (2941s) acc: fc3_official_ft=0.637 fc3_norm=0.567 mix3_init=0.592 tri_2_20_25=0.590 tri_14_20_25=0.592 tri_11_20_25=0.592 tri_19_22_25=0.597 pair_20_25=0.586 single_25=0.536\n"}
+,{"stream_name":"stdout","time":3532.885508729,"data":"14:40:05 step 950/1000 (3017s) acc: fc3_official_ft=0.628 fc3_norm=0.561 mix3_init=0.583 tri_2_20_25=0.584 tri_14_20_25=0.586 tri_11_20_25=0.583 tri_19_22_25=0.589 pair_20_25=0.578 single_25=0.535\n"}
+,{"stream_name":"stdout","time":3616.641478478,"data":"14:41:29 step 975/1000 (3101s) acc: fc3_official_ft=0.636 fc3_norm=0.569 mix3_init=0.591 tri_2_20_25=0.589 tri_14_20_25=0.593 tri_11_20_25=0.593 tri_19_22_25=0.596 pair_20_25=0.585 single_25=0.538\n"}
+,{"stream_name":"stdout","time":3695.604368179,"data":"14:42:48 step 1000/1000 (3180s) acc: fc3_official_ft=0.639 fc3_norm=0.569 mix3_init=0.590 tri_2_20_25=0.588 tri_14_20_25=0.592 tri_11_20_25=0.592 tri_19_22_25=0.596 pair_20_25=0.587 single_25=0.541\n"}
+,{"stream_name":"stdout","time":3699.438712234,"data":"14:42:51 fc3_official_ft step0 {'loss': 1.1268631061271293, 'acc': 0.7313120719821097, 'positions': 5739.0}\n"}
+,{"stream_name":"stdout","time":3703.346547827,"data":"14:42:55 fc3_norm step0 {'loss': 2.008888693652641, 'acc': 0.579369227517293, 'positions': 5739.0}\n"}
+,{"stream_name":"stdout","time":3707.305049616,"data":"14:42:59 mix3_init step0 {'loss': 1.8269579793688602, 'acc': 0.6086426197308907, 'positions': 5739.0}\n"}
+,{"stream_name":"stdout","time":3711.176205222,"data":"14:43:03 tri_2_20_25 step0 {'loss': 1.88075773713688, 'acc': 0.6001045516474485, 'positions': 5739.0}\n"}
+,{"stream_name":"stdout","time":3715.042955282,"data":"14:43:07 tri_14_20_25 step0 {'loss': 1.8333743871203447, 'acc': 0.608468373273802, 'positions': 5739.0}\n"}
+,{"stream_name":"stdout","time":3718.908578912,"data":"14:43:11 tri_11_20_25 step0 {'loss': 1.843895029784869, 'acc': 0.6025439977001948, 'positions': 5739.0}\n"}
+,{"stream_name":"stdout","time":3722.77332668,"data":"14:43:15 tri_19_22_25 step0 {'loss': 1.7961250158693134, 'acc': 0.6109078219126359, 'positions': 5739.0}\n"}
+,{"stream_name":"stdout","time":3726.61549211,"data":"14:43:19 pair_20_25 step0 {'loss': 1.9031751346122847, 'acc': 0.598362084204861, 'positions': 5739.0}\n"}
+,{"stream_name":"stdout","time":3730.442486422,"data":"14:43:22 single_25 step0 {'loss': 2.2465398657049818, 'acc': 0.5410350231078261, 'positions': 5739.0}\n"}
+,{"stream_name":"stdout","time":3832.238366145,"data":"14:45:04 fc3_official_ft tau 4.225 ci=[0.7243637670946241, 0.9201933196461614]\n"}
+,{"stream_name":"stdout","time":3969.764897764,"data":"14:47:22 fc3_norm tau 3.055 ci=[-0.45321448976089035, -0.2553517111734486]\n"}
+,{"stream_name":"stdout","time":4105.982731565,"data":"14:49:38 mix3_init tau 3.137 ci=[-0.36820781148564025, -0.1731048714817463]\n"}
+,{"stream_name":"stdout","time":4241.132953392,"data":"14:51:53 tri_2_20_25 tau 3.155 ci=[-0.34541996415419274, -0.16661081159407148]\n"}
+,{"stream_name":"stdout","time":4373.629083363,"data":"14:54:06 tri_14_20_25 tau 3.194 ci=[-0.3130127098181318, -0.11765513170790423]\n"}
+,{"stream_name":"stdout","time":4506.138488778,"data":"14:56:18 tri_11_20_25 tau 3.177 ci=[-0.3257035076286761, -0.13661194689169096]\n"}
+,{"stream_name":"stdout","time":4639.112191347,"data":"14:58:31 tri_19_22_25 tau 3.183 ci=[-0.3175592602007805, -0.13393837756814253]\n"}
+,{"stream_name":"stdout","time":4778.413412012,"data":"15:00:50 pair_20_25 tau 3.043 ci=[-0.47149028710397456, -0.2605591208763635]\n"}
+,{"stream_name":"stdout","time":4935.733945452,"data":"15:03:28 single_25 tau 2.691 ci=[-0.8386037013152131, -0.5949169795288192]\n"}
+,{"stream_name":"stdout","time":4935.734756855,"data":"15:03:28 phase B finished\n"}
+,{"stream_name":"stdout","time":4935.927313603,"data":"optimizer steps: 1000 / 1000 stopped early: False train s: 3180 target fwd s: 1200\n"}
+,{"stream_name":"stderr","time":4940.127941502,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":4940.128464175,"data":"  File \"\u003cstring\u003e\", line 1, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":4940.12848438,"data":"    import sys;import papermill as pm;pm.execute_notebook(\"__notebook__.ipynb\",\"__notebook__.ipynb\",progress_bar=False,log_output=True,stdout_file=sys.stdout,stderr_file=sys.stderr,allow_errors=False,timeout=43200)\n"}
+,{"stream_name":"stderr","time":4940.128490882,"data":"                                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":4940.128495668,"data":"  File \"/usr/local/lib/python3.13/dist-packages/papermill/execute.py\", line 131, in execute_notebook\n"}
+,{"stream_name":"stderr","time":4940.12850045,"data":"    raise_for_execution_errors(nb, output_path)\n"}
+,{"stream_name":"stderr","time":4940.12850609,"data":"    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":4940.1285107,"data":"  File \"/usr/local/lib/python3.13/dist-packages/papermill/execute.py\", line 251, in raise_for_execution_errors\n"}
+,{"stream_name":"stderr","time":4940.128527099,"data":"    raise error\n"}
+,{"stream_name":"stderr","time":4940.128531882,"data":"papermill.exceptions.PapermillExecutionError: \n"}
+,{"stream_name":"stderr","time":4940.128536243,"data":"---------------------------------------------------------------------------\n"}
+,{"stream_name":"stderr","time":4940.12855258,"data":"Exception encountered at \"In [3]\":\n"}
+,{"stream_name":"stderr","time":4940.128556414,"data":"---------------------------------------------------------------------------\n"}
+,{"stream_name":"stderr","time":4940.128559845,"data":"TypeError                                 Traceback (most recent call last)\n"}
+,{"stream_name":"stderr","time":4940.128562931,"data":"/tmp/ipykernel_23/4058218660.py in \u003ccell line: 0\u003e()\n"}
+,{"stream_name":"stderr","time":4940.128566582,"data":"     29         im = ax.imshow(np.array(w), aspect=\"auto\", cmap=\"magma\", vmin=0)\n"}
+,{"stream_name":"stderr","time":4940.128570174,"data":"     30         ax.set(title=n, ylabel=\"слот\", xticks=range(len(w[0]))); fig.colorbar(im, ax=ax)\n"}
+,{"stream_name":"stderr","time":4940.128575102,"data":"---\u003e 31     axes[-1].set_xlabel(\"слой target\")\n"}
+,{"stream_name":"stderr","time":4940.1285784,"data":"     32     fig.tight_layout(); fig.savefig(OUT / \"mix_weights.png\", dpi=150); plt.show()\n"}
+,{"stream_name":"stderr","time":4940.128581791,"data":"     33 for n, v in r[\"variants\"].items():\n"}
+,{"stream_name":"stderr","time":4940.128585232,"data":"\n"}
+,{"stream_name":"stderr","time":4940.128588367,"data":"TypeError: 'Axes' object is not subscriptable\n"}
+,{"stream_name":"stderr","time":4940.12859163,"data":"\n"}
+,{"stream_name":"stderr","time":4942.33314236,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":4942.333168371,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":4942.496635596,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":4942.496657368,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":4943.305157879,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":4943.419267338,"data":"[NbConvertApp] Writing 436543 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":4945.852673805,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":4946.441631892,"data":"[NbConvertApp] Support files will be in __results___files/\n"}
+,{"stream_name":"stderr","time":4946.441660033,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":4946.441974844,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":4946.442237026,"data":"[NbConvertApp] Writing 549029 bytes to __results__.html\n"}
+]

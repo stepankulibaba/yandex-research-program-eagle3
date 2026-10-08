@@ -1,0 +1,20 @@
+20:24:30 START eval_official dsl-8b
+21:56:15 END eval_official dsl-8b exit=0
+21:56:15 START gen_data dsl-8b
+22:37:11 END gen_data dsl-8b exit=0
+22:37:11 START fusion dsl-8b
+22:37:54 START sweep dsl-8b
+23:28:28 END sweep dsl-8b exit=0
+02:01:26 END fusion dsl-8b exit=0
+02:01:26 START analysis dsl-8b
+02:09:27 END analysis dsl-8b exit=0
+02:09:27 START eval_official qwen3-1.7b
+03:35:29 END eval_official qwen3-1.7b exit=0
+03:35:29 START gen_data qwen3-1.7b
+04:00:41 END gen_data qwen3-1.7b exit=0
+04:00:41 START fusion qwen3-1.7b
+04:01:29 START sweep qwen3-1.7b
+04:23:31 END sweep qwen3-1.7b exit=0
+06:14:11 END fusion qwen3-1.7b exit=0
+06:14:11 START analysis qwen3-1.7b
+06:19:01 END analysis qwen3-1.7b exit=0

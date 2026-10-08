@@ -1,0 +1,105 @@
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
+Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.54it/s]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.01it/s]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.64it/s]
+~/eagle-layers/EAGLE/eagle/model/ea_model.py:128: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ea_layer_state_dict = torch.load(load_model_path,
+04:09:47 official tau {'tau': 3.6013463530108005, 'cycles': 13518, 'new_tokens': 48683, 'seconds': 540.0640734694898, 'tau_gsm8k': 4.071971913399649, 'tau_mt_bench': 3.3137885830056013}
+04:09:53 official step0 {'loss': 1.3705396633412332, 'acc': 0.6873369679397544, 'positions': 47153.0}
+04:20:07 official via adapter tau {'tau': 3.6000590754689115, 'cycles': 13542, 'new_tokens': 48752, 'seconds': 614.5816214894876, 'tau_gsm8k': 4.070551549405574, 'tau_mt_bench': 3.313042444418024, 'mismatched_prompts': 32, 'tau_prefix': 3.6319212808539025, 'prefix_cycles': 11992}
+~/eagle-layers/phase_b.py:101: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  train_seqs = torch.load(cfg["train_data"])[: cfg["n_train_seqs"]]
+04:20:09 train sequences: 8000, tokens=4199115
+04:20:09 fc3_scratch: params=12582912 (upstream layers (2, 14, 25), no norm, random init)
+04:20:09 fc3_official_ft: params=12582912 (official fc fine-tuned with our recipe)
+04:20:09 fc3_norm: params=12589056 (upstream layers + per-source RMSNorm (EAGLE-3.1 style))
+04:20:09 fc3_last: params=12589056 (high slot = last layer output (N))
+04:20:09 fc4_norm: params=16785408 (four layers (2, 11, 20, 25); +33% fusion params)
+04:20:09 mix3_uniform: params=12589143 (3 slots, softmax over all layers, uniform init)
+04:20:09 mix3_init: params=12589143 (3 slots, softmax over all layers, init at upstream)
+04:20:09 router_mix: params=12767406 (token-wise router over layers (soft MoE over layers))
+04:20:09 lowrank_1536: params=12589056 (dense low-rank, same total params as fc)
+04:20:09 lowrank_960: params=7870464 (dense low-rank, same active params as MoE)
+04:20:09 moe_lowrank: params=12613632 (shared rank 768 + 4 experts rank 192, top-1)
+04:20:09 tri_14_20_25: params=12589056 (layers (14, 20, 25) + per-source RMSNorm; fc 3H->H)
+04:20:09 tri_2_20_25: params=12589056 (layers (2, 20, 25) + per-source RMSNorm; fc 3H->H)
+04:20:09 pair_20_25: params=8392704 (layers (20, 25) + per-source RMSNorm; fc 2H->H)
+04:20:09 single_25: params=4196352 (layers (25,) + per-source RMSNorm; fc 1H->H)
+04:20:09 single_28: params=4196352 (layers (28,) + per-source RMSNorm; fc 1H->H)
+04:20:09 moe_lowrank_bal: params=12613632 (as moe_lowrank, load-balance coefficient 0.1)
+04:20:45 step 25/1000 (36s) acc: fc3_scratch=0.212 fc3_official_ft=0.664 fc3_norm=0.123 fc3_last=0.113 fc4_norm=0.157 mix3_uniform=0.111 mix3_init=0.139 router_mix=0.155 lowrank_1536=0.113 lowrank_960=0.125 moe_lowrank=0.114 tri_14_20_25=0.126 tri_2_20_25=0.142 pair_20_25=0.121 single_25=0.090 single_28=0.087 moe_lowrank_bal=0.107
+04:21:20 step 50/1000 (72s) acc: fc3_scratch=0.412 fc3_official_ft=0.698 fc3_norm=0.371 fc3_last=0.367 fc4_norm=0.396 mix3_uniform=0.380 mix3_init=0.377 router_mix=0.422 lowrank_1536=0.351 lowrank_960=0.358 moe_lowrank=0.335 tri_14_20_25=0.406 tri_2_20_25=0.411 pair_20_25=0.374 single_25=0.308 single_28=0.292 moe_lowrank_bal=0.337
+04:21:56 step 75/1000 (107s) acc: fc3_scratch=0.459 fc3_official_ft=0.686 fc3_norm=0.462 fc3_last=0.457 fc4_norm=0.488 mix3_uniform=0.477 mix3_init=0.467 router_mix=0.502 lowrank_1536=0.435 lowrank_960=0.435 moe_lowrank=0.428 tri_14_20_25=0.496 tri_2_20_25=0.491 pair_20_25=0.479 single_25=0.400 single_28=0.370 moe_lowrank_bal=0.426
+04:22:31 step 100/1000 (142s) acc: fc3_scratch=0.490 fc3_official_ft=0.694 fc3_norm=0.501 fc3_last=0.500 fc4_norm=0.534 mix3_uniform=0.522 mix3_init=0.513 router_mix=0.542 lowrank_1536=0.476 lowrank_960=0.471 moe_lowrank=0.470 tri_14_20_25=0.535 tri_2_20_25=0.531 pair_20_25=0.525 single_25=0.457 single_28=0.408 moe_lowrank_bal=0.467
+04:23:06 step 125/1000 (177s) acc: fc3_scratch=0.512 fc3_official_ft=0.700 fc3_norm=0.532 fc3_last=0.531 fc4_norm=0.562 mix3_uniform=0.556 mix3_init=0.547 router_mix=0.571 lowrank_1536=0.505 lowrank_960=0.500 moe_lowrank=0.505 tri_14_20_25=0.565 tri_2_20_25=0.563 pair_20_25=0.560 single_25=0.496 single_28=0.449 moe_lowrank_bal=0.502
+04:23:36 step 150/1000 (208s) acc: fc3_scratch=0.539 fc3_official_ft=0.706 fc3_norm=0.557 fc3_last=0.555 fc4_norm=0.587 mix3_uniform=0.579 mix3_init=0.574 router_mix=0.593 lowrank_1536=0.529 lowrank_960=0.525 moe_lowrank=0.531 tri_14_20_25=0.590 tri_2_20_25=0.586 pair_20_25=0.584 single_25=0.527 single_28=0.489 moe_lowrank_bal=0.528
+04:23:56 step 175/1000 (228s) acc: fc3_scratch=0.536 fc3_official_ft=0.700 fc3_norm=0.567 fc3_last=0.567 fc4_norm=0.596 mix3_uniform=0.590 mix3_init=0.585 router_mix=0.603 lowrank_1536=0.542 lowrank_960=0.538 moe_lowrank=0.545 tri_14_20_25=0.596 tri_2_20_25=0.597 pair_20_25=0.591 single_25=0.541 single_28=0.495 moe_lowrank_bal=0.539
+04:24:16 step 200/1000 (247s) acc: fc3_scratch=0.539 fc3_official_ft=0.697 fc3_norm=0.572 fc3_last=0.568 fc4_norm=0.600 mix3_uniform=0.595 mix3_init=0.589 router_mix=0.605 lowrank_1536=0.548 lowrank_960=0.543 moe_lowrank=0.551 tri_14_20_25=0.601 tri_2_20_25=0.598 pair_20_25=0.596 single_25=0.545 single_28=0.506 moe_lowrank_bal=0.544
+04:24:35 step 225/1000 (266s) acc: fc3_scratch=0.571 fc3_official_ft=0.714 fc3_norm=0.594 fc3_last=0.591 fc4_norm=0.621 mix3_uniform=0.616 mix3_init=0.612 router_mix=0.626 lowrank_1536=0.570 lowrank_960=0.565 moe_lowrank=0.574 tri_14_20_25=0.622 tri_2_20_25=0.623 pair_20_25=0.617 single_25=0.571 single_28=0.536 moe_lowrank_bal=0.569
+04:24:54 step 250/1000 (285s) acc: fc3_scratch=0.569 fc3_official_ft=0.714 fc3_norm=0.606 fc3_last=0.603 fc4_norm=0.632 mix3_uniform=0.628 mix3_init=0.627 router_mix=0.637 lowrank_1536=0.583 lowrank_960=0.580 moe_lowrank=0.588 tri_14_20_25=0.634 tri_2_20_25=0.632 pair_20_25=0.629 single_25=0.583 single_28=0.543 moe_lowrank_bal=0.582
+04:25:13 step 275/1000 (304s) acc: fc3_scratch=0.575 fc3_official_ft=0.713 fc3_norm=0.612 fc3_last=0.613 fc4_norm=0.639 mix3_uniform=0.632 mix3_init=0.631 router_mix=0.642 lowrank_1536=0.593 lowrank_960=0.587 moe_lowrank=0.596 tri_14_20_25=0.638 tri_2_20_25=0.637 pair_20_25=0.634 single_25=0.594 single_28=0.558 moe_lowrank_bal=0.592
+04:25:33 step 300/1000 (324s) acc: fc3_scratch=0.572 fc3_official_ft=0.705 fc3_norm=0.607 fc3_last=0.605 fc4_norm=0.632 mix3_uniform=0.628 mix3_init=0.626 router_mix=0.635 lowrank_1536=0.582 lowrank_960=0.580 moe_lowrank=0.588 tri_14_20_25=0.632 tri_2_20_25=0.631 pair_20_25=0.627 single_25=0.583 single_28=0.554 moe_lowrank_bal=0.583
+04:25:52 step 325/1000 (343s) acc: fc3_scratch=0.592 fc3_official_ft=0.715 fc3_norm=0.624 fc3_last=0.624 fc4_norm=0.648 mix3_uniform=0.645 mix3_init=0.644 router_mix=0.654 lowrank_1536=0.604 lowrank_960=0.599 moe_lowrank=0.609 tri_14_20_25=0.652 tri_2_20_25=0.648 pair_20_25=0.645 single_25=0.603 single_28=0.568 moe_lowrank_bal=0.604
+04:26:11 step 350/1000 (362s) acc: fc3_scratch=0.577 fc3_official_ft=0.706 fc3_norm=0.616 fc3_last=0.615 fc4_norm=0.642 mix3_uniform=0.637 mix3_init=0.637 router_mix=0.642 lowrank_1536=0.592 lowrank_960=0.590 moe_lowrank=0.598 tri_14_20_25=0.643 tri_2_20_25=0.641 pair_20_25=0.636 single_25=0.592 single_28=0.560 moe_lowrank_bal=0.593
+04:26:31 step 375/1000 (382s) acc: fc3_scratch=0.599 fc3_official_ft=0.720 fc3_norm=0.633 fc3_last=0.630 fc4_norm=0.654 mix3_uniform=0.654 mix3_init=0.652 router_mix=0.658 lowrank_1536=0.612 lowrank_960=0.608 moe_lowrank=0.615 tri_14_20_25=0.656 tri_2_20_25=0.656 pair_20_25=0.651 single_25=0.612 single_28=0.575 moe_lowrank_bal=0.609
+04:26:51 step 400/1000 (402s) acc: fc3_scratch=0.609 fc3_official_ft=0.730 fc3_norm=0.648 fc3_last=0.644 fc4_norm=0.673 mix3_uniform=0.671 mix3_init=0.670 router_mix=0.674 lowrank_1536=0.628 lowrank_960=0.625 moe_lowrank=0.630 tri_14_20_25=0.673 tri_2_20_25=0.671 pair_20_25=0.669 single_25=0.627 single_28=0.591 moe_lowrank_bal=0.626
+04:27:10 step 425/1000 (422s) acc: fc3_scratch=0.596 fc3_official_ft=0.714 fc3_norm=0.634 fc3_last=0.632 fc4_norm=0.658 mix3_uniform=0.654 mix3_init=0.653 router_mix=0.661 lowrank_1536=0.614 lowrank_960=0.609 moe_lowrank=0.616 tri_14_20_25=0.660 tri_2_20_25=0.659 pair_20_25=0.654 single_25=0.611 single_28=0.577 moe_lowrank_bal=0.613
+04:27:29 step 450/1000 (440s) acc: fc3_scratch=0.606 fc3_official_ft=0.722 fc3_norm=0.643 fc3_last=0.641 fc4_norm=0.666 mix3_uniform=0.664 mix3_init=0.664 router_mix=0.668 lowrank_1536=0.622 lowrank_960=0.618 moe_lowrank=0.624 tri_14_20_25=0.666 tri_2_20_25=0.666 pair_20_25=0.661 single_25=0.622 single_28=0.591 moe_lowrank_bal=0.620
+04:27:48 step 475/1000 (460s) acc: fc3_scratch=0.598 fc3_official_ft=0.710 fc3_norm=0.634 fc3_last=0.634 fc4_norm=0.658 mix3_uniform=0.657 mix3_init=0.657 router_mix=0.660 lowrank_1536=0.617 lowrank_960=0.611 moe_lowrank=0.620 tri_14_20_25=0.657 tri_2_20_25=0.657 pair_20_25=0.653 single_25=0.613 single_28=0.581 moe_lowrank_bal=0.615
+04:28:08 step 500/1000 (479s) acc: fc3_scratch=0.602 fc3_official_ft=0.711 fc3_norm=0.632 fc3_last=0.630 fc4_norm=0.655 mix3_uniform=0.654 mix3_init=0.654 router_mix=0.657 lowrank_1536=0.613 lowrank_960=0.609 moe_lowrank=0.616 tri_14_20_25=0.655 tri_2_20_25=0.654 pair_20_25=0.649 single_25=0.608 single_28=0.580 moe_lowrank_bal=0.613
+04:28:27 step 525/1000 (498s) acc: fc3_scratch=0.619 fc3_official_ft=0.717 fc3_norm=0.645 fc3_last=0.646 fc4_norm=0.669 mix3_uniform=0.669 mix3_init=0.668 router_mix=0.673 lowrank_1536=0.630 lowrank_960=0.623 moe_lowrank=0.629 tri_14_20_25=0.671 tri_2_20_25=0.669 pair_20_25=0.665 single_25=0.627 single_28=0.595 moe_lowrank_bal=0.628
+04:28:46 step 550/1000 (517s) acc: fc3_scratch=0.620 fc3_official_ft=0.713 fc3_norm=0.647 fc3_last=0.642 fc4_norm=0.667 mix3_uniform=0.665 mix3_init=0.667 router_mix=0.669 lowrank_1536=0.629 lowrank_960=0.624 moe_lowrank=0.630 tri_14_20_25=0.667 tri_2_20_25=0.666 pair_20_25=0.662 single_25=0.624 single_28=0.590 moe_lowrank_bal=0.624
+04:29:05 step 575/1000 (537s) acc: fc3_scratch=0.616 fc3_official_ft=0.710 fc3_norm=0.641 fc3_last=0.639 fc4_norm=0.661 mix3_uniform=0.662 mix3_init=0.662 router_mix=0.664 lowrank_1536=0.624 lowrank_960=0.619 moe_lowrank=0.625 tri_14_20_25=0.663 tri_2_20_25=0.662 pair_20_25=0.658 single_25=0.619 single_28=0.587 moe_lowrank_bal=0.623
+04:29:24 step 600/1000 (556s) acc: fc3_scratch=0.624 fc3_official_ft=0.718 fc3_norm=0.650 fc3_last=0.648 fc4_norm=0.672 mix3_uniform=0.669 mix3_init=0.671 router_mix=0.671 lowrank_1536=0.635 lowrank_960=0.630 moe_lowrank=0.635 tri_14_20_25=0.672 tri_2_20_25=0.672 pair_20_25=0.666 single_25=0.628 single_28=0.599 moe_lowrank_bal=0.631
+04:29:43 step 625/1000 (575s) acc: fc3_scratch=0.653 fc3_official_ft=0.738 fc3_norm=0.676 fc3_last=0.672 fc4_norm=0.697 mix3_uniform=0.693 mix3_init=0.694 router_mix=0.696 lowrank_1536=0.659 lowrank_960=0.652 moe_lowrank=0.660 tri_14_20_25=0.695 tri_2_20_25=0.693 pair_20_25=0.689 single_25=0.651 single_28=0.628 moe_lowrank_bal=0.655
+04:30:03 step 650/1000 (595s) acc: fc3_scratch=0.626 fc3_official_ft=0.714 fc3_norm=0.648 fc3_last=0.643 fc4_norm=0.672 mix3_uniform=0.667 mix3_init=0.667 router_mix=0.672 lowrank_1536=0.632 lowrank_960=0.629 moe_lowrank=0.634 tri_14_20_25=0.672 tri_2_20_25=0.670 pair_20_25=0.665 single_25=0.625 single_28=0.597 moe_lowrank_bal=0.630
+04:30:23 step 675/1000 (614s) acc: fc3_scratch=0.650 fc3_official_ft=0.734 fc3_norm=0.668 fc3_last=0.665 fc4_norm=0.692 mix3_uniform=0.687 mix3_init=0.690 router_mix=0.691 lowrank_1536=0.657 lowrank_960=0.654 moe_lowrank=0.659 tri_14_20_25=0.690 tri_2_20_25=0.690 pair_20_25=0.687 single_25=0.648 single_28=0.617 moe_lowrank_bal=0.655
+04:30:42 step 700/1000 (633s) acc: fc3_scratch=0.639 fc3_official_ft=0.721 fc3_norm=0.655 fc3_last=0.652 fc4_norm=0.677 mix3_uniform=0.674 mix3_init=0.677 router_mix=0.678 lowrank_1536=0.641 lowrank_960=0.636 moe_lowrank=0.642 tri_14_20_25=0.677 tri_2_20_25=0.677 pair_20_25=0.671 single_25=0.633 single_28=0.606 moe_lowrank_bal=0.639
+04:31:01 step 725/1000 (653s) acc: fc3_scratch=0.643 fc3_official_ft=0.715 fc3_norm=0.653 fc3_last=0.652 fc4_norm=0.675 mix3_uniform=0.673 mix3_init=0.673 router_mix=0.677 lowrank_1536=0.641 lowrank_960=0.633 moe_lowrank=0.639 tri_14_20_25=0.675 tri_2_20_25=0.675 pair_20_25=0.668 single_25=0.629 single_28=0.603 moe_lowrank_bal=0.639
+04:31:21 step 750/1000 (672s) acc: fc3_scratch=0.651 fc3_official_ft=0.724 fc3_norm=0.665 fc3_last=0.661 fc4_norm=0.688 mix3_uniform=0.683 mix3_init=0.685 router_mix=0.689 lowrank_1536=0.652 lowrank_960=0.647 moe_lowrank=0.652 tri_14_20_25=0.687 tri_2_20_25=0.686 pair_20_25=0.681 single_25=0.643 single_28=0.616 moe_lowrank_bal=0.650
+04:31:41 step 775/1000 (692s) acc: fc3_scratch=0.664 fc3_official_ft=0.732 fc3_norm=0.675 fc3_last=0.672 fc4_norm=0.695 mix3_uniform=0.694 mix3_init=0.693 router_mix=0.695 lowrank_1536=0.662 lowrank_960=0.657 moe_lowrank=0.661 tri_14_20_25=0.695 tri_2_20_25=0.693 pair_20_25=0.690 single_25=0.653 single_28=0.623 moe_lowrank_bal=0.661
+04:32:00 step 800/1000 (711s) acc: fc3_scratch=0.659 fc3_official_ft=0.731 fc3_norm=0.671 fc3_last=0.669 fc4_norm=0.693 mix3_uniform=0.689 mix3_init=0.691 router_mix=0.693 lowrank_1536=0.661 lowrank_960=0.655 moe_lowrank=0.661 tri_14_20_25=0.693 tri_2_20_25=0.691 pair_20_25=0.687 single_25=0.649 single_28=0.620 moe_lowrank_bal=0.659
+04:32:19 step 825/1000 (731s) acc: fc3_scratch=0.650 fc3_official_ft=0.724 fc3_norm=0.662 fc3_last=0.658 fc4_norm=0.682 mix3_uniform=0.679 mix3_init=0.682 router_mix=0.684 lowrank_1536=0.648 lowrank_960=0.644 moe_lowrank=0.647 tri_14_20_25=0.681 tri_2_20_25=0.680 pair_20_25=0.676 single_25=0.636 single_28=0.607 moe_lowrank_bal=0.645
+04:32:39 step 850/1000 (750s) acc: fc3_scratch=0.667 fc3_official_ft=0.735 fc3_norm=0.675 fc3_last=0.671 fc4_norm=0.696 mix3_uniform=0.692 mix3_init=0.695 router_mix=0.697 lowrank_1536=0.666 lowrank_960=0.660 moe_lowrank=0.665 tri_14_20_25=0.695 tri_2_20_25=0.693 pair_20_25=0.690 single_25=0.654 single_28=0.627 moe_lowrank_bal=0.663
+04:32:59 step 875/1000 (770s) acc: fc3_scratch=0.684 fc3_official_ft=0.751 fc3_norm=0.694 fc3_last=0.691 fc4_norm=0.715 mix3_uniform=0.710 mix3_init=0.712 router_mix=0.715 lowrank_1536=0.684 lowrank_960=0.678 moe_lowrank=0.684 tri_14_20_25=0.713 tri_2_20_25=0.713 pair_20_25=0.708 single_25=0.675 single_28=0.646 moe_lowrank_bal=0.682
+04:33:18 step 900/1000 (790s) acc: fc3_scratch=0.665 fc3_official_ft=0.732 fc3_norm=0.673 fc3_last=0.669 fc4_norm=0.692 mix3_uniform=0.691 mix3_init=0.692 router_mix=0.693 lowrank_1536=0.659 lowrank_960=0.655 moe_lowrank=0.660 tri_14_20_25=0.692 tri_2_20_25=0.691 pair_20_25=0.686 single_25=0.648 single_28=0.620 moe_lowrank_bal=0.659
+04:33:38 step 925/1000 (809s) acc: fc3_scratch=0.672 fc3_official_ft=0.734 fc3_norm=0.674 fc3_last=0.672 fc4_norm=0.694 mix3_uniform=0.691 mix3_init=0.692 router_mix=0.696 lowrank_1536=0.667 lowrank_960=0.658 moe_lowrank=0.663 tri_14_20_25=0.695 tri_2_20_25=0.693 pair_20_25=0.688 single_25=0.653 single_28=0.627 moe_lowrank_bal=0.661
+04:33:57 step 950/1000 (828s) acc: fc3_scratch=0.668 fc3_official_ft=0.729 fc3_norm=0.674 fc3_last=0.669 fc4_norm=0.694 mix3_uniform=0.690 mix3_init=0.692 router_mix=0.696 lowrank_1536=0.664 lowrank_960=0.657 moe_lowrank=0.662 tri_14_20_25=0.693 tri_2_20_25=0.692 pair_20_25=0.688 single_25=0.649 single_28=0.624 moe_lowrank_bal=0.662
+04:34:16 step 975/1000 (848s) acc: fc3_scratch=0.667 fc3_official_ft=0.729 fc3_norm=0.669 fc3_last=0.665 fc4_norm=0.690 mix3_uniform=0.688 mix3_init=0.688 router_mix=0.692 lowrank_1536=0.658 lowrank_960=0.653 moe_lowrank=0.658 tri_14_20_25=0.690 tri_2_20_25=0.688 pair_20_25=0.683 single_25=0.648 single_28=0.623 moe_lowrank_bal=0.656
+04:34:36 step 1000/1000 (867s) acc: fc3_scratch=0.659 fc3_official_ft=0.724 fc3_norm=0.668 fc3_last=0.667 fc4_norm=0.688 mix3_uniform=0.685 mix3_init=0.687 router_mix=0.688 lowrank_1536=0.658 lowrank_960=0.655 moe_lowrank=0.658 tri_14_20_25=0.688 tri_2_20_25=0.687 pair_20_25=0.680 single_25=0.645 single_28=0.618 moe_lowrank_bal=0.656
+04:34:39 fc3_scratch step0 {'loss': 1.265327845634571, 'acc': 0.725913516298103, 'positions': 47153.0}
+04:34:42 fc3_official_ft step0 {'loss': 0.8881485056861841, 'acc': 0.7922719670305767, 'positions': 47153.0}
+04:34:45 fc3_norm step0 {'loss': 1.2213581243935485, 'acc': 0.7319152542908336, 'positions': 47153.0}
+04:34:49 fc3_last step0 {'loss': 1.2450521505705952, 'acc': 0.7249379691172715, 'positions': 47153.0}
+04:34:52 fc4_norm step0 {'loss': 1.1161263765217306, 'acc': 0.7522957175985878, 'positions': 47153.0}
+04:34:55 mix3_uniform step0 {'loss': 1.1262214008506286, 'acc': 0.749284246533637, 'positions': 47153.0}
+04:34:58 mix3_init step0 {'loss': 1.1191530540341237, 'acc': 0.7487328473000658, 'positions': 47153.0}
+04:35:04 router_mix step0 {'loss': 1.1151451362067866, 'acc': 0.751680697406501, 'positions': 47153.0}
+04:35:08 lowrank_1536 step0 {'loss': 1.2780770756855873, 'acc': 0.7225839270572431, 'positions': 47153.0}
+04:35:11 lowrank_960 step0 {'loss': 1.3052926801772844, 'acc': 0.7187241563074607, 'positions': 47153.0}
+04:35:17 moe_lowrank step0 {'loss': 1.2817775661040574, 'acc': 0.7219052885744581, 'positions': 47153.0}
+04:35:21 tri_14_20_25 step0 {'loss': 1.1200239003372048, 'acc': 0.7511505112426444, 'positions': 47153.0}
+04:35:24 tri_2_20_25 step0 {'loss': 1.1254910375549465, 'acc': 0.7508960187844709, 'positions': 47153.0}
+04:35:27 pair_20_25 step0 {'loss': 1.1473086564785535, 'acc': 0.7467817536835716, 'positions': 47153.0}
+04:35:30 single_25 step0 {'loss': 1.329906148264381, 'acc': 0.7134858872433739, 'positions': 47153.0}
+04:35:33 single_28 step0 {'loss': 1.4833708297985624, 'acc': 0.6789175665182893, 'positions': 47153.0}
+04:35:39 moe_lowrank_bal step0 {'loss': 1.3048811176218966, 'acc': 0.7177698124718611, 'positions': 47153.0}
+04:41:56 fc3_scratch tau 3.372 ci=[-0.2781321984536283, -0.18196344557163682]
+04:46:45 fc3_official_ft tau 4.397 ci=[0.7447818879059005, 0.8473882174981243]
+04:52:31 fc3_norm tau 3.675 ci=[0.036878079092626845, 0.11163296075163101]
+04:58:18 fc3_last tau 3.664 ci=[0.021579582217158055, 0.10341873514824561]
+05:03:46 fc4_norm tau 3.879 ci=[0.24436055807891927, 0.313169663598861]
+05:09:28 mix3_uniform tau 3.747 ci=[0.10907704383887566, 0.1828897481796818]
+05:15:08 mix3_init tau 3.754 ci=[0.11970790374411862, 0.18556355536548774]
+05:20:47 router_mix tau 3.782 ci=[0.14478591558283188, 0.21677697574107235]
+05:26:27 lowrank_1536 tau 3.736 ci=[0.0916301069245402, 0.17994398302857165]
+05:32:14 lowrank_960 tau 3.645 ci=[0.0018448407097937164, 0.08805042132625943]
+05:38:01 moe_lowrank tau 3.724 ci=[0.07610521406185186, 0.17346499984214933]
+05:43:37 tri_14_20_25 tau 3.797 ci=[0.1605539892940202, 0.23350802241818422]
+05:49:14 tri_2_20_25 tau 3.788 ci=[0.14890413883679565, 0.22570961829089747]
+05:55:03 pair_20_25 tau 3.630 ci=[-0.011647411108795002, 0.06489427099715525]
+06:01:38 single_25 tau 3.218 ci=[-0.4298884121815358, -0.339288657637668]
+06:08:22 single_28 tau 3.123 ci=[-0.5325665364884246, -0.4260130206380811]
+06:14:10 moe_lowrank_bal tau 3.699 ci=[0.05234131780044822, 0.14648910317701822]
+06:14:10 phase B finished

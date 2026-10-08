@@ -1,0 +1,115 @@
+[{"stream_name":"stderr","time":6.5562753,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":6.556313144,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":6.55631753,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":6.556320366,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":7.137100645,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":7.137127189,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":7.137131706,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":7.137135288,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":10.229092298,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.9/40.9 kB 2.0 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":10.43115473,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.9/40.9 kB 2.0 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":11.630566805,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.8/10.8 MB 31.3 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":11.659423785,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 566.4/566.4 kB 24.5 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":11.695658921,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 102.7 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":11.833010538,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.8/10.8 MB 31.3 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":11.833039567,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 566.4/566.4 kB 24.5 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":11.83305683,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 102.7 MB/s eta 0:00:00\n"}
+,{"stream_name":"stderr","time":25.322182044,"data":"ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\n"}
+,{"stream_name":"stderr","time":25.32222395,"data":"gradio 6.26.0 requires huggingface-hub\u003c2.0,\u003e=1.16.0, but you have huggingface-hub 0.36.2 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.322230882,"data":"diffusers 0.40.0 requires huggingface-hub\u003c2.0,\u003e=1.23.0, but you have huggingface-hub 0.36.2 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.524737958,"data":"ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\n"}
+,{"stream_name":"stderr","time":25.524766636,"data":"gradio 6.26.0 requires huggingface-hub\u003c2.0,\u003e=1.16.0, but you have huggingface-hub 0.36.2 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.524770332,"data":"diffusers 0.40.0 requires huggingface-hub\u003c2.0,\u003e=1.23.0, but you have huggingface-hub 0.36.2 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.524781672,"data":"\n"}
+,{"stream_name":"stderr","time":25.524784169,"data":"ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\n"}
+,{"stream_name":"stderr","time":25.524786624,"data":"gradio 6.26.0 requires huggingface-hub\u003c2.0,\u003e=1.16.0, but you have huggingface-hub 0.36.2 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.524788961,"data":"diffusers 0.40.0 requires huggingface-hub\u003c2.0,\u003e=1.23.0, but you have huggingface-hub 0.36.2 which is incompatible.\n"}
+,{"stream_name":"stdout","time":37.719304566,"data":"{\n"}
+,{"stream_name":"stdout","time":37.719328854,"data":"  \"gpu\": \"Tesla T4\",\n"}
+,{"stream_name":"stdout","time":37.719333844,"data":"  \"torch\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":37.719338146,"data":"  \"transformers\": \"4.53.2\",\n"}
+,{"stream_name":"stdout","time":37.719342265,"data":"  \"python\": \"3.13.15\",\n"}
+,{"stream_name":"stdout","time":37.719346122,"data":"  \"eagle_commit\": \"cb7e0841fe0c206c6ed74a197ad5e2a1f13f5a2b\",\n"}
+,{"stream_name":"stdout","time":37.719350117,"data":"  \"sources_sha256\": {\n"}
+,{"stream_name":"stdout","time":37.719353944,"data":"    \"layer_lab.py\": \"122715a7d70c62e0fa9cde33ebd532c6fc217deaa5de1159d340b958463f4604\",\n"}
+,{"stream_name":"stdout","time":37.719357976,"data":"    \"phase_a.py\": \"e010130c7fba2d5c099a6b941daf78c49c1571cdfbe470d41794c2441a63dd82\",\n"}
+,{"stream_name":"stdout","time":37.71936197,"data":"    \"phase_b.py\": \"1f172c908404127c3280cb7c12e47b448d51a46abbf2753181f6f97267b2a241\"\n"}
+,{"stream_name":"stdout","time":37.719365941,"data":"  }\n"}
+,{"stream_name":"stdout","time":37.719369454,"data":"}\n"}
+,{"stream_name":"stdout","time":98.102518934,"data":"11:53:34 loaded: N=28 H=2048 triplet=(2, 14, 25)\n"}
+,{"stream_name":"stdout","time":220.735333329,"data":"11:55:37 baseline {'tau': 3.4072164948453607, 'cycles': 1746, 'new_tokens': 5949, 'seconds': 122.52746621999995, 'tau_gsm8k': 3.7517985611510793, 'tau_humaneval': 3.860294117647059, 'tau_mt_bench': 3.2240802675585285}\n"}
+,{"stream_name":"stdout","time":230.58660075,"data":"11:55:46 patch check [{'id': 'mt_bench/81', 'mismatch': False, 'same_cycles': True}, {'id': 'mt_bench/83', 'mismatch': False, 'same_cycles': True}, {'id': 'mt_bench/85', 'mismatch': False, 'same_cycles': True}]\n"}
+,{"stream_name":"stdout","time":240.215631189,"data":"11:55:56 ultrachat sequences: 400\n"}
+,{"stream_name":"stdout","time":304.503682907,"data":"11:57:00 positions train=torch.Size([37042, 29, 2048]) test=torch.Size([5853, 29, 2048])\n"}
+,{"stream_name":"stdout","time":328.307985982,"data":"11:57:24 fc shares [0.014975737808874498, 0.12533833116570395, 0.8596859310254216]\n"}
+,{"stream_name":"stdout","time":332.447048736,"data":"11:57:28 cka done\n"}
+,{"stream_name":"stdout","time":445.037197512,"data":"11:59:21 ridge r2 {'0': 0.03541674784885762, '1': 0.13078372192565513, '2': 0.16027541403624157, '3': 0.1840861972950284, '4': 0.20542627172227423, '5': 0.22153512651570406, '6': 0.22921538633981697, '7': 0.25216369010532214, '8': 0.2635599153791016, '9': 0.27308367762797736, '10': 0.28581168788174904, '11': 0.3086633442901129, '12': 0.3252247510168699, '13': 0.3479811681145306, '14': 0.38074725224971084, '15': 0.3722556962440625, '16': 0.377972032473618, '17': 0.39796977145952184, '18': 0.4408881580396412, '19': 0.4736535216529064, '20': 0.5358611800577489, '21': 0.604850786640611, '22': 0.6759126492055691, '23': 0.7476728984557851, '24': 0.8186995507313858, '25': 0.9044328957377988, '26': 0.8142848537822432, '27': 0.7085621765539192, '28': 0.6498186619032827, 'triplet': 0.9675230996637447}\n"}
+,{"stream_name":"stdout","time":474.270321777,"data":"11:59:50 probe layer 0: k1=0.081, k2=0.037, k3=0.028\n"}
+,{"stream_name":"stdout","time":503.422919107,"data":"12:00:19 probe layer 1: k1=0.139, k2=0.059, k3=0.042\n"}
+,{"stream_name":"stdout","time":532.545627613,"data":"12:00:48 probe layer 2: k1=0.158, k2=0.055, k3=0.048\n"}
+,{"stream_name":"stdout","time":561.687720047,"data":"12:01:17 probe layer 3: k1=0.159, k2=0.067, k3=0.044\n"}
+,{"stream_name":"stdout","time":590.854562989,"data":"12:01:47 probe layer 4: k1=0.184, k2=0.076, k3=0.046\n"}
+,{"stream_name":"stdout","time":620.009259883,"data":"12:02:16 probe layer 5: k1=0.181, k2=0.081, k3=0.047\n"}
+,{"stream_name":"stdout","time":649.15140044,"data":"12:02:45 probe layer 6: k1=0.194, k2=0.078, k3=0.047\n"}
+,{"stream_name":"stdout","time":678.324822613,"data":"12:03:14 probe layer 7: k1=0.208, k2=0.081, k3=0.045\n"}
+,{"stream_name":"stdout","time":707.463255125,"data":"12:03:43 probe layer 8: k1=0.209, k2=0.084, k3=0.043\n"}
+,{"stream_name":"stdout","time":736.664682303,"data":"12:04:12 probe layer 9: k1=0.219, k2=0.089, k3=0.042\n"}
+,{"stream_name":"stdout","time":765.805238062,"data":"12:04:42 probe layer 10: k1=0.220, k2=0.089, k3=0.046\n"}
+,{"stream_name":"stdout","time":794.958526206,"data":"12:05:11 probe layer 11: k1=0.225, k2=0.096, k3=0.052\n"}
+,{"stream_name":"stdout","time":824.122434512,"data":"12:05:40 probe layer 12: k1=0.224, k2=0.092, k3=0.047\n"}
+,{"stream_name":"stdout","time":853.284648907,"data":"12:06:09 probe layer 13: k1=0.232, k2=0.093, k3=0.052\n"}
+,{"stream_name":"stdout","time":882.417346605,"data":"12:06:38 probe layer 14: k1=0.246, k2=0.099, k3=0.052\n"}
+,{"stream_name":"stdout","time":911.585605487,"data":"12:07:07 probe layer 15: k1=0.261, k2=0.105, k3=0.050\n"}
+,{"stream_name":"stdout","time":940.747998379,"data":"12:07:37 probe layer 16: k1=0.267, k2=0.111, k3=0.053\n"}
+,{"stream_name":"stdout","time":969.883311182,"data":"12:08:06 probe layer 17: k1=0.290, k2=0.108, k3=0.063\n"}
+,{"stream_name":"stdout","time":999.023395041,"data":"12:08:35 probe layer 18: k1=0.338, k2=0.131, k3=0.065\n"}
+,{"stream_name":"stdout","time":1028.174798067,"data":"12:09:04 probe layer 19: k1=0.392, k2=0.152, k3=0.072\n"}
+,{"stream_name":"stdout","time":1057.318764705,"data":"12:09:33 probe layer 20: k1=0.497, k2=0.167, k3=0.074\n"}
+,{"stream_name":"stdout","time":1086.455750952,"data":"12:10:02 probe layer 21: k1=0.586, k2=0.183, k3=0.071\n"}
+,{"stream_name":"stdout","time":1115.655322404,"data":"12:10:31 probe layer 22: k1=0.689, k2=0.182, k3=0.069\n"}
+,{"stream_name":"stdout","time":1144.812514806,"data":"12:11:01 probe layer 23: k1=0.731, k2=0.188, k3=0.062\n"}
+,{"stream_name":"stdout","time":1173.944547972,"data":"12:11:30 probe layer 24: k1=0.770, k2=0.189, k3=0.063\n"}
+,{"stream_name":"stdout","time":1203.114662621,"data":"12:11:59 probe layer 25: k1=0.814, k2=0.198, k3=0.063\n"}
+,{"stream_name":"stdout","time":1232.262513118,"data":"12:12:28 probe layer 26: k1=0.857, k2=0.193, k3=0.061\n"}
+,{"stream_name":"stdout","time":1261.435488788,"data":"12:12:57 probe layer 27: k1=0.868, k2=0.200, k3=0.063\n"}
+,{"stream_name":"stdout","time":1290.546731866,"data":"12:13:26 probe layer 28: k1=0.868, k2=0.183, k3=0.058\n"}
+,{"stream_name":"stdout","time":1682.433506524,"data":"12:19:58 mean_all: tau=1.004 ci=[-2.5797897927118005, -2.223483125781176]\n"}
+,{"stream_name":"stdout","time":1809.727728978,"data":"12:22:06 mean_low: tau=3.171 ci=[-0.27404959302521814, -0.20290783254572464]\n"}
+,{"stream_name":"stdout","time":1939.13271848,"data":"12:24:15 mean_mid: tau=3.108 ci=[-0.3624832172018143, -0.23939992269364527]\n"}
+,{"stream_name":"stdout","time":2288.855669684,"data":"12:30:05 mean_high: tau=1.119 ci=[-2.4664373826282593, -2.1078457196594895]\n"}
+,{"stream_name":"stdout","time":2413.016869004,"data":"12:32:09 shift0_2to0: tau=3.250 ci=[-0.19462590711123812, -0.12387645988469963]\n"}
+,{"stream_name":"stdout","time":2531.899837506,"data":"12:34:08 shift0_2to1: tau=3.392 ci=[-0.04588918735133607, 0.017984073938601047]\n"}
+,{"stream_name":"stdout","time":2652.114000518,"data":"12:36:08 shift0_2to1_noscale: tau=3.364 ci=[-0.07715627178780511, -0.009461354137167779]\n"}
+,{"stream_name":"stdout","time":2771.226245786,"data":"12:38:07 shift0_2to3: tau=3.386 ci=[-0.05380908421909793, 0.01336991756695694]\n"}
+,{"stream_name":"stdout","time":2891.920597946,"data":"12:40:08 shift0_2to4: tau=3.344 ci=[-0.09575249602629662, -0.029392564088470956]\n"}
+,{"stream_name":"stdout","time":3013.880547204,"data":"12:42:10 shift0_2to6: tau=3.304 ci=[-0.1442139306858363, -0.06376877454279388]\n"}
+,{"stream_name":"stdout","time":3136.96575352,"data":"12:44:13 shift1_14to8: tau=3.275 ci=[-0.18407442691823184, -0.08158570051875032]\n"}
+,{"stream_name":"stdout","time":3258.975484383,"data":"12:46:15 shift1_14to11: tau=3.322 ci=[-0.12481269985273682, -0.042753895824705415]\n"}
+,{"stream_name":"stdout","time":3379.188258581,"data":"12:48:15 shift1_14to17: tau=3.359 ci=[-0.09580758514301832, 0.0014409166237883324]\n"}
+,{"stream_name":"stdout","time":3503.416623492,"data":"12:50:19 shift1_14to20: tau=3.269 ci=[-0.1908042465411247, -0.08571684669949989]\n"}
+,{"stream_name":"stdout","time":3661.793720651,"data":"12:52:58 shift2_25to20: tau=2.580 ci=[-0.9125880560232632, -0.742590465899916]\n"}
+,{"stream_name":"stdout","time":3801.760963417,"data":"12:55:18 shift2_25to22: tau=3.018 ci=[-0.4565103445626751, -0.3314647407855496]\n"}
+,{"stream_name":"stdout","time":3934.199492121,"data":"12:57:30 shift2_25to24: tau=3.321 ci=[-0.13055812340697143, -0.042630479183994395]\n"}
+,{"stream_name":"stdout","time":4076.752803732,"data":"12:59:53 shift2_25to26: tau=3.205 ci=[-0.2596340724447907, -0.14963807078631347]\n"}
+,{"stream_name":"stdout","time":4231.84507636,"data":"13:02:28 shift2_25to26_noscale: tau=2.928 ci=[-0.5559498447155187, -0.4098219493577026]\n"}
+,{"stream_name":"stdout","time":4388.945655769,"data":"13:05:05 shift2_25to27: tau=2.874 ci=[-0.6291321683911647, -0.44378954575908097]\n"}
+,{"stream_name":"stdout","time":4604.420398698,"data":"13:08:40 shift2_25to28: tau=2.026 ci=[-1.5227908257209295, -1.2371934359204138]\n"}
+,{"stream_name":"stdout","time":4796.870034281,"data":"13:11:53 shift2_25to28_noscale: tau=2.166 ci=[-1.3722983458115183, -1.1080569246060814]\n"}
+,{"stream_name":"stdout","time":5091.056808815,"data":"13:16:47 fc_rank128: tau=1.386 ci=[-2.172133856185469, -1.8736420674978391]\n"}
+,{"stream_name":"stdout","time":5299.43262494,"data":"13:20:15 fc_rank256: tau=1.948 ci=[-1.5711703957562044, -1.3505466039786314]\n"}
+,{"stream_name":"stdout","time":5448.995957667,"data":"13:22:45 fc_rank512: tau=2.728 ci=[-0.747153487991086, -0.6120231854470712]\n"}
+,{"stream_name":"stdout","time":5573.737568908,"data":"13:24:50 fc_rank1024: tau=3.292 ci=[-0.1696330490276979, -0.06266320297512909]\n"}
+,{"stream_name":"stdout","time":5573.73902496,"data":"13:24:50 phase A finished\n"}
+,{"stream_name":"stderr","time":5582.502123205,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":5582.502148885,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":5582.801221729,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":5582.801260852,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":5584.100117799,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":5584.218935114,"data":"[NbConvertApp] Writing 543957 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":5586.659405142,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":5587.476435517,"data":"[NbConvertApp] Support files will be in __results___files/\n"}
+,{"stream_name":"stderr","time":5587.476462945,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":5587.476779223,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":5587.476973793,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":5587.477301184,"data":"[NbConvertApp] Writing 550210 bytes to __results__.html\n"}
+]

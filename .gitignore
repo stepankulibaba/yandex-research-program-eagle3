@@ -74,7 +74,7 @@ docs/_build/
 
 # PyBuilder
 .pybuilder/
-target/
+extra-checks/target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -218,3 +218,19 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ---- EAGLE-3 experiments: heavy artifacts stay out of git
+models/
+extra-checks/target/
+extra-checks/zoo/
+data/
+EAGLE/
+.venv/
+logs/
+*.tgz
+*.zip
+*.safetensors
+*.bin
+*.pt
+!**/results/**/final_eval.pt
+!**/results/**/*.log
