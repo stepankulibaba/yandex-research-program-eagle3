@@ -20,7 +20,7 @@
 
 - В `code/` пути к `models/`, `data/`, `EAGLE/`, `results/` считаются от **родительской** папки: `ROOT = Path(__file__).resolve().parent.parent`, а `sys.path` указывает на `code/`. После переноса или добавления скриптов проверить, что `make_*.py` отрабатывают и пишут в `figures/`.
 - `layer-selection/router/code/run_dsl.sh` сначала делает `cd` в папку направления и вызывает `code/*.py`.
-- В `layer-selection/frozen/code` и `layer-selection/router/code` есть `original/` — код, на котором реально шли прогоны. Рядом — читаемая версия (у router проверена на совпадение результатов, у frozen сверка идёт). Править читаемую версию; `original/` не трогать (кроме путей).
+- В `layer-selection/frozen/code` и `layer-selection/router/code` есть `original/` — код, на котором реально шли прогоны. Рядом — читаемая версия, проверенная на совпадение результатов (побайтно). Править читаемую версию; `original/` не трогать (кроме путей).
 - `extra-checks/code/zoo_eval.py check|validate` используют модули из `layer-selection/frozen/code` и его папку моделей.
 
 ## Что нельзя коммитить (репозиторий публичный)
