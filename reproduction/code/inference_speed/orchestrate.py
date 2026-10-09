@@ -228,7 +228,15 @@ class Night:
         wanted = digest({'schema': SCHEMA, 'requirements': requirements, 'imports': import_check})
         marker = python.parent.parent / '.installed.json'
         if not python.exists():
-            self.command(name + '_venv', [sys.executable, '-m', 'venv', python.parent.parent], timeout=120)
+            try:
+                self.command(name + '_venv', [sys.executable, '-m', 'venv', python.parent.parent], timeout=120)
+            except subprocess.CalledProcessError:
+                # Some images (e.g. DataSphere) ship Python without ensurepip; `virtualenv` brings its own pip.
+                shutil.rmtree(python.parent.parent, ignore_errors=True)
+                self.command(name + '_virtualenv_install', [sys.executable, '-m', 'pip', 'install', '-q', 'virtualenv'],
+                             timeout=600)
+                self.command(name + '_virtualenv', [sys.executable, '-m', 'virtualenv', python.parent.parent],
+                             timeout=300)
         try:
             up_to_date = read_json(marker)['desired'] == wanted
         except (OSError, ValueError, KeyError):
