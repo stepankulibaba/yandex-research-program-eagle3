@@ -257,16 +257,9 @@ class Night:
         # checks). Without a CUDA toolkit it gets a stub nvcc that prints torch's CUDA version; nothing is compiled
         # (DS_BUILD_OPS=0, and the trainer uses torch's AdamW).
         deepspeed_env = dict(self.env, DS_BUILD_OPS='0')
-        if not shutil.which('nvcc'):
-            version = subprocess.check_output([str(self.py_original), '-c', 'import torch; print(torch.version.cuda)'],
-                                              text=True, timeout=30).strip()
-            stub = self.py_original.parent.parent / 'stub_cuda/bin/nvcc'
-            stub.parent.mkdir(parents=True, exist_ok=True)
-            stub.write_text(f'#!/bin/sh\necho "Cuda compilation tools, release {version}, V{version}.0"\n',
-                            encoding='utf-8')
-            stub.chmod(0o755)
-            deepspeed_env['CUDA_HOME'] = str(stub.parent.parent)
-            self.deepspeed_cuda_home = str(stub.parent.parent)
+        self.deepspeed_cuda_home = self.cuda_stub(self.py_original)
+        if self.deepspeed_cuda_home:
+            deepspeed_env['CUDA_HOME'] = self.deepspeed_cuda_home
         self.command('deepspeed_install', [self.py_original, '-m', 'pip', 'install', '--no-build-isolation',
                                            'deepspeed==0.16.4'], env=deepspeed_env, timeout=900)
         self.command('deepspeed_import', [self.py_original, '-c', 'import deepspeed; '
@@ -289,12 +282,54 @@ class Night:
                                          text=True, timeout=60)
         self.environment['nemo_env'] = {'commit': NEMO_COMMIT, 'freeze_sha256': digest(sorted(freeze.splitlines()))}
 
+    def cuda_stub(self, python):
+        """Without a CUDA toolkit: <venv>/stub_cuda/bin/nvcc that only prints the venv torch's CUDA version.
+
+        Some packages only *ask* nvcc for the version or *store* CUDA_HOME at import (DeepSpeed's op checks,
+        DeepGEMM's init) and compile nothing on our path. Returns the directory for CUDA_HOME, or None.
+        """
+        if shutil.which('nvcc'):
+            return None
+        version = subprocess.check_output([str(python), '-c', 'import torch; print(torch.version.cuda)'],
+                                          text=True, timeout=60).strip()
+        stub = python.parent.parent / 'stub_cuda/bin/nvcc'
+        stub.parent.mkdir(parents=True, exist_ok=True)
+        stub.write_text(f'#!/bin/sh\necho "Cuda compilation tools, release {version}, V{version}.0"\n',
+                        encoding='utf-8')
+        stub.chmod(0o755)
+        return str(stub.parent.parent)
+
+    def sglang_process_env(self):
+        """SGLang 0.5.9 initialises DeepGEMM on import even with SGLANG_ENABLE_JIT_DEEPGEMM=0, and DeepGEMM asserts
+        that CUDA_HOME exists (it stores the path; it compiles only for FP8 models, not for this fp16 run)."""
+        return {**self.env, 'CUDA_HOME': self.sglang_cuda_home} if self.sglang_cuda_home else self.env
+
     def setup_sglang_env(self):
         self.virtualenv(self.py_sglang, 'sglang_env', ['sglang[all]==0.5.9', 'requests', 'datasets'],
                         'import sglang, requests, datasets; assert sglang.__version__.split("+")[0]=="0.5.9"')
         # A dependency pulls the newest `kernels` (needs huggingface_hub>=1.10, transformers 4.57 pins <1.0);
         # transformers imports it when present and every SGLang server dies at start. Without it: fine.
         self.command('sglang_drop_kernels', [self.py_sglang, '-m', 'pip', 'uninstall', '-y', 'kernels'], timeout=120)
+        self.sglang_cuda_home = self.cuda_stub(self.py_sglang)
+        # Check the import chain the servers need (it pulls in DeepGEMM) once, here. If DeepGEMM still refuses,
+        # remove its own package (never sgl-kernel): SGLang then gets an ImportError and runs without it.
+        # A failure here only takes the SGLang stages down, not the night.
+        self.attempt('sglang_import', self.import_sglang)
+
+    def import_sglang(self):
+        check = [self.py_sglang, '-c', 'import sglang.srt.speculative.spec_utils']
+        try:
+            self.command('sglang_import_check', check, env=self.sglang_process_env(), timeout=300)
+            return
+        except subprocess.CalledProcessError:
+            pass
+        owner = subprocess.check_output([str(self.py_sglang), '-c',
+            'import importlib.metadata as m; print(" ".join(sorted({d.metadata["Name"] for d in m.distributions() '
+            'if any(str(f).startswith("deep_gemm/") for f in (d.files or []))})))'], text=True, timeout=120).strip()
+        if not owner or len(owner.split()) != 1 or 'gemm' not in owner.lower():
+            raise RuntimeError(f'SGLang import fails and deep_gemm belongs to {owner!r}; not removing it')
+        self.command('sglang_drop_deep_gemm', [self.py_sglang, '-m', 'pip', 'uninstall', '-y', owner], timeout=300)
+        self.command('sglang_import_check', check, env=self.sglang_process_env(), timeout=300)
 
     def setup_models(self, inference):
         """Target (always) and draft (for inference) at their pinned revisions."""
@@ -374,7 +409,8 @@ class Night:
         if tree:     # without the tree-sampling kernel SGLang silently verifies T=1 greedily
             self.command('tree_sampling_kernel', [self.py_sglang, '-c',
                 'from sglang.srt.speculative.spec_utils import TREE_SPEC_KERNEL_AVAILABLE; '
-                'assert TREE_SPEC_KERNEL_AVAILABLE, "T=1 would fall back to greedy"'], timeout=120)
+                'assert TREE_SPEC_KERNEL_AVAILABLE, "T=1 would fall back to greedy"'],
+                env=self.sglang_process_env(), timeout=300)
         # Triton attention and PyTorch sampling: kernels that need no CUDA toolkit (flashinfer may JIT-compile).
         cmd = [self.py_sglang, '-m', 'sglang.launch_server', '--model-path', self.model, '--dtype', 'float16',
                '--host', '127.0.0.1', '--port', str(port), '--mem-fraction-static', '0.8',
@@ -390,7 +426,7 @@ class Night:
         proc = None
         with log.open('w', encoding='utf-8') as stream:
             try:
-                proc = subprocess.Popen([str(x) for x in cmd], cwd=HERE, env=self.env, stdout=stream,
+                proc = subprocess.Popen([str(x) for x in cmd], cwd=HERE, env=self.sglang_process_env(), stdout=stream,
                                         stderr=subprocess.STDOUT, start_new_session=True)
                 self.wait_until_ready(proc, url, log, tree)
                 self.active_server_log = log
