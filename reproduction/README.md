@@ -10,7 +10,7 @@
 
 Всё считается на одной H200.
 
-Отчёт для чтения: [reports/eagle3_reproduction.pdf](reports/eagle3_reproduction.pdf) (промежуточный, без 3b и бюджета).
+Отчёт для чтения: [reports/eagle3_reproduction.pdf](reports/eagle3_reproduction.pdf) (промежуточный, без 3b и бюджета). Отдельно про профиль — почему ускорение ниже статьи: [reports/eagle3_profile.pdf](reports/eagle3_profile.pdf).
 
 ![3a: τ и ускорение](figures/fig1_3a_tau_speedup.png)
 
