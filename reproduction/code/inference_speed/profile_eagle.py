@@ -98,6 +98,8 @@ def main():
     parser.add_argument('--bench', default='mt_bench')
     parser.add_argument('--questions', type=int, default=5)
     parser.add_argument('--out', default='../results/main/profile')
+    parser.add_argument('--profile-tokens', type=int, default=128,
+                        help='answer length under torch.profiler: a full 512-token answer makes a ~2 GB trace')
     args = parser.parse_args()
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -119,11 +121,11 @@ def main():
         text = tok.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         prompts.append(torch.as_tensor(tok([text], add_special_tokens=False).input_ids).cuda())
 
-    def eagle(ids):
-        return model.eagenerate(ids, temperature=0.0, log=True, is_llama3=True)
+    def eagle(ids, max_new_tokens=512):
+        return model.eagenerate(ids, temperature=0.0, log=True, is_llama3=True, max_new_tokens=max_new_tokens)
 
-    def plain(ids):
-        return model.naivegenerate(ids, temperature=0.0, log=True, is_llama3=True)
+    def plain(ids, max_new_tokens=512):
+        return model.naivegenerate(ids, temperature=0.0, log=True, is_llama3=True, max_new_tokens=max_new_tokens)
 
     with torch.no_grad():
         for _ in range(2):                      # warm-up, as the authors do
@@ -228,7 +230,7 @@ def main():
             try:
                 with torch.profiler.profile(activities=activities) as prof:
                     t0 = sync_time()
-                    _, new_token, idx = fn(prompts[0])
+                    _, new_token, idx = fn(prompts[0], max_new_tokens=args.profile_tokens)
                     wall = sync_time() - t0
             finally:
                 for n, f in originals.items():

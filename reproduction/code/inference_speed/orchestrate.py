@@ -718,7 +718,7 @@ class Night:
         """Where the time of an EAGLE round goes on this GPU (profile_eagle.py), and its pictures."""
         out = self.results / 'profile'
         self.command('profile', [self.py_eagle, HERE / 'profile_eagle.py', '--model', self.model, '--draft', self.draft,
-                                 '--out', out], cwd=HERE / 'EAGLE', timeout=3600)
+                                 '--out', out], cwd=HERE / 'EAGLE', timeout=7200)
         self.command('profile_plots', [self.py_eagle, HERE / 'plot_profile.py', out], timeout=1800)
 
     def run(self):
