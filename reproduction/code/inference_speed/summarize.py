@@ -10,7 +10,10 @@ Authors' code (3a), computed like the authors' evaluation/speed.py:
     tau      = generated tokens / verification rounds, with idx + 1 rounds per turn
 SGLang (3b), same questions over HTTP:
     speed-up = mean tokens/s with the EAGLE-3 server / mean tokens/s with the plain server, same seed
-    two tau-like counters: accepted draft tokens per round + 1, and generated tokens per round
+    tau      = (generated tokens - 1) / verification rounds, per turn summed: SGLang emits the first token at
+               prefill, then each round emits its accepted draft tokens + 1, exactly as a round of the authors'
+               code. Diagnostics: SGLang's accepted-draft counter + 1 (it can include a tail cut at a stop token)
+               and generated tokens / rounds (it includes the prefill token).
 """
 import json
 from pathlib import Path
@@ -59,10 +62,11 @@ def sglang_speed(path):
     steps = [t.get('steps') for t in turns]
     accepted = [t.get('accepted_draft_tokens') for t in turns]
     rounds = sum(steps) if all(s is not None for s in steps) else None
+    tau = sum(t['tokens'] - 1 for t in turns) / rounds if rounds else None
     tokens_per_round = sum(t['tokens'] for t in turns) / rounds if rounds else None
     accepted_per_round = ((sum(accepted) / rounds + 1)
                           if rounds and all(a is not None for a in accepted) else None)
-    return {'tok_s': mean(speeds), 'completion_over_verify': tokens_per_round,
+    return {'tok_s': mean(speeds), 'tau': tau, 'completion_over_verify': tokens_per_round,
             'verification_tokens_per_round': accepted_per_round, 'verification_rounds': rounds,
             'zero_round_turns': sum(s == 0 for s in steps), 'questions': len(rows), 'timing': 'http_round_trip'}
 
@@ -104,12 +108,14 @@ def main(model_dir, output='results/main'):
              'Authors\' code: unchanged official scripts, their speed-up and tau. Tree: 60 tokens, --depth 7',
              '(draft length 8), top-k 10 — depth 8 of the EAGLE-3 paper.',
              'SGLang: HTTP round-trip time, at most 512 new / 1979 total tokens per turn, no prefix cache.',
+             'SGLang tau = (generated - 1) / rounds, the same count as the authors\' tau. Compare speed-ups,',
+             'not absolute tokens/s, between the two (HTTP vs CUDA timer).',
              'paper_8_10_60 has the same budget as the authors\' tree (not necessarily the same candidates);',
              'eagle2_6_10_60 is the EAGLE-2 tree.', '']
     for temperature in ('0', '1'):
         lines += [f'## T={temperature}', '',
                   '| benchmark | paper speed-up / τ | authors\' code speed-up / τ | SGLang config | SGLang speed-up '
-                  '| accepted per round + 1 | generated per round | T=1 seeds: speed-up mean ± sd |',
+                  '| SGLang τ | accepted + 1 (diagnostic) | T=1 seeds: speed-up mean ± sd |',
                   '|---|---|---|---|---|---|---|---|']
         prefix = '' if temperature == '0' else 't1_'
         configs = SGLANG_TREES_T0 if temperature == '0' else SGLANG_TREES_T1
@@ -142,8 +148,8 @@ def main(model_dir, output='results/main'):
                           f"(n={len(repeats)})" if len(repeats) > 1 else '—')
                 lines.append(f"| {bench} | {paper_speedup:.2f} / {paper_tau:.2f} | {author_text} | {config} | "
                              f"{fmt(first['speedup']) if first else 'incomplete'} | "
-                             f"{fmt(first['verification_tokens_per_round']) if first else '—'} | "
-                             f"{fmt(first['completion_over_verify']) if first else '—'} | {spread} |")
+                             f"{fmt(first['tau']) if first else '—'} | "
+                             f"{fmt(first['verification_tokens_per_round']) if first else '—'} | {spread} |")
             per_bench[bench] = r
         summary['T=' + temperature] = per_bench
         lines.append('')

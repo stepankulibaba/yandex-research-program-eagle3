@@ -4,15 +4,17 @@
                      [--gpu-hours 100] [--overhead-hours 10] [--already-regenerated] [--out results/main/budget.md]
 
 For every measured trainer and number of epochs:
-    regeneration h = sum over source and length group: dialogues x measured seconds per dialogue / 3600
+    regeneration h = sum over split and length group: dialogues x measured seconds per dialogue / 3600
     h per epoch    = training tokens per epoch / the trainer's measured tokens/s / 3600
     total h        = reserve + regeneration + epochs x h per epoch
     data share     = which fraction of the corpus fits the budget (regeneration shrinks with it, unless
                      --already-regenerated: then it is paid in full first)
 A sensitivity range (x0.75 .. x1.5 of the measured cost) is shown; it is not a confidence interval.
 
-Inputs are pilots: dialogue counts (68K ShareGPT, 464K UltraChat) are the paper's, the group weights come from a
-bounded scan, and the trainer speed was measured on another corpus with the matched (padded) protocol.
+Inputs are pilots: dialogue counts are 68K ShareGPT (the paper's) and the real UltraChat-200K train splits (208K +
+256K = the paper's 464K); group weights come from a bounded scan of each split; the regeneration policy is ours
+(the paper gives none); trainer speeds were measured on another corpus. Use the "as-is" and packed NeMo rows for
+realistic costs: the matched rows pad every example to 2048 tokens on purpose.
 """
 import argparse
 from pathlib import Path
@@ -38,11 +40,11 @@ def estimate(probe, tokens_per_second):
     """
     regen_seconds = epoch_tokens = 0.0
     for source in probe['sources'].values():
-        dialogues = source['paper_assumed_dialogues']
-        for group in source['groups'].values():
-            count = dialogues * group['weight']
-            regen_seconds += count * group['seconds_per_dialogue']
-            epoch_tokens += count * group['mean_training_tokens']
+        for split in source['splits'].values():
+            for group in split['groups'].values():
+                count = split['dialogues'] * group['weight']
+                regen_seconds += count * group['seconds_per_dialogue']
+                epoch_tokens += count * group['mean_training_tokens']
     positive(tokens_per_second, 'training throughput')
     return regen_seconds / 3600, epoch_tokens / tokens_per_second / 3600, epoch_tokens
 
@@ -72,14 +74,17 @@ def main():
 
     lines = ['# Preliminary GPU-hour scenarios', '',
              f'**This pilot does not establish that {args.gpu_hours:g} GPU-hours suffice for full paper reproduction.**',
-             'Regeneration: both corpora, all assistant turns, the shared system prompt and 1900-token length policy.',
-             f'Sampling: {probe["sampling"]}. Dialogue counts (68K/464K) are the paper\'s, not measured sizes.',
+             'Regeneration (our policy; the paper gives none): all assistant turns, greedy, the authors\' system',
+             'prompt, <=512 tokens per turn, <=1900 per example; dialogues that do not fit are dropped.',
+             f'Sampling: {probe["sampling"]}. Dialogues: ShareGPT 68K (paper), UltraChat 208K + 256K (real splits).',
              f'Reserve: {args.overhead_hours:g} GPU-hours for evaluation, checkpoints and retries.',
              f'Sensitivity: {args.fast_factor:g}x to {args.slow_factor:g}x of the measured cost; NOT a confidence interval.',
-             'Trainer speed: matched BF16 protocol on another corpus; padding/packing effects carry over as an assumption.',
+             'Trainer speed: measured on another corpus. Realistic rows: author-as-is and packed NeMo; matched rows',
+             'pad every example to 2048 tokens on purpose and overstate the cost.',
              'Regeneration is paid once. --already-regenerated counts it in full before training.', '',
-             '| trainer | regen h | h/epoch | epochs | central total h | sensitivity total h | data share (central / slow) |',
-             '|---|---|---|---|---|---|---|']
+             '| trainer | protocol | regen h | h/epoch | epochs | central total h | sensitivity total h '
+             '| data share (central / slow) |',
+             '|---|---|---|---|---|---|---|---|']
     rows = []
     for run in summary['runs']:
         result_path = Path(args.training).parent / (run['name'] + '.speed.json')
@@ -100,7 +105,7 @@ def main():
             rows.append({'run': run['name'], 'epochs': epochs, 'regen_h': regen, 'epoch_h': h_epoch,
                          'central_h': total, 'sensitivity_h': [low, high], 'data_share': share,
                          'slow_scenario_share': slow_share})
-            lines.append(f"| {run['name']} | {regen:.2f} | {h_epoch:.2f} | {epochs} | {total:.2f} | "
+            lines.append(f"| {run['name']} | {measured['protocol']} | {regen:.2f} | {h_epoch:.2f} | {epochs} | {total:.2f} | "
                          f"{low:.2f}–{high:.2f} | {share:.1%} / {slow_share:.1%} |")
 
     first = summary['runs'][0]

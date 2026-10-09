@@ -38,8 +38,12 @@ MODELS = {
     'draft': ('yuhuili/EAGLE3-LLaMA3.1-Instruct-8B', 'ada412b672e293d682423de84a095447bf38a637'),
 }
 
-# Training-speed protocol name, written into every training result.
+# Training-speed protocols, written into every training result:
+#   matched  both trainers on identical work (bf16, rows padded to 2048, no checkpointing, constant lr)
+#   as-is    the authors' trainer with its own settings (fp16, checkpointing, no padding, its lr schedule)
 TRAINING_PROTOCOL = 'matched-bf16-fixed2048-v1'
+AUTHOR_AS_IS_PROTOCOL = 'author-as-is-fp16-v1'
+TRAINING_PROTOCOLS = (TRAINING_PROTOCOL, AUTHOR_AS_IS_PROTOCOL)
 
 
 # --------------------------------------------------------------------------------------------------------------------
@@ -172,7 +176,7 @@ def validate_answers(path, expected, kind):
 def validate_speed(path):
     """Check a training-speed result written by training_common.SpeedWindow."""
     r = read_json(path)
-    if r.get('schema') != SCHEMA or r.get('protocol') != TRAINING_PROTOCOL:
+    if r.get('schema') != SCHEMA or r.get('protocol') not in TRAINING_PROTOCOLS:
         raise ValueError('Unknown training protocol')
     for key in ('seconds', 'optimizer_steps', 'nonpad_tokens', 'padded_tokens', 'supervised_tokens'):
         positive(r[key], key)

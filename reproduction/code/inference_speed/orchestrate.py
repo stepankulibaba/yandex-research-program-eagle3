@@ -34,7 +34,7 @@ import time
 import urllib.request
 
 from common import (BENCHES, EAGLE_COMMIT, MODELS, NEMO_COMMIT, SCHEMA, atomic_json, atomic_text, digest,
-                    file_hash, finish, finished, questions, read_json, run_process, terminate_owned,
+                    done_path, file_hash, finish, finished, questions, read_json, run_process, terminate_owned,
                     validate_answers, validate_speed)
 
 HERE = Path(__file__).resolve().parent                 # .../inference_speed
@@ -154,6 +154,9 @@ class Night:
         if finished(path, manifest, validator):
             self.status(name, 'REUSED')
             return
+        if self.adopt_earlier_result(path, manifest, validator):
+            self.status(name, 'ADOPTED')
+            return
         if path.exists():       # an unfinished leftover is kept aside, never deleted
             os.replace(path, path.with_name(path.name + '.previous.' + str(time.time_ns())))
         try:
@@ -167,6 +170,34 @@ class Night:
         except BaseException as exc:
             self.status(name, 'FAILED', reason=f'{type(exc).__name__}: {exc}')
             raise
+
+    # Settings that must be identical for an earlier result to be adopted (see adopt_earlier_result).
+    ADOPT_KEYS = ('stage', 'protocol', 'temperature', 'tree', 'models', 'eagle', 'count', 'hardware')
+
+    def adopt_earlier_result(self, path, manifest, validator):
+        """Accept a 3a result finished by the previous code version (other marker format, SCHEMA 3).
+
+        Only for the authors' benchmarks (their scripts are unchanged), and only if the result file is intact, is
+        complete, and was made with the same settings, model revisions, hardware and the same installed packages
+        of the eval environment. The result is then re-marked in the current format; nothing is recomputed.
+        """
+        if manifest.get('protocol') != 'unchanged-author' or not path.exists():
+            return False
+        try:
+            earlier = read_json(done_path(path))
+            old = json.loads(json.dumps(earlier['manifest']))
+            new = json.loads(json.dumps(manifest))
+            same = (earlier['sha256'] == file_hash(path)
+                    and all(old.get(k) == new.get(k) for k in self.ADOPT_KEYS)
+                    and old['environment']['eagle_env']['freeze_sha256']
+                    == new['environment']['eagle_env']['freeze_sha256'])
+            if not same:
+                return False
+            validator(path)
+        except (OSError, ValueError, KeyError, TypeError):
+            return False
+        finish(path, manifest, validator)       # status ADOPTED in stages.json records where it came from
+        return True
 
     # ================================================================================================================
     # Setup: pinned code, four environments, models
@@ -347,7 +378,8 @@ class Night:
         # Triton attention and PyTorch sampling: kernels that need no CUDA toolkit (flashinfer may JIT-compile).
         cmd = [self.py_sglang, '-m', 'sglang.launch_server', '--model-path', self.model, '--dtype', 'float16',
                '--host', '127.0.0.1', '--port', str(port), '--mem-fraction-static', '0.8',
-               '--attention-backend', 'triton', '--sampling-backend', 'pytorch', '--disable-radix-cache']
+               '--attention-backend', 'triton', '--sampling-backend', 'pytorch', '--disable-radix-cache',
+               '--random-seed', '0']     # tree verification at T=1 uses the server's global RNG
         if tree:
             steps, topk, tokens = tree
             cmd += ['--speculative-algorithm', 'EAGLE3', '--speculative-draft-model-path', self.draft,
@@ -408,7 +440,7 @@ class Night:
                     for bench in BENCHES:
                         path = self.results / 'sglang' / f'{prefix}_{bench}.json'
                         expected = questions(HERE / 'EAGLE', bench, self.questions_per_bench)
-                        settings = {'protocol': 'bounded-http-no-prefix-cache', 'tree': tree,
+                        settings = {'protocol': 'bounded-http-no-prefix-cache-v2', 'tree': tree,
                                     'temperature': temperature, 'seed': seed}
                         manifest = {**self.base_manifest, 'stage': prefix + '_' + bench, **settings}
                         validator = lambda p, e=expected: validate_answers(p, e, 'sglang')
@@ -459,7 +491,8 @@ class Night:
                            'N': self.train_examples, 'warmup': self.warmup_steps,
                            'protocol': 'matched-bf16-fixed2048-v1'}
         if not variants:
-            self.original_trainer(data, common_settings)
+            self.original_trainer(data, common_settings, 'matched')
+            self.original_trainer(data, common_settings, 'asis')
         runs = [('nemo_eager_nopack', 'eager', 0, None)] if not variants else [
             ('nemo_eager_pack', 'eager', 2048, None),
             ('nemo_fa2_pack', 'flash_attention_2', 2048, None),
@@ -471,19 +504,26 @@ class Night:
         for name, attention, packing, extra in runs:
             self.nemo_trainer(data, common_settings, name, attention, packing, extra, has_fa2)
 
-    def original_trainer(self, data, common_settings):
-        """The authors' traineagle3/main.py, adapted for timing by ../nemo_speed/patch_original.py."""
-        work = self.train_out / 'work/original'
-        out = self.train_out / 'original.speed.json'
-        settings = {**common_settings, 'backend': 'original', 'batch': [1, 2], 'packing': 0}
-        if not finished(out, {**self.base_manifest, 'stage': 'train_original', **settings}, validate_speed):
-            self.attempt('patch_original', self.command, 'patch_original',
+    def original_trainer(self, data, common_settings, mode):
+        """The authors' traineagle3/main.py, prepared by ../nemo_speed/patch_original.py.
+
+        mode='matched': the same work as the NeMo runs (bf16, rows padded to 2048, no checkpointing).
+        mode='asis':    the authors' own settings (fp16, checkpointing, no padding, their lr schedule).
+        """
+        name = 'original' if mode == 'matched' else 'original_asis'
+        work = self.train_out / 'work' / name
+        out = self.train_out / (name + '.speed.json')
+        settings = {**common_settings, 'backend': 'original', 'batch': [1, 2], 'packing': 0, 'mode': mode}
+        if mode == 'asis':
+            settings['protocol'] = 'author-as-is-fp16-v1'
+        if not finished(out, {**self.base_manifest, 'stage': 'train_' + name, **settings}, validate_speed):
+            self.attempt('patch_' + name, self.command, 'patch_' + name,
                          [self.py_original, TRAIN_DIR / 'patch_original.py', HERE / 'EAGLE', str(self.warmup_steps),
-                          work], timeout=60)
+                          work, mode], timeout=60)
         env = {**self.env, 'SHARED_MAPPING': str(data / 'selected_tokens.json'), 'SPEED_OUTPUT': str(out)}
         if self.deepspeed_cuda_home:
             env['CUDA_HOME'] = self.deepspeed_cuda_home
-        self.attempt('train_original', self.produce, 'train_original', out, settings, validate_speed,
+        self.attempt('train_' + name, self.produce, 'train_' + name, out, settings, validate_speed,
                      [self.py_original, '-m', 'deepspeed.launcher.runner', '--num_gpus', '1', 'main.py',
                       '--deepspeed_config', 'ds_config.json', '--basepath', self.model,
                       '--trainpath', data / 'canonical.jsonl', '--testpath', data / 'test_canonical.jsonl',
@@ -532,7 +572,7 @@ class Night:
     def regeneration_probe(self):
         from regen_probe import validate_probe
         path = self.results / 'regen_probe.json'
-        settings = {'protocol': 'stratified-multiturn-fixed1900-v1',
+        settings = {'protocol': 'stratified-multiturn-fixed1900-v2',
                     'samples_per_bucket': 2 if self.smoke else 64,
                     'scan_limit': 64 if self.smoke else 8192,
                     'concurrency': 8 if self.smoke else 64}

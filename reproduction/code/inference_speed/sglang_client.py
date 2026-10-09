@@ -4,7 +4,9 @@
     env: MAX_Q (questions, default 80), SPECULATIVE=1 for an EAGLE-3 server, SAMPLING_SEED
 
 Mirrors the authors' eval script: the same system prompt and chat template, every turn of the question (the
-answer to turn 1 goes into the context of turn 2), at most 512 new tokens per turn, stop on eos / <|eot_id|>.
+answer to turn 1 goes into the context of turn 2), at most 512 new tokens per turn, stop on eos / <|eot_id|>,
+warm-up = the first question with all its turns, three times. (SGLang additionally always stops on the eos list of
+the model's generation_config; for this model those extra ids are practically never generated.)
 Per turn it stores the time of the HTTP round trip, the generated tokens and, for EAGLE-3, the number of
 verification rounds and of accepted draft tokens.
 """
@@ -13,19 +15,15 @@ from pathlib import Path
 import sys
 import time
 
-from common import SYSTEM, atomic_json, digest, questions, read_json, validate_answers
+from common import SYSTEM, atomic_json, digest, questions, validate_answers
 
 MAX_NEW_TOKENS = 512
 MAX_CONTEXT = 1979      # prompt + answer budget per turn; a longer prompt is an error, never silently truncated
 
 
-def stop_ids(tok, model_dir):
-    """eos, <|eot_id|> and whatever generation_config.json lists."""
+def stop_ids(tok, model_dir=None):
+    """The authors' stop tokens: the tokenizer's eos and <|eot_id|> (the same id for this model)."""
     ids = {tok.eos_token_id, tok.convert_tokens_to_ids('<|eot_id|>')}
-    config = Path(model_dir) / 'generation_config.json'
-    if config.exists():
-        eos = read_json(config).get('eos_token_id', [])
-        ids.update(eos if isinstance(eos, list) else [eos])
     return sorted(i for i in ids if isinstance(i, int) and i >= 0 and i != tok.unk_token_id)
 
 
@@ -76,25 +74,22 @@ def main(server, model_dir, bench, out_path, temperature='0'):
     speculative = os.environ.get('SPECULATIVE', '0') == '1'
     seed = int(os.environ.get('SAMPLING_SEED', '0'))
 
-    def ask(messages):
-        ids = tok.apply_chat_template(messages, tokenize=True, add_generation_prompt=True)
-        return generate(server, ids, temperature, stops=stops, seed=seed, speculative=speculative)
-
-    warm_up = [{'role': 'system', 'content': SYSTEM}, {'role': 'user', 'content': expected[0]['turns'][0]}]
-    for _ in range(3):
-        ask(warm_up)
-
-    rows = []
-    for question in expected:
+    def answer(question):
+        """All turns of one question; each answer goes into the context of the next turn."""
         messages = [{'role': 'system', 'content': SYSTEM}]
         turns = []
         for user_turn in question['turns']:
             messages.append({'role': 'user', 'content': user_turn})
-            turn = ask(messages)
+            ids = tok.apply_chat_template(messages, tokenize=True, add_generation_prompt=True)
+            turn = generate(server, ids, temperature, stops=stops, seed=seed, speculative=speculative)
             turn['clean_text'] = clean_text(turn['text'], tok)
             turns.append(turn)
             messages.append({'role': 'assistant', 'content': turn['clean_text']})
-        rows.append({'question_id': question['question_id'], 'turns': turns})
+        return turns
+
+    for _ in range(3):                  # warm-up, as the authors: the first question, all turns
+        answer(expected[0])
+    rows = [{'question_id': q['question_id'], 'turns': answer(q)} for q in expected]
     atomic_json(out_path, rows)
     validate_answers(out_path, expected, 'sglang')
     print(f'{bench}: {len(rows)} complete questions; HTTP latency; seed={seed}', flush=True)

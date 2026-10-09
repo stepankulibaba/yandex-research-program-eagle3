@@ -86,9 +86,10 @@ class SpeedWindow:
     after_step() after every optimizer step. The GPU is synchronised only at the start and the end of the window.
     """
 
-    def __init__(self, warmup, expected_steps, framework, config):
+    def __init__(self, warmup, expected_steps, framework, config, protocol=TRAINING_PROTOCOL):
         if warmup < 0 or expected_steps <= warmup:
             raise ValueError('Not enough optimizer steps after warm-up')
+        self.protocol = protocol
         self.warmup, self.expected_steps = warmup, expected_steps
         self.framework, self.config = framework, config
         self.start = self.end = None
@@ -125,7 +126,7 @@ class SpeedWindow:
     def result(self, torch):
         if self.start is None or self.end is None or not self.finite_loss:
             raise ValueError('Incomplete timing window or nonfinite loss')
-        return {'schema': SCHEMA, 'protocol': TRAINING_PROTOCOL, 'framework': self.framework,
+        return {'schema': SCHEMA, 'protocol': self.protocol, 'framework': self.framework,
                 'complete': True, 'finite_loss': True, 'seconds': self.end - self.start,
                 'optimizer_steps': self.steps, 'warmup_optimizer_steps': self.warmup,
                 'nonpad_tokens': self.nonpad, 'padded_tokens': self.padded, 'supervised_tokens': self.supervised,

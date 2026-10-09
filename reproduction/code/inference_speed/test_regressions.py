@@ -21,8 +21,8 @@ from common import (atomic_json, atomic_text, finish, finished, run_process, val
 from training_common import SpeedWindow
 from download import validate_files
 from summarize import eagle_repo, sglang_speed
-from budget import data_share
-from patch_original import adapt_main
+from budget import data_share, estimate
+from patch_original import adapt_cnets, adapt_main
 from prepare_data import selected_vocab
 from sglang_client import generate
 
@@ -86,6 +86,7 @@ class Tests(unittest.TestCase):
         self.assertEqual(r['verification_tokens_per_round'], 3)
         self.assertEqual(r['completion_over_verify'], 4)
         self.assertEqual(r['zero_round_turns'], 1)
+        self.assertEqual(r['tau'], 3)          # (7 - 1 + 1 - 1) generated after prefill / 2 rounds
 
     def test_empty_partial_download_rejected(self):
         atomic_json(self.path / 'config.json', {})
@@ -143,6 +144,31 @@ class Tests(unittest.TestCase):
         self.assertIn('shuffle=False)', patched)
         with self.assertRaises(ValueError):
             adapt_main(source.replace('"num_epochs": 40,', '"num_epochs": 39,'), 20)
+        as_is = adapt_main(source, 20, 'asis')
+        ast.parse(as_is)
+        self.assertIn('model.zero_grad()', as_is)                       # the authors' loop is kept
+        self.assertNotIn('max_length = 2048', as_is)                    # no padding to 2048
+        self.assertIn('"gradient_checkpoint": True', as_is)
+        self.assertIn("protocol='author-as-is-fp16-v1'", as_is)
+
+    def test_trainer_dict_access_bug_fixed(self):
+        pinned = '\n'.join(['gradient_checkpointing = self.train_config.gradient_checkpointing',
+                            'if len(input_ids) > self.train_config.max_len:',
+                            '    x = AutoModel.from_pretrained(path, torch_dtype=torch.float16)', ''])
+        fixed = adapt_cnets(pinned, 'asis')
+        self.assertIn('self.train_config["gradient_checkpoint"]', fixed)
+        self.assertIn('self.train_config["max_len"]', fixed)
+        self.assertIn('torch.float16', fixed)
+        self.assertIn('torch.bfloat16', adapt_cnets(pinned, 'matched'))
+
+    def test_budget_weights_each_split(self):
+        group = lambda w, sec, tok: {'weight': w, 'seconds_per_dialogue': sec, 'mean_training_tokens': tok}
+        probe = {'sources': {'ultrachat': {'splits': {
+            'train_sft': {'dialogues': 100, 'groups': {'a': group(1.0, 3600, 10)}},
+            'train_gen': {'dialogues': 300, 'groups': {'a': group(0.5, 3600, 0), 'b': group(0.5, 7200, 20)}}}}}}
+        regen_h, h_epoch, tokens = estimate(probe, 1.0)
+        self.assertAlmostEqual(regen_h, 100 + 150 + 300)
+        self.assertAlmostEqual(tokens, 100 * 10 + 150 * 20)
 
     def test_sglang_sampling_contract(self):
         out = {'text': 'answer', 'meta_info': {'completion_tokens': 5, 'spec_verify_ct': 2,
