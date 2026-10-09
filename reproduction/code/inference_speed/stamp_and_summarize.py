@@ -41,18 +41,22 @@ def summary(directory='artifacts/main'):
     if len({(r['manifest']['data'], r['manifest']['mapping'], r['warmup_optimizer_steps']) for r in runs}) != 1:
         raise ValueError('Training cohort mismatch')
 
-    lines = ['# Training step speed (matched BF16 protocol)', '',
-             'Both trainers get the same tokenized examples, masks and 32K vocabulary.',
-             'Common: 2048-token rows, eager target, BF16, constant LR, TTT=7, no activation checkpointing.',
+    lines = ['# Training step speed', '',
+             'All runs get the same tokenized examples, masks and 32K vocabulary, TTT=7.',
+             'matched: 2048-token rows, eager target, BF16, constant LR, no checkpointing (identical work).',
+             'author-as-is: the authors\' trainer with its own settings (fp16, checkpointing, no padding, its lr schedule).',
+             'The trainers still differ in loss details, draft RoPE config, optimizer precision and library versions:',
+             'this compares the speed of two software stacks, not identical training.',
              'Not timed: preprocessing, evaluation, checkpoints.',
              'Packing changes what a row holds; mb4 makes an optimizer step 4 rows instead of 2.',
              'flash-attn 2 applies to the draft only; the target attention stays eager.', '',
-             '| run | draft attention | batch × accumulation | packing | ms / optimizer step | documents/s '
+             '| run | protocol | draft attention | batch × accumulation | packing | ms / optimizer step | documents/s '
              '| non-pad tok/s | padded tok/s | supervised tok/s | peak allocated / reserved GiB | measured steps |',
-             '|---|---|---|---|---|---|---|---|---|---|---|']
+             '|---|---|---|---|---|---|---|---|---|---|---|---|']
     for r in runs:
         c = r['config']
-        lines.append(f"| {r['name']} | {c['draft_attention']} | {c['micro_batch']} × {c['accumulation']} | "
+        lines.append(f"| {r['name']} | {r['protocol']} | {c['draft_attention']} | "
+                     f"{c['micro_batch']} × {c['accumulation']} | "
                      f"{c['packing']} | {r['optimizer_ms']:.2f} | {r['documents_per_s']:.3f} | "
                      f"{r['nonpad_tokens_per_s']:.1f} | {r['padded_tokens_per_s']:.1f} | "
                      f"{r['supervised_tokens_per_s']:.1f} | {r['peak_allocated_gb']:.2f} / "
