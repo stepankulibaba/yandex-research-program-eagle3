@@ -179,22 +179,32 @@ class Night:
     ADOPT_KEYS = ('stage', 'protocol', 'temperature', 'tree', 'models', 'eagle', 'count', 'hardware')
 
     def adopt_earlier_result(self, path, manifest, validator):
-        """Accept a 3a result finished by the previous code version (other marker format, SCHEMA 3).
+        """Accept a finished result whose marker no longer matches exactly; it is re-marked, nothing recomputed.
 
-        Only for the authors' benchmarks (their scripts are unchanged), and only if the result file is intact, is
-        complete, and was made with the same settings, model revisions, hardware and the same installed packages
-        of the eval environment. The result is then re-marked in the current format; nothing is recomputed.
+        Two cases, both only for an intact, complete result file:
+        - a 3a result of the previous code version (SCHEMA 3): same settings, model revisions, hardware and the
+          same installed packages of the eval environment;
+        - with REUSE_IGNORE_ENV=1, any result of this version whose settings are identical except the package
+          lists of the environments (e.g. after installing matplotlib for the profile pictures). Use it only when
+          the changed packages cannot affect the measurement.
         """
-        if manifest.get('protocol') != 'unchanged-author' or not path.exists():
+        if not path.exists():
             return False
         try:
             earlier = read_json(done_path(path))
+            if earlier['sha256'] != file_hash(path):
+                return False
             old = json.loads(json.dumps(earlier['manifest']))
             new = json.loads(json.dumps(manifest))
-            same = (earlier['sha256'] == file_hash(path)
-                    and all(old.get(k) == new.get(k) for k in self.ADOPT_KEYS)
-                    and old['environment']['eagle_env']['freeze_sha256']
-                    == new['environment']['eagle_env']['freeze_sha256'])
+            if os.environ.get('REUSE_IGNORE_ENV', '0') == '1' and earlier.get('schema') == SCHEMA:
+                without_env = lambda m: {k: v for k, v in m.items() if k != 'environment'}
+                same = without_env(old) == without_env(new)
+            elif manifest.get('protocol') == 'unchanged-author' and earlier.get('schema') != SCHEMA:
+                same = (all(old.get(k) == new.get(k) for k in self.ADOPT_KEYS)
+                        and old['environment']['eagle_env']['freeze_sha256']
+                        == new['environment']['eagle_env']['freeze_sha256'])
+            else:
+                return False
             if not same:
                 return False
             validator(path)
