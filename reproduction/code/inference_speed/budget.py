@@ -1,10 +1,26 @@
-"""Dimensionally checked pilot scenarios, with explicit reserve and cache policy."""
+"""Task 5: GPU hours to rebuild the paper's training data and train the draft, compared with a budget (100 h).
+
+    python budget.py --probe results/main/regen_probe.json --training ../nemo_speed/artifacts/main/summary.json
+                     [--gpu-hours 100] [--overhead-hours 10] [--already-regenerated] [--out results/main/budget.md]
+
+For every measured trainer and number of epochs:
+    regeneration h = sum over source and length group: dialogues x measured seconds per dialogue / 3600
+    h per epoch    = training tokens per epoch / the trainer's measured tokens/s / 3600
+    total h        = reserve + regeneration + epochs x h per epoch
+    data share     = which fraction of the corpus fits the budget (regeneration shrinks with it, unless
+                     --already-regenerated: then it is paid in full first)
+A sensitivity range (x0.75 .. x1.5 of the measured cost) is shown; it is not a confidence interval.
+
+Inputs are pilots: dialogue counts (68K ShareGPT, 464K UltraChat) are the paper's, the group weights come from a
+bounded scan, and the trainer speed was measured on another corpus with the matched (padded) protocol.
+"""
 import argparse
 from pathlib import Path
-from runtime import atomic_json, atomic_text, positive, read_json, validate_speed, verified_artifact
+
+from common import atomic_json, atomic_text, positive, read_json, validate_speed, verified_artifact
 from regen_probe import validate_probe
 
-EPOCHS = (1, 2, 5, 10, 20, 40)
+EPOCHS = (1, 2, 5, 10, 20, 40)      # the authors' trainer is configured for 40
 
 
 def data_share(budget, regen, epoch_cost, epochs, overhead=0, already_regenerated=False):
@@ -14,18 +30,21 @@ def data_share(budget, regen, epoch_cost, epochs, overhead=0, already_regenerate
     return min(1.0, available / (regen + epochs * epoch_cost))
 
 
-def estimate(probe, run):
-    # Weights include policy-rejected examples: they cost regeneration time but
-    # contribute zero retained training tokens. Multiple assistant turns are measured.
-    regen_seconds, epoch_tokens = 0.0, 0.0
+def estimate(probe, tokens_per_second):
+    """(regeneration hours, hours per epoch, training tokens per epoch) for the full corpus.
+
+    Group weights include dialogues the length policy rejects: they cost regeneration time but add no
+    training tokens. All assistant turns are regenerated, as in the paper.
+    """
+    regen_seconds = epoch_tokens = 0.0
     for source in probe['sources'].values():
-        population = source['paper_assumed_dialogues']
+        dialogues = source['paper_assumed_dialogues']
         for group in source['groups'].values():
-            count = population * group['weight']
+            count = dialogues * group['weight']
             regen_seconds += count * group['seconds_per_dialogue']
             epoch_tokens += count * group['mean_training_tokens']
-    positive(run['nonpad_tokens_per_s'], 'training throughput')
-    return regen_seconds / 3600, epoch_tokens / run['nonpad_tokens_per_s'] / 3600, epoch_tokens
+    positive(tokens_per_second, 'training throughput')
+    return regen_seconds / 3600, epoch_tokens / tokens_per_second / 3600, epoch_tokens
 
 
 def main():
@@ -44,50 +63,55 @@ def main():
     positive(args.overhead_hours, 'overhead', zero=True)
     if not args.fast_factor <= 1 <= args.slow_factor:
         raise ValueError('Sensitivity factors must bracket 1')
+
     verified_artifact(args.probe, validate_probe)
     probe = read_json(args.probe)
     summary = read_json(args.training)
     if not summary['runs']:
         raise ValueError('No measured trainers')
-    rows = []
+
     lines = ['# Preliminary GPU-hour scenarios', '',
-        '**This pilot does not establish that 100 GPU-hours suffice for full paper reproduction.**',
-        f'Regeneration: both corpora, measured multi-turn answers, shared system prompt and 1900-token retention policy.',
-        f'Sampling: {probe["sampling"]}. Source counts (68K/464K) are paper assumptions, not measured retained sizes.',
-        f'Operational reserve: {args.overhead_hours:g} GPU-hours; adjust it for evaluation/checkpoint/retry costs.',
-        f'Sensitivity: {args.fast_factor:g}× to {args.slow_factor:g}× measured cost; this is NOT a confidence interval.',
-        'Training uses the adapted BF16 throughput recipe and another corpus; padding/length/packing effects remain a transfer assumption.',
-        'One-off target regeneration is counted once. Already-regenerated mode treats its full cost as sunk in the same budget.', '',
-        '| trainer | regen h | h/epoch | epochs | central total h | sensitivity total h | data share (central / slow) |',
-        '|---|---|---|---|---|---|---|']
+             f'**This pilot does not establish that {args.gpu_hours:g} GPU-hours suffice for full paper reproduction.**',
+             'Regeneration: both corpora, all assistant turns, the shared system prompt and 1900-token length policy.',
+             f'Sampling: {probe["sampling"]}. Dialogue counts (68K/464K) are the paper\'s, not measured sizes.',
+             f'Reserve: {args.overhead_hours:g} GPU-hours for evaluation, checkpoints and retries.',
+             f'Sensitivity: {args.fast_factor:g}x to {args.slow_factor:g}x of the measured cost; NOT a confidence interval.',
+             'Trainer speed: matched BF16 protocol on another corpus; padding/packing effects carry over as an assumption.',
+             'Regeneration is paid once. --already-regenerated counts it in full before training.', '',
+             '| trainer | regen h | h/epoch | epochs | central total h | sensitivity total h | data share (central / slow) |',
+             '|---|---|---|---|---|---|---|']
+    rows = []
     for run in summary['runs']:
-        artifact = Path(args.training).parent / (run['name'] + '.speed.json')
-        verified_artifact(artifact, validate_speed)
-        actual = read_json(artifact)
-        run = {**actual, 'name': run['name'],
-               'nonpad_tokens_per_s': actual['nonpad_tokens'] / actual['seconds']}
-        regen, h_epoch, tokens = estimate(probe, run)
+        result_path = Path(args.training).parent / (run['name'] + '.speed.json')
+        verified_artifact(result_path, validate_speed)
+        measured = read_json(result_path)
+        regen, h_epoch, _ = estimate(probe, measured['nonpad_tokens'] / measured['seconds'])
         if h_epoch <= 0:
             raise ValueError('No retained training tokens')
-        for e in EPOCHS:
-            total = args.overhead_hours + regen + e * h_epoch
-            low = args.overhead_hours + args.fast_factor * (regen + e * h_epoch)
-            high = args.overhead_hours + args.slow_factor * (regen + e * h_epoch)
-            share = data_share(args.gpu_hours, regen, h_epoch, e, args.overhead_hours, args.already_regenerated)
-            conservative = data_share(args.gpu_hours, regen * args.slow_factor, h_epoch * args.slow_factor,
-                                      e, args.overhead_hours, args.already_regenerated)
-            rows.append({'run': run['name'], 'epochs': e, 'regen_h': regen, 'epoch_h': h_epoch,
+        for epochs in EPOCHS:
+            cost = regen + epochs * h_epoch
+            total = args.overhead_hours + cost
+            low = args.overhead_hours + args.fast_factor * cost
+            high = args.overhead_hours + args.slow_factor * cost
+            share = data_share(args.gpu_hours, regen, h_epoch, epochs, args.overhead_hours,
+                               args.already_regenerated)
+            slow_share = data_share(args.gpu_hours, regen * args.slow_factor, h_epoch * args.slow_factor,
+                                    epochs, args.overhead_hours, args.already_regenerated)
+            rows.append({'run': run['name'], 'epochs': epochs, 'regen_h': regen, 'epoch_h': h_epoch,
                          'central_h': total, 'sensitivity_h': [low, high], 'data_share': share,
-                         'slow_scenario_share': conservative})
-            lines.append(f"| {run['name']} | {regen:.2f} | {h_epoch:.2f} | {e} | {total:.2f} | "
-                         f"{low:.2f}–{high:.2f} | {share:.1%} / {conservative:.1%} |")
-    tokens = estimate(probe, summary['runs'][0])[2]
-    lines += ['', f'Hidden-state cache only: {tokens * 3 * 4096 * 2 / 1e12:.2f} TB for three BF16 states/token.',
-              'This excludes target probability/logit supervision, vocab maps, embeddings, metadata and I/O.',
-              'Required follow-up for a firm budget: full-corpus length/turn census and throughput validation on regenerated samples.']
+                         'slow_scenario_share': slow_share})
+            lines.append(f"| {run['name']} | {regen:.2f} | {h_epoch:.2f} | {epochs} | {total:.2f} | "
+                         f"{low:.2f}–{high:.2f} | {share:.1%} / {slow_share:.1%} |")
+
+    first = summary['runs'][0]
+    epoch_tokens = estimate(probe, first['nonpad_tokens'] / first['seconds'])[2]
+    lines += ['', f'Caching the target\'s hidden states instead of running it every epoch: '
+                  f'{epoch_tokens * 3 * 4096 * 2 / 1e12:.2f} TB (three BF16 states per token, nothing else).',
+              'For a firm budget: count lengths/turns over the full corpora and time training on regenerated data.']
     atomic_text(args.out, '\n'.join(lines) + '\n')
     atomic_json(Path(args.out).with_suffix('.json'), {'scope': 'preliminary sensitivity scenarios',
-        'budget_h': args.gpu_hours, 'reserve_h': args.overhead_hours, 'rows': rows})
+                                                      'budget_h': args.gpu_hours, 'reserve_h': args.overhead_hours,
+                                                      'rows': rows})
     print('\n'.join(lines))
 
 

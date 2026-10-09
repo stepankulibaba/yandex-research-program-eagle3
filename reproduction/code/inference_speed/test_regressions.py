@@ -1,4 +1,7 @@
-"""CPU-only regression tests: no torch, CUDA, downloads or installations."""
+"""CPU-only tests of the speed package: no torch, CUDA, downloads or installations.
+
+    py -3.12 -X utf8 test_regressions.py
+"""
 import ast
 from contextlib import redirect_stdout
 import io
@@ -14,8 +17,8 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT.parent / 'nemo_speed'))
-from runtime import (BenchmarkWindow, SCHEMA, atomic_json, atomic_text, digest, finish,
-                     finished, run_process, validate_answers, validate_speed, verified_artifact)
+from common import (atomic_json, atomic_text, finish, finished, run_process, validate_answers)
+from training_common import SpeedWindow
 from download import validate_files
 from summarize import eagle_repo, sglang_speed
 from budget import data_share
@@ -125,12 +128,18 @@ class Tests(unittest.TestCase):
         self.assertEqual(len(selected_vocab(rows, 20, size=10)), 10)
 
     def test_original_patch_pinned_ast_and_accumulation(self):
-        source = (ROOT.parent.parent / 'eagle-work/eagle/traineagle3/main.py').read_text(encoding='utf-8')
+        candidates = [ROOT / 'EAGLE', ROOT.parent.parent / 'eagle-work']     # clone made by the run, or a local one
+        main_py = next((c / 'eagle/traineagle3/main.py' for c in candidates
+                        if (c / 'eagle/traineagle3/main.py').exists()), None)
+        if main_py is None:
+            self.skipTest('no SafeAILab/EAGLE checkout next to the package')
+        source = main_py.read_text(encoding='utf-8')
         patched = adapt_main(source, 20)
         ast.parse(patched)
         self.assertNotIn('model.zero_grad()', patched)
         self.assertIn('max_length = 2048', patched)
-        self.assertIn('BenchmarkWindow(20, len(train_loader) // 2', patched)
+        self.assertIn('SpeedWindow(20, len(train_loader) // 2', patched)
+        self.assertIn('from training_common import original_dataset', patched)
         self.assertIn('shuffle=False)', patched)
         with self.assertRaises(ValueError):
             adapt_main(source.replace('"num_epochs": 40,', '"num_epochs": 39,'), 20)
@@ -152,8 +161,8 @@ class Tests(unittest.TestCase):
 
     def test_warmup_requires_measured_optimizer_steps(self):
         with self.assertRaises(ValueError):
-            BenchmarkWindow(20, 20, 'nemo', {})
-        w = BenchmarkWindow(2, 4, 'nemo', {})
+            SpeedWindow(20, 20, 'nemo', {})
+        w = SpeedWindow(2, 4, 'nemo', {})
         gpu = SimpleNamespace(cuda=SimpleNamespace(synchronize=lambda: None))
         w.after_step(1, gpu)
         w.after_step(2, gpu)

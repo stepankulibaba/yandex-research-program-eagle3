@@ -1,16 +1,26 @@
-"""Scoped NeMo adapter: canonical inputs/mapping and exact optimizer timing."""
+"""Training-speed run of NeMo AutoModel's EAGLE-3 recipe on our shared data, timed by SpeedWindow.
+
+    python train_nemo.py --config work/<run>.yaml --data canonical.jsonl --mapping selected_tokens.json
+                         --out <run>.speed.json --warmup 20
+
+The recipe itself (nemo_automodel.recipes.llm.train_eagle3, pinned commit) runs unchanged, except for four
+replacements made before it starts:
+  1. the dataloader -> our shared corpus (training_common.nemo_loader), the same rows the authors' trainer gets;
+  2. the draft-vocabulary mapping -> our shared 32K mapping;
+  3. the training loop and the forward pass are wrapped to feed the stopwatch and to stop on a non-finite loss;
+  4. checkpoint saving is switched off (it is not part of the step time).
+"""
 import argparse
 import inspect
-import os
-from pathlib import Path
 
-from runtime import BenchmarkWindow, atomic_json, digest, read_json
-from training_data import canonical_nemo_loader, mapping
+from common import atomic_json, digest, read_json
+from training_common import SpeedWindow, mapping, nemo_loader
 
 
 def main():
     import torch
     import nemo_automodel.recipes.llm.train_eagle3 as recipe
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', required=True)
     parser.add_argument('--data', required=True)
@@ -18,26 +28,30 @@ def main():
     parser.add_argument('--out', required=True)
     parser.add_argument('--warmup', type=int, required=True)
     args = parser.parse_args()
-    # Do not silently adapt another API after an upstream change.
-    if 'apply_draft_compile' not in inspect.getsource(recipe.TrainEagle3Recipe.setup):
+
+    Recipe = recipe.TrainEagle3Recipe
+    # The replacements below rely on the pinned recipe's internals; refuse to run against another version.
+    if 'apply_draft_compile' not in inspect.getsource(Recipe.setup):
         raise RuntimeError('Unsupported NeMo recipe API')
-    original_loop = recipe.TrainEagle3Recipe._train_epochs
-    original_forward = recipe.TrainEagle3Recipe._forward_batch
+    original_train_epochs = Recipe._train_epochs
+    original_forward_batch = Recipe._forward_batch
 
-    def loader(self, data_path, split=None):
+    # 1. Dataloader.
+    def shared_dataloader(self, data_path, split=None):
         cfg = self.cfg.recipe_args
-        return canonical_nemo_loader(args.data, packed=bool(cfg.get('packed_sequence_size', 0)),
-                                     batch_size=int(cfg.micro_batch_size))
-    recipe.TrainEagle3Recipe._build_train_dataloader = loader
+        return nemo_loader(args.data, packed=bool(cfg.get('packed_sequence_size', 0)),
+                           batch_size=int(cfg.micro_batch_size))
 
+    # 2. Draft vocabulary.
     def shared_mapping(dataloader, *, target_vocab_size, **kwargs):
         return mapping(args.mapping, target_vocab_size)
-    recipe.load_or_build_eagle3_token_mapping = shared_mapping
 
-    def loop(self, *loop_args, **loop_kwargs):
+    # 3a. Training loop: describe the run, check that compile/FP8 were really applied, time the optimizer steps.
+    def timed_train_epochs(self, *loop_args, **loop_kwargs):
         cfg = self.cfg.recipe_args
         if self.compute_dtype != torch.bfloat16 or cfg.get('draft_gradient_checkpointing', False):
             raise RuntimeError('Matched baseline requires BF16 and no activation checkpointing')
+        fp8_modules = [name for name, m in self.draft_model.named_modules() if 'Float8' in type(m).__name__]
         config = {'dtype': 'bfloat16', 'target_attention': cfg.get('target_attn_implementation'),
                   'draft_attention': cfg.get('draft_attn_implementation'), 'seq_length': 2048,
                   'micro_batch': int(cfg.micro_batch_size), 'accumulation': self.grad_accumulation_steps,
@@ -46,42 +60,47 @@ def main():
                   'compile_requested': bool(self.cfg.get('compile.enabled', False)),
                   'compile_applied': bool(getattr(self.draft_model, '_compiled_call_impl', None)),
                   'fp8_requested': bool(self.cfg.get('fp8.enabled', False)),
-                  'fp8_modules': [n for n, m in self.draft_model.named_modules() if 'Float8' in type(m).__name__]}
+                  'fp8_modules': fp8_modules}
         if config['compile_requested'] and not config['compile_applied']:
             raise RuntimeError('Requested torch.compile was not applied')
-        if config['fp8_requested'] and not config['fp8_modules']:
+        if config['fp8_requested'] and not fp8_modules:
             raise RuntimeError('Requested FP8 was not applied')
-        self._speed_window = BenchmarkWindow(args.warmup, self.total_optim_steps, 'nemo', config)
-        step = self.optimizer.step
+
+        self._speed_window = SpeedWindow(args.warmup, self.total_optim_steps, 'nemo', config)
+        optimizer_step = self.optimizer.step
         completed = 0
 
-        def measured_step(*a, **kw):
+        def timed_step(*a, **kw):
             nonlocal completed
-            result = step(*a, **kw)
+            result = optimizer_step(*a, **kw)
             completed += 1
             self._speed_window.after_step(completed, torch)
             return result
-        self.optimizer.step = measured_step
+
+        self.optimizer.step = timed_step
         try:
-            result = original_loop(self, *loop_args, **loop_kwargs)
+            result = original_train_epochs(self, *loop_args, **loop_kwargs)
             atomic_json(args.out, self._speed_window.result(torch))
             return result
         finally:
-            self.optimizer.step = step
+            self.optimizer.step = optimizer_step
 
-    def forward(self, batch, target_batch=None):
-        window = self._speed_window
-        window.before_batch(self.runtime.global_step, batch, torch)
+    # 3b. Forward pass: count the micro-batch, drop our bookkeeping keys, stop on a non-finite loss.
+    def counted_forward_batch(self, batch, target_batch=None):
+        self._speed_window.before_batch(self.runtime.global_step, batch, torch)
         batch = {k: v for k, v in batch.items() if not k.startswith('_')}
-        metrics = original_forward(self, batch, target_batch)
+        metrics = original_forward_batch(self, batch, target_batch)
         if not bool(torch.isfinite(metrics.loss.detach())):
-            window.finite_loss = False
+            self._speed_window.finite_loss = False
             raise RuntimeError('Nonfinite training loss')
         return metrics
-    recipe.TrainEagle3Recipe._train_epochs = loop
-    recipe.TrainEagle3Recipe._forward_batch = forward
-    # Speed-only adapters deliberately exclude final checkpoint/eval cost.
-    recipe.TrainEagle3Recipe.save_checkpoint = lambda *a, **kw: None
+
+    Recipe._build_train_dataloader = shared_dataloader
+    recipe.load_or_build_eagle3_token_mapping = shared_mapping
+    Recipe._train_epochs = timed_train_epochs
+    Recipe._forward_batch = counted_forward_batch
+    Recipe.save_checkpoint = lambda *a, **kw: None          # 4. no checkpoints
+
     import sys
     sys.argv = [sys.argv[0], '-c', args.config]
     recipe.main()
