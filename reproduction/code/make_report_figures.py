@@ -100,14 +100,14 @@ def fig_training():
     labels = ['авторы\nкак есть', 'NeMo\npacking', 'NeMo\n+ compile', 'NeMo\n+ compile + FP8']
     a.bar(labels, values, color=[AUTHORS, NEMO, NEMO, NEMO])
     for i, v in enumerate(values):
-        a.text(i, v, f'{v:,.0f}\n×{v / values[0]:.2f}'.replace(',', ' '), ha='center', va='bottom', fontsize=8)
+        a.text(i, v, f'{int(v + 0.5):,}\n×{v / values[0]:.2f}'.replace(',', ' '), ha='center', va='bottom', fontsize=8)
     a.set_ylim(0, max(values) * 1.25)
     a.set_ylabel('токенов в секунду')
     a.set_title('Каждый в своих настройках', fontsize=10)
     m = [runs['original']['tok_s'], runs['nemo_eager_nopack']['tok_s']]
     b.bar(['авторы', 'NeMo'], m, color=[AUTHORS, NEMO])
     for i, v in enumerate(m):
-        b.text(i, v, f'{v:,.0f}\n×{v / m[0]:.2f}'.replace(',', ' '), ha='center', va='bottom', fontsize=8)
+        b.text(i, v, f'{int(v + 0.5):,}\n×{v / m[0]:.2f}'.replace(',', ' '), ha='center', va='bottom', fontsize=8)
     b.set_ylim(0, max(m) * 1.3)
     b.set_title('Одинаковая работа (паддинг до 2048)', fontsize=10)
     fig.suptitle('4. Скорость шага обучения драфта, одна H200', fontweight='bold')

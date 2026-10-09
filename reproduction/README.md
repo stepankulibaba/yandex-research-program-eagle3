@@ -10,6 +10,10 @@
 
 Всё считается на одной H200.
 
+Отчёт для чтения: [reports/eagle3_reproduction.pdf](reports/eagle3_reproduction.pdf) (промежуточный, без 3b и бюджета).
+
+![3a: τ и ускорение](figures/fig1_3a_tau_speedup.png)
+
 ## Главное
 
 | Задача | Статус | Результат |
