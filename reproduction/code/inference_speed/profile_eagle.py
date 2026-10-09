@@ -32,6 +32,18 @@ SYSTEM = ("You are a helpful, respectful and honest assistant. Always answer as 
           "know the answer to a question, please don't share false information.")
 
 
+# Peak memory bandwidth, TB/s (vendor specs); a plain decoding step cannot be faster than reading the weights once.
+BANDWIDTH_TB_S = {'H200': 4.8, 'H100 NVL': 3.9, 'H100 PCIe': 2.0, 'H100': 3.35, 'A100-SXM4-80GB': 2.04,
+                  'A100 80GB PCIe': 1.94, 'A100': 1.56}
+
+
+def weights_line(gpu, weights_gb):
+    tb_s = next((v for k, v in BANDWIDTH_TB_S.items() if k in gpu), None)
+    if tb_s is None:
+        return f"Target weights {weights_gb:.1f} GB (bandwidth of {gpu} unknown)."
+    return f"Target weights {weights_gb:.1f} GB: reading them once takes ~{weights_gb / tb_s:.1f} ms at {tb_s} TB/s."
+
+
 def sync_time():
     torch.cuda.synchronize()
     return time.perf_counter()
@@ -254,7 +266,7 @@ def main():
              f"EAGLE {timing['eagle_tok_s']:.1f} tok/s, plain {timing['plain_tok_s']:.1f} tok/s, "
              f"speed-up {timing['speedup']:.2f}x, tau {timing['tau']:.2f}; one round = {timing['ms_per_round']:.2f} ms "
              f"= {timing['round_cost_in_plain_steps']:.2f} plain steps ({timing['ms_per_plain_token']:.2f} ms).", '',
-             f"Target weights {weights_gb:.1f} GB: reading them once takes ~{weights_gb / 4.8:.1f} ms at 4.8 TB/s.", '',
+             weights_line(result['gpu'], weights_gb), '',
              '| one EAGLE round | ms |', '|---|---|']
     lines += [f'| {k} | {v:.2f} |' for k, v in per_round.items()]
     lines += ['', '| one plain token | ms |', '|---|---|']

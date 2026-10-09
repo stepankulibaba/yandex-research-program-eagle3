@@ -1,37 +1,462 @@
 {
-  "_source": "server run of 9 October 2026, one H200 NVL; copied from results/main/summary.json, nemo_speed/artifacts/main/summary.txt and results/main/profile/summary.md",
-  "benches": ["MT-bench", "HumanEval", "GSM8K", "Alpaca", "CNN/DM"],
+  "_source": "server runs of 9 October 2026: one H200 NVL (3a, 3b, 4, 5, profile) and one A100-SXM4-80GB in Yandex DataSphere (3a T=0, profile); copied from results/main/summary.md, budget.md, profile/summary.json and figures/phases.md, nemo_speed/artifacts/main/summary.txt",
+  "benches": [
+    "MT-bench",
+    "HumanEval",
+    "GSM8K",
+    "Alpaca",
+    "CNN/DM"
+  ],
   "task_3a": {
     "paper": {
-      "T0": {"speedup": [4.40, 4.85, 4.48, 4.82, 3.65], "tau": [6.13, 6.74, 6.23, 6.70, 5.34]},
-      "T1": {"speedup": [3.07, 4.13, 3.32, 3.90, 2.99], "tau": [4.24, 5.82, 4.59, 5.56, 4.39]}
+      "T0": {
+        "speedup": [
+          4.4,
+          4.85,
+          4.48,
+          4.82,
+          3.65
+        ],
+        "tau": [
+          6.13,
+          6.74,
+          6.23,
+          6.7,
+          5.34
+        ]
+      },
+      "T1": {
+        "speedup": [
+          3.07,
+          4.13,
+          3.32,
+          3.9,
+          2.99
+        ],
+        "tau": [
+          4.24,
+          5.82,
+          4.59,
+          5.56,
+          4.39
+        ]
+      }
     },
     "ours_depth8": {
-      "T0": {"speedup": [3.29, 3.74, 3.46, 3.68, 2.75], "tau": [6.18, 6.74, 6.26, 6.70, 5.39]},
-      "T1": {"speedup": [2.34, 3.17, 2.98, 2.91, 2.19], "tau": [4.12, 5.81, 4.84, 5.29, 4.48]}
+      "T0": {
+        "speedup": [
+          3.29,
+          3.74,
+          3.46,
+          3.68,
+          2.75
+        ],
+        "tau": [
+          6.18,
+          6.74,
+          6.26,
+          6.7,
+          5.39
+        ]
+      },
+      "T1": {
+        "speedup": [
+          2.34,
+          3.17,
+          2.98,
+          2.91,
+          2.19
+        ],
+        "tau": [
+          4.12,
+          5.81,
+          4.84,
+          5.29,
+          4.48
+        ]
+      }
     },
     "ours_depth6_default": {
-      "T0": {"speedup": [3.12, 3.33, 3.25, 3.43, 2.69], "tau": [5.54, 5.78, 5.59, 5.89, 4.96],
-             "plain_tok_s": [90.7, 92.6, 92.4, 90.5, 87.4], "eagle_tok_s": [282.8, 308.4, 300.7, 309.9, 235.5]},
-      "T1": {"speedup": [2.33, 2.96, 2.75, 2.85, 2.21], "tau": [3.83, 5.22, 4.28, 5.03, 4.25]}
+      "T0": {
+        "speedup": [
+          3.12,
+          3.33,
+          3.25,
+          3.43,
+          2.69
+        ],
+        "tau": [
+          5.54,
+          5.78,
+          5.59,
+          5.89,
+          4.96
+        ],
+        "plain_tok_s": [
+          90.7,
+          92.6,
+          92.4,
+          90.5,
+          87.4
+        ],
+        "eagle_tok_s": [
+          282.8,
+          308.4,
+          300.7,
+          309.9,
+          235.5
+        ]
+      },
+      "T1": {
+        "speedup": [
+          2.33,
+          2.96,
+          2.75,
+          2.85,
+          2.21
+        ],
+        "tau": [
+          3.83,
+          5.22,
+          4.28,
+          5.03,
+          4.25
+        ]
+      }
+    },
+    "a100_depth8": {
+      "T0": {
+        "speedup": [
+          3.93,
+          4.34,
+          4.06,
+          4.26,
+          3.51
+        ],
+        "tau": [
+          6.19,
+          6.75,
+          6.28,
+          6.73,
+          5.39
+        ]
+      },
+      "note": "A100-SXM4-80GB, DataSphere VM (28 vCPU AMD EPYC), torch 2.5.1+cu124; T=1 not run"
     }
   },
   "profile_3a": {
     "bench": "MT-bench, first turn of 5 questions, depth 8, T=0",
-    "plain_step_ms": {"target forward": 12.81, "loop": 0.12},
-    "eagle_round_ms": {"verify": 13.61, "draft": 6.90, "accept": 0.13, "update": 0.22, "loop": 0.13, "prefill": 0.52},
-    "kernel_launches_per_step": {"plain": 1819, "eagle": 2967},
-    "gpu_kernel_ms_per_step": {"plain": 8.37, "eagle": 15.60},
-    "weights_read_floor_ms": 3.3
+    "plain_step_ms": {
+      "target forward": 12.81,
+      "loop": 0.12
+    },
+    "eagle_round_ms": {
+      "verify": 13.61,
+      "draft": 6.9,
+      "accept": 0.13,
+      "update": 0.22,
+      "loop": 0.13,
+      "prefill": 0.52
+    },
+    "kernel_launches_per_step": {
+      "plain": 1819,
+      "eagle": 2967
+    },
+    "gpu_kernel_ms_per_step": {
+      "plain": 8.37,
+      "eagle": 15.6
+    },
+    "weights_read_floor_ms": 3.3,
+    "phase_gpu_ms": {
+      "plain": 8.2,
+      "verify": 9.7,
+      "draft": 3.6,
+      "accept_update": 0.1
+    },
+    "phase_launches": {
+      "plain": 1766,
+      "verify": 1758,
+      "draft": 885,
+      "accept_update": 20
+    },
+    "wall_ms": {
+      "plain": 12.7,
+      "round": 21.3
+    }
   },
   "task_4": {
     "runs": {
-      "original_asis":     {"label": "авторы, как есть", "protocol": "as-is", "tok_s": 6924.5, "ms_step": 148.46, "docs_s": 13.472, "mem_gb": 28.38},
-      "nemo_eager_pack":   {"label": "NeMo, packing", "protocol": "matched", "tok_s": 7325.8, "ms_step": 465.81, "docs_s": 13.426, "mem_gb": 31.59},
-      "nemo_compile":      {"label": "NeMo, + compile", "protocol": "matched", "tok_s": 8454.2, "ms_step": 403.64, "docs_s": 15.494, "mem_gb": 28.97},
-      "nemo_compile_fp8":  {"label": "NeMo, + compile + FP8", "protocol": "matched", "tok_s": 8576.5, "ms_step": 397.88, "docs_s": 15.718, "mem_gb": 28.34},
-      "original":          {"label": "авторы, одинаковая работа", "protocol": "matched", "tok_s": 1638.4, "ms_step": 635.61, "docs_s": 3.147, "mem_gb": 36.55},
-      "nemo_eager_nopack": {"label": "NeMo, одинаковая работа", "protocol": "matched", "tok_s": 2258.7, "ms_step": 461.07, "docs_s": 4.338, "mem_gb": 31.59}
+      "original_asis": {
+        "label": "авторы, как есть",
+        "protocol": "as-is",
+        "tok_s": 6924.5,
+        "ms_step": 148.46,
+        "docs_s": 13.472,
+        "mem_gb": 28.38
+      },
+      "nemo_eager_pack": {
+        "label": "NeMo, packing",
+        "protocol": "matched",
+        "tok_s": 7325.8,
+        "ms_step": 465.81,
+        "docs_s": 13.426,
+        "mem_gb": 31.59
+      },
+      "nemo_compile": {
+        "label": "NeMo, + compile",
+        "protocol": "matched",
+        "tok_s": 8454.2,
+        "ms_step": 403.64,
+        "docs_s": 15.494,
+        "mem_gb": 28.97
+      },
+      "nemo_compile_fp8": {
+        "label": "NeMo, + compile + FP8",
+        "protocol": "matched",
+        "tok_s": 8576.5,
+        "ms_step": 397.88,
+        "docs_s": 15.718,
+        "mem_gb": 28.34
+      },
+      "original": {
+        "label": "авторы, одинаковая работа",
+        "protocol": "matched",
+        "tok_s": 1638.4,
+        "ms_step": 635.61,
+        "docs_s": 3.147,
+        "mem_gb": 36.55
+      },
+      "nemo_eager_nopack": {
+        "label": "NeMo, одинаковая работа",
+        "protocol": "matched",
+        "tok_s": 2258.7,
+        "ms_step": 461.07,
+        "docs_s": 4.338,
+        "mem_gb": 31.59
+      }
     }
+  },
+  "task_3b": {
+    "engine": "SGLang 0.5.9, triton attention, CUDA graphs, no prefix cache, HTTP round-trip timing",
+    "T0": {
+      "paper_8_10_60": {
+        "speedup": [
+          2.961,
+          3.366,
+          3.158,
+          3.379,
+          2.457
+        ],
+        "tau": [
+          6.11,
+          6.686,
+          6.18,
+          6.627,
+          5.338
+        ]
+      },
+      "eagle2_6_10_60": {
+        "speedup": [
+          2.828,
+          3.093,
+          3.05,
+          3.177,
+          2.429
+        ],
+        "tau": [
+          5.449,
+          5.743,
+          5.564,
+          5.853,
+          4.936
+        ]
+      },
+      "docs_5_8_32": {
+        "speedup": [
+          2.67,
+          2.908,
+          2.89,
+          2.978,
+          2.293
+        ],
+        "tau": [
+          4.829,
+          5.054,
+          4.929,
+          5.13,
+          4.395
+        ]
+      },
+      "chain_3_1_4": {
+        "speedup": [
+          1.885,
+          2.124,
+          2.03,
+          2.058,
+          1.615
+        ],
+        "tau": [
+          2.952,
+          3.229,
+          2.993,
+          3.005,
+          2.712
+        ]
+      }
+    },
+    "T1": {
+      "paper_8_10_60": {
+        "speedup": [
+          2.175,
+          3.063,
+          2.777,
+          2.739,
+          2.03
+        ],
+        "tau": [
+          3.821,
+          5.949,
+          5.017,
+          5.134,
+          4.281
+        ],
+        "seed_mean": [
+          2.181,
+          3.065,
+          2.781,
+          2.744,
+          2.061
+        ],
+        "seed_sd": [
+          0.006,
+          0.031,
+          0.003,
+          0.022,
+          0.024
+        ]
+      }
+    },
+    "absolute_tok_s_mean_T0": {
+      "sglang_eagle": 555,
+      "sglang_plain": 181,
+      "authors_eagle": 293,
+      "authors_plain": 87,
+      "note": "approximate means over benchmarks; HTTP vs CUDA timer, compare loosely"
+    }
+  },
+  "task_5": {
+    "regen_h": 38.14,
+    "reserve_h": 10,
+    "budget_h": 100,
+    "h_per_epoch": {
+      "original_asis": 18.89,
+      "nemo_eager_pack": 17.85,
+      "nemo_compile": 15.47,
+      "nemo_compile_fp8": 15.25
+    },
+    "data_share": {
+      "original_asis": {
+        "1": [
+          1.0,
+          1.0
+        ],
+        "2": [
+          1.0,
+          0.79
+        ],
+        "5": [
+          0.679,
+          0.453
+        ],
+        "10": [
+          0.396,
+          0.264
+        ],
+        "20": [
+          0.216,
+          0.144
+        ],
+        "40": [
+          0.113,
+          0.076
+        ]
+      },
+      "nemo_compile_fp8": {
+        "1": [
+          1.0,
+          1.0
+        ],
+        "2": [
+          1.0,
+          0.874
+        ],
+        "5": [
+          0.787,
+          0.525
+        ],
+        "10": [
+          0.472,
+          0.315
+        ],
+        "20": [
+          0.262,
+          0.175
+        ],
+        "40": [
+          0.139,
+          0.093
+        ]
+      }
+    },
+    "total_h_40_epochs": {
+      "original_asis": 803.62,
+      "nemo_compile_fp8": 658.09
+    },
+    "hidden_state_cache_tb": 11.57,
+    "dialogues": {
+      "sharegpt": 68623,
+      "ultrachat_train_sft": 207865,
+      "ultrachat_train_gen": 256032
+    },
+    "notes": [
+      "regeneration timed per group of <=64 dialogues incl. the tail; KV cache 3% used: likely pessimistic",
+      "trainer speeds measured on another corpus (PerfectBlend)"
+    ]
+  },
+  "profile_a100": {
+    "gpu": "A100-SXM4-80GB",
+    "bench": "MT-bench, first turn of 5 questions, depth 8, T=0",
+    "tau": 6.32,
+    "speedup": 4.29,
+    "eagle_tok_s": 105.6,
+    "plain_tok_s": 24.6,
+    "plain_step_ms": {
+      "target forward": 40.55,
+      "loop": 0.23
+    },
+    "eagle_round_ms": {
+      "verify": 39.0,
+      "draft": 17.91,
+      "accept": 0.23,
+      "update": 0.46,
+      "loop": 0.3,
+      "prefill": 1.29
+    },
+    "round_cost_in_plain_steps": 1.47,
+    "phase_gpu_ms": {
+      "plain": 16.37,
+      "verify": 18.73,
+      "draft": 7.42,
+      "accept": 0.11,
+      "update": 0.1
+    },
+    "phase_launches": {
+      "plain": 1855,
+      "verify": 1853,
+      "draft": 900,
+      "accept": 9,
+      "update": 11
+    },
+    "weights_read_floor_ms": 7.9
   }
 }
