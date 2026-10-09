@@ -39,6 +39,7 @@ bash check.sh                                                        # то же
 | `budget.py` | 5: GPU-часы на полный датасет при 1–40 эпохах против 100 ч |
 | `download.py` | скачивание моделей по закреплённым ревизиям с проверкой целостности |
 | `profile_eagle.py` | 3a: куда уходит время цикла EAGLE и шага обычной генерации (фазы + torch.profiler), запускать на свободном GPU |
+| `plot_profile.py` | картинки профиля: таймлайн с простоями GPU, загрузка GPU во времени, длительности ядер |
 | `setup_cuda.sh` | разово ставит компилятор CUDA 12.8 (conda-forge, без root) в `../cuda-home` — для SGLang |
 | `nemo_config.yaml` | шаблон конфига NeMo |
 | `night.sh`, `check.sh`, `run.sh`, `nemo_run.sh` | запуск `orchestrate.py` в нужном режиме |

@@ -204,13 +204,34 @@ def main():
                          1000 * (b_total - b_timer.seconds['target forward']) / b_tok}
 
         # 3. torch.profiler: GPU busy time vs wall time.
+        # Phases are marked in the trace ("phase: ..." user annotations) for plot_profile.py; no syncs added.
+        def labelled(label, fn):
+            def run(*a, **kw):
+                with torch.profiler.record_function('phase: ' + label):
+                    return fn(*a, **kw)
+            return run
+
+        labels = {'initialize_tree': 'prefill', 'tree_decoding': 'verify', 'evaluate_posterior': 'accept',
+                  'update_inference_inputs': 'update'}
         activities = [torch.profiler.ProfilerActivity.CPU, torch.profiler.ProfilerActivity.CUDA]
         profiles = {}
         for name, fn in (('eagle', eagle), ('plain', plain)):
-            with torch.profiler.profile(activities=activities) as prof:
-                t0 = sync_time()
-                _, new_token, idx = fn(prompts[0])
-                wall = sync_time() - t0
+            originals = {n: getattr(ea_module, n) for n in labels}
+            draft_original, forward_original = model.ea_layer.topK_genrate, model.base_model.forward
+            for n, label in labels.items():
+                setattr(ea_module, n, labelled(label, originals[n]))
+            model.ea_layer.topK_genrate = labelled('draft', draft_original)
+            if name == 'plain':
+                model.base_model.forward = labelled('target forward', forward_original)
+            try:
+                with torch.profiler.profile(activities=activities) as prof:
+                    t0 = sync_time()
+                    _, new_token, idx = fn(prompts[0])
+                    wall = sync_time() - t0
+            finally:
+                for n, f in originals.items():
+                    setattr(ea_module, n, f)
+                model.ea_layer.topK_genrate, model.base_model.forward = draft_original, forward_original
             kernels_s, launches = kernel_stats(prof)
             steps = (int(idx) + 1) if name == 'eagle' else int(new_token)
             profiles[name] = {'wall_s': wall, 'gpu_kernel_s': kernels_s, 'gpu_busy_share': kernels_s / wall,
