@@ -22,6 +22,7 @@
 - `layer-selection/router/code/run_dsl.sh` сначала делает `cd` в папку направления и вызывает `code/*.py`.
 - В `layer-selection/frozen/code` и `layer-selection/router/code` есть `original/` — код, на котором реально шли прогоны. Рядом — читаемая версия, проверенная на совпадение результатов (побайтно). Править читаемую версию; `original/` не трогать (кроме путей).
 - `extra-checks/code/zoo_eval.py check|validate` используют модули из `layer-selection/frozen/code` и его папку моделей.
+- `reproduction/code/inference_speed` и `reproduction/code/nemo_speed` должны лежать рядом: оркестратор (`orchestrate.py`) считает свою папку корнем, а `../nemo_speed` — папкой обучения. Окружения, клоны (`EAGLE/`, `Automodel/`), модели и результаты создаются внутри этих папок на GPU-сервере и в git не попадают.
 
 ## Что нельзя коммитить (репозиторий публичный)
 
@@ -31,7 +32,7 @@
 
 ## Метрики (не путать)
 
-- **τ по протоколу статьи** — реальная генерация EAGLE деревом: total_token 60, depth 5, top_k 10, temperature 0, MT-bench / GSM8K / HumanEval, первый ход без system prompt; `max_new_tokens` фактически 512.
+- **τ по протоколу статьи** — реальная генерация EAGLE деревом: total_token 60, **depth 7**, top_k 10, temperature 0; `max_new_tokens` фактически 512. Глубину передавать явно: скрипты оценки авторов по умолчанию берут `--depth 5` — это дерево EAGLE-2 (глубина 6 в статье); для EAGLE-3 статья даёт глубину 8 = `--depth 7` (так же по умолчанию в `EaModel.from_pretrained`). В SGLang `--speculative-num-steps` — это длина ветки, т. е. `depth + 1` = 8. Прежние сравнения со статьёй (`extra-checks`, DSL-8B) сделаны на `--depth 5`.
 - **Цепочечная τ** — офлайн, одна цепочка глубины 6 по greedy-тексту target (`router/code/metrics.py`). Совпадает с EAGLE в режиме цепочки с точностью 0,01, но ниже τ по дереву. Абсолютные значения двух метрик не сравнивать — только приросты.
 - Интервалы — парный bootstrap по вопросам.
 
@@ -45,6 +46,10 @@
 - `router/code/` (читаемая версия) побайтно эквивалентна `router/code/original/` — после правок в `draft.py`, `fusion.py`, `train.py` прогнать `check_equivalence.py` или аналогичный тест на маленьких моделях.
 - Во frozen-коде этап обучения входов (`train_fusions.py`) грузит модель в float16, остальные — в bfloat16: так было в исходных прогонах.
 - Порядок создания вариантов в `draft_inputs.build_variants` и `train_fusions.all_variants` задаёт случайную инициализацию — не переставлять.
+- `reproduction`, сервер без CUDA toolkit (нет `nvcc`/`CUDA_HOME`): DeepSpeed 0.16.4 спрашивает `nvcc -V` и при установке, и при **каждом импорте** — ему даётся заглушка `venv_orig/stub_cuda` (печатает версию CUDA из torch); SGLang — с `SGLANG_ENABLE_JIT_DEEPGEMM=0`, Triton-attention и PyTorch-sampling (flashinfer может требовать JIT); flash-attn 2 не ставится.
+- `reproduction`: в окружении SGLang 0.5.9 удалять пакет `kernels` (новая версия требует `huggingface_hub>=1.10`, transformers 4.57 держит <1.0 — сервер падает на старте). Счётчик принятых токенов в ответе SGLang — `meta_info.spec_accept_token_num`; при нуле раундов счётчиков нет вовсе.
+- `reproduction`: скрипты с потоковым `datasets` падают при завершении Python (`PyGILState_Release`) уже после записи результатов — выходить через `os._exit(0)`.
+- Зеркало `unsloth/Meta-Llama-3.1-8B-Instruct`: в `tokenizer_config.json` класс `PreTrainedTokenizer`; скрипты EAGLE (`use_fast=False`) с ним не получают токенизатор — менять на `PreTrainedTokenizerFast` (так у Meta).
 
 ## Проверки перед PR
 
@@ -61,4 +66,5 @@
 
 ## Текущее состояние
 
-- `layer-selection/router`: идёт прогон DSL-8B (7 вариантов, с исправленным пословным роутером). После него — `code/final_eval.py`, `code/probe.py` (обнуление g / эмбеддинга, сравнение с официальным драфтом), затем обновить README и `reports/eagle3_routed.pdf`.
+- `layer-selection/router`: DSL-8B посчитан, отчёт обновлён.
+- `reproduction`: идёт прогон — 3a с `--depth 7`, 3b (SGLang), задача 4 (обучение), задача 5 (бюджет). Результаты 3a в README пока с `--depth 5`.

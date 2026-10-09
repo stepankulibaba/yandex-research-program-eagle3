@@ -234,3 +234,10 @@ logs/
 *.pt
 !**/results/**/final_eval.pt
 !**/results/**/*.log
+
+# reproduction: environments, clones and run outputs live on the GPU server
+reproduction/code/**/venv*/
+reproduction/code/**/Automodel/
+reproduction/code/**/artifacts/
+reproduction/code/**/results/
+reproduction/code/**/.night.lock
