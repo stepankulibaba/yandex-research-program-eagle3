@@ -44,7 +44,12 @@ POLICY = {'max_training_tokens': 1900, 'max_new_tokens_per_turn': 512, 'system':
 
 
 def normalize(item):
-    """A dialogue as [{'role': 'user'|'assistant', 'content': ...}, ...] alternating from the user, or None."""
+    """A dialogue as [{'role': 'user'|'assistant', 'content': ...}, ...] alternating from the user, or None.
+
+    Only the user turns matter (every answer is regenerated), so, as in the authors' data preparation, leading
+    assistant turns are dropped and a dialogue may end with a user turn or be a single prompt (UltraChat's
+    train_gen split holds prompts only). Other roles, empty turns or broken alternation reject the dialogue.
+    """
     messages = []
     source = item.get('messages', item.get('conversations', []))
     if isinstance(source, str):       # a dialogue stored as a JSON string
@@ -71,8 +76,10 @@ def normalize(item):
         if role not in ('user', 'assistant') or not isinstance(text, str) or not text.strip():
             return None
         messages.append({'role': role, 'content': text})
-    alternating = ['user', 'assistant'] * (len(messages) // 2)
-    if len(messages) < 2 or len(messages) % 2 or [m['role'] for m in messages] != alternating:
+    while messages and messages[0]['role'] == 'assistant':     # answers before the first question
+        messages.pop(0)
+    alternating = (['user', 'assistant'] * len(messages))[:len(messages)]
+    if not messages or [m['role'] for m in messages] != alternating:
         return None
     return messages
 

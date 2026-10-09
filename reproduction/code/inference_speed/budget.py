@@ -41,8 +41,8 @@ def estimate(probe, tokens_per_second):
     regen_seconds = epoch_tokens = 0.0
     for source in probe['sources'].values():
         for split in source['splits'].values():
-            # only the share of dialogues our policy can use at all (ShareGPT: ~63 %: odd turn counts, a model
-            # turn first, other roles or empty turns are skipped); the group weights are within that share
+            # only the share of dialogues our policy can use at all (other roles, empty turns or broken
+            # alternation are skipped); the group weights are within that share
             usable = split.get('valid', 1) / split.get('scanned', 1)
             for group in split['groups'].values():
                 count = split['dialogues'] * usable * group['weight']
