@@ -100,6 +100,8 @@ def main():
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
 
+    import sys
+    sys.path.insert(0, str(Path.cwd()))      # the EAGLE checkout we run from (the authors use python -m from there)
     import eagle.model.ea_model as ea_module
     from eagle.model.ea_model import EaModel
     model = EaModel.from_pretrained(base_model_path=args.model, ea_model_path=args.draft, total_token=60, depth=7,
