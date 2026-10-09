@@ -5,6 +5,7 @@
     python3 orchestrate.py setup       only environments and models
     python3 orchestrate.py inference   only 3a, 3b and the regeneration probe (run.sh)
     python3 orchestrate.py train       only the training speed (../nemo_speed/run.sh)
+    python3 orchestrate.py author      only the authors' code on this GPU: profile, then 3a (author.sh; e.g. an A100)
 
 Order of the night (most important first):
     1. 3a  the authors' evaluation scripts, unchanged: EAGLE-3 and plain generation, T=0 and T=1
@@ -245,7 +246,7 @@ class Night:
         self.virtualenv(self.py_eagle, 'eagle_env',
             ['torch==2.5.1', 'transformers==4.53.2', 'fschat==0.2.31', 'openai==0.28.1', 'anthropic==0.3.11',
              'pydantic<2', 'accelerate', 'shortuuid', 'sentencepiece', 'protobuf', 'numpy', 'huggingface_hub',
-             'requests', 'datasets', 'tqdm'],
+             'requests', 'datasets', 'tqdm', 'matplotlib'],
             'import torch, transformers, fastchat.llm_judge.common; '
             'assert torch.__version__.split("+")[0]=="2.5.1"; assert transformers.__version__=="4.53.2"')
 
@@ -393,7 +394,10 @@ class Night:
     # ================================================================================================================
     def author_benchmarks(self):
         """EAGLE-3 and plain generation with SafeAILab/EAGLE's own scripts, T=0 then T=1 (results/<mode>/eagle)."""
+        wanted = os.environ.get('AUTHOR_TEMPERATURES', '0,1').split(',')
         for temperature, prefix in ((0, ''), (1, 't1_')):
+            if str(temperature) not in wanted:
+                continue
             for bench in BENCHES:
                 expected = questions(HERE / 'EAGLE', bench, self.questions_per_bench)
                 for use_eagle, script in ((True, 'gen_ea_answer_llama3chat'),
@@ -673,7 +677,21 @@ class Night:
     # ================================================================================================================
     # The night
     # ================================================================================================================
+    def profile(self):
+        """Where the time of an EAGLE round goes on this GPU (profile_eagle.py), and its pictures."""
+        out = self.results / 'profile'
+        self.command('profile', [self.py_eagle, HERE / 'profile_eagle.py', '--model', self.model, '--draft', self.draft,
+                                 '--out', out], cwd=HERE / 'EAGLE', timeout=3600)
+        self.command('profile_plots', [self.py_eagle, HERE / 'plot_profile.py', out], timeout=1800)
+
     def run(self):
+        if self.mode == 'author':     # the authors' code only, e.g. on another GPU: profile first (fast), then 3a
+            self.setup(inference=True, training=False, sglang=False)
+            self.attempt('profile', self.profile)
+            self.attempt('author_benches', self.author_benchmarks)
+            if self.failures:
+                raise RuntimeError('Failed stages (the rest ran): ' + ', '.join(dict.fromkeys(self.failures)))
+            return
         inference = self.mode in ('night', 'inference', 'check')
         training = self.mode in ('night', 'train', 'check')
         self.setup(inference=self.mode != 'train', training=self.mode in ('night', 'train', 'check', 'setup'),
@@ -699,7 +717,7 @@ class Night:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('mode', choices=('night', 'inference', 'train', 'check', 'setup'))
+    parser.add_argument('mode', choices=('night', 'inference', 'train', 'check', 'setup', 'author'))
     args = parser.parse_args()
     if os.name != 'posix':
         raise SystemExit('GPU orchestration requires Linux; run tests locally on Windows')

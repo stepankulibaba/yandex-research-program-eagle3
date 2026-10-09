@@ -43,6 +43,7 @@ bash check.sh                                                        # то же
 | `setup_cuda.sh` | разово ставит компилятор CUDA 12.8 (conda-forge, без root) в `../cuda-home` — для SGLang |
 | `nemo_config.yaml` | шаблон конфига NeMo |
 | `night.sh`, `check.sh`, `run.sh`, `nemo_run.sh` | запуск `orchestrate.py` в нужном режиме |
+| `author.sh` | только код авторов на этой машине (например, A100): профиль, затем 3a |
 | `test_regressions.py` | быстрые тесты без GPU: `py -3.12 -X utf8 test_regressions.py` |
 | `../nemo_speed/prepare_data.py` | 4: 1000 примеров, токенизированных функцией авторов, и словарь на 32K токенов |
 | `../nemo_speed/patch_original.py` | 4: копия тренера авторов, подправленная для замера (что именно меняется — в начале файла) |
