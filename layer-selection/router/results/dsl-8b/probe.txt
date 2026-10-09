@@ -1,0 +1,11 @@
+python code/probe.py dsl-8b   (H200, 8 Oct 2026)
+chain tau (depth 6) on 240 questions  [on the 96 used during training]
+draft                           full                no_g              no_emb
+official               4.175 [4.205]       1.021 [1.023]       1.057 [1.057]
+fixed_raw              3.476 [3.520]       1.005 [1.005]       1.169 [1.172]
+fixed_norm             3.460 [3.502]       1.004 [1.004]       1.167 [1.171]
+fixed_alt              3.483 [3.525]       1.006 [1.005]       1.170 [1.172]
+static_top3            3.418 [3.458]       1.005 [1.004]       1.153 [1.154]
+static_top2            3.410 [3.449]       1.005 [1.005]       1.154 [1.157]
+token_top3_s           3.404 [3.437]       1.004 [1.004]       1.151 [1.153]
+token_top2_s           3.371 [3.414]       1.005 [1.004]       1.148 [1.150]

@@ -1,0 +1,12 @@
+{
+  "gpu": "Tesla T4",
+  "torch": "2.11.0+cu128",
+  "transformers": "4.53.2",
+  "python": "3.13.15",
+  "eagle_commit": "cb7e0841fe0c206c6ed74a197ad5e2a1f13f5a2b",
+  "sources_sha256": {
+    "layer_lab.py": "d1004b96857652e4731dc30b9e1af74b699eee4a69b83bcaba8e18c10afb82ac",
+    "phase_a.py": "e010130c7fba2d5c099a6b941daf78c49c1571cdfbe470d41794c2441a63dd82",
+    "phase_b.py": "5c799826eb4ec31f7debb0dff3f553d8a5f07d9162234a298829049c8bb8238b"
+  }
+}

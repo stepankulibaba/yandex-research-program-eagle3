@@ -1,0 +1,7 @@
+torch==2.5.1
+transformers==4.53.2
+safetensors==0.8.0
+accelerate==1.15.0
+datasets==5.0.1
+numpy==2.4.6
+matplotlib

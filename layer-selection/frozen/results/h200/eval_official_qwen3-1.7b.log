@@ -1,0 +1,18 @@
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
+Loading checkpoint shards:  50%|█████     | 1/2 [00:10<00:10, 10.80s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:13<00:00,  5.88s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:13<00:00,  6.62s/it]
+~/eagle-layers/EAGLE/eagle/model/ea_model.py:128: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ea_layer_state_dict = torch.load(load_model_path,
+02:09:46 qwen3-1.7b: N=28 H=2048 triplet=(2, 14, 25) prompts=240
+02:19:13 baseline {'tau': 3.678164615101966, 'cycles': 21772, 'new_tokens': 80081, 'seconds': 567.0971997641027, 'tau_gsm8k': 4.0490042951971885, 'tau_humaneval': 3.896032831737346, 'tau_mt_bench': 3.254036473458009}
+02:27:49 only_high: tau=2.879 ci=[-0.7234383863401553, -0.6191334228013218] prefix=(3.6279646017699116, 2.940931302098304)
+02:34:10 drop_low: tau=3.320 ci=[-0.26772821134326635, -0.1928135245222644] prefix=(3.638196105227195, 3.394195503109552)
+02:40:38 drop_mid: tau=3.258 ci=[-0.32801054815867775, -0.2552093311129298] prefix=(3.6372957942301007, 3.338124900175691)
+02:59:08 only_low_mid: tau=1.122 ci=[-2.548434510296561, -2.3107825640781914] prefix=(3.6792792792792794, 1.1162419505751555)
+03:05:22 mid_14to20: tau=3.378 ci=[-0.20201784054331548, -0.14362774810577647] prefix=(3.592221467391304, 3.4146065600258524)
+03:15:02 high_25to28: tau=2.163 ci=[-1.488074790949507, -1.29088837739146] prefix=(3.6484388476798344, 2.1647639617402037)
+03:21:58 high_25to27: tau=3.046 ci=[-0.56398909331386, -0.4512061226109497] prefix=(3.679821551132464, 3.075807609475951)
+03:29:18 fc_rank512: tau=2.870 ci=[-0.7287712767303554, -0.6313916621474674] prefix=(3.655264090747962, 2.947458840372226)
+03:35:28 fc_rank1024: tau=3.414 ci=[-0.17078220463372365, -0.10176268286375001] prefix=(3.715088282504013, 3.5896043444530643)

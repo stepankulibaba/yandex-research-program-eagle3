@@ -1,0 +1,59 @@
+LlamaForCausalLM has generative capabilities, as `prepare_inputs_for_generation` is explicitly defined. However, it doesn't directly inherit from `GenerationMixin`. From 👉v4.50👈 onwards, `PreTrainedModel` will NOT inherit from `GenerationMixin`, and this model will lose the ability to call `generate` and other related functions.
+  - If you're using `trust_remote_code=True`, you can get rid of this warning by loading the model with an auto class. See https://huggingface.co/docs/transformers/en/model_doc/auto#auto-classes
+  - If you are the owner of the model architecture code, please modify your model class such that it inherits from `GenerationMixin` (after `PreTrainedModel`, otherwise you'll get an exception).
+  - If you are not the owner of the model architecture class, please contact the model code owner to update it.
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
+Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.38s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.25s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.27s/it]
+LlamaForCausalLM has generative capabilities, as `prepare_inputs_for_generation` is explicitly defined. However, it doesn't directly inherit from `GenerationMixin`. From 👉v4.50👈 onwards, `PreTrainedModel` will NOT inherit from `GenerationMixin`, and this model will lose the ability to call `generate` and other related functions.
+  - If you're using `trust_remote_code=True`, you can get rid of this warning by loading the model with an auto class. See https://huggingface.co/docs/transformers/en/model_doc/auto#auto-classes
+  - If you are the owner of the model architecture code, please modify your model class such that it inherits from `GenerationMixin` (after `PreTrainedModel`, otherwise you'll get an exception).
+  - If you are not the owner of the model architecture class, please contact the model code owner to update it.
+LlamaForCausalLM has generative capabilities, as `prepare_inputs_for_generation` is explicitly defined. However, it doesn't directly inherit from `GenerationMixin`. From 👉v4.50👈 onwards, `PreTrainedModel` will NOT inherit from `GenerationMixin`, and this model will lose the ability to call `generate` and other related functions.
+  - If you're using `trust_remote_code=True`, you can get rid of this warning by loading the model with an auto class. See https://huggingface.co/docs/transformers/en/model_doc/auto#auto-classes
+  - If you are the owner of the model architecture code, please modify your model class such that it inherits from `GenerationMixin` (after `PreTrainedModel`, otherwise you'll get an exception).
+  - If you are not the owner of the model architecture class, please contact the model code owner to update it.
+~/eagle-layers/EAGLE/eagle/model/ea_model.py:128: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ea_layer_state_dict = torch.load(load_model_path,
+~/eagle-layers/run.py:211: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  data = torch.load(out / "train_data.pt")
+~/eagle-layers/run.py:213: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  base_out = torch.load(out / "baseline_outputs.pt")
+02:03:03 positions train=(60000, 33, 4096) test=(30000, 33, 4096)
+02:03:23 fc shares [0.026727928776221363, 0.3202467111674919, 0.6530253600562868]
+02:03:46 ridge r2 single max at 29, triplet 0.996
+02:03:57 probe 0: k1=0.167 k2=0.099 k3=0.070
+02:04:07 probe 1: k1=0.251 k2=0.144 k3=0.094
+02:04:17 probe 2: k1=0.281 k2=0.167 k3=0.110
+02:04:28 probe 3: k1=0.318 k2=0.175 k3=0.113
+02:04:38 probe 4: k1=0.328 k2=0.185 k3=0.119
+02:04:48 probe 5: k1=0.331 k2=0.185 k3=0.117
+02:04:58 probe 6: k1=0.342 k2=0.188 k3=0.119
+02:05:09 probe 7: k1=0.349 k2=0.197 k3=0.127
+02:05:19 probe 8: k1=0.343 k2=0.190 k3=0.118
+02:05:29 probe 9: k1=0.351 k2=0.196 k3=0.121
+02:05:39 probe 10: k1=0.356 k2=0.203 k3=0.120
+02:05:50 probe 11: k1=0.365 k2=0.206 k3=0.125
+02:06:00 probe 12: k1=0.372 k2=0.215 k3=0.134
+02:06:10 probe 13: k1=0.389 k2=0.213 k3=0.132
+02:06:21 probe 14: k1=0.408 k2=0.234 k3=0.145
+02:06:31 probe 15: k1=0.425 k2=0.238 k3=0.142
+02:06:41 probe 16: k1=0.473 k2=0.258 k3=0.156
+02:06:51 probe 17: k1=0.524 k2=0.281 k3=0.161
+02:07:02 probe 18: k1=0.560 k2=0.300 k3=0.169
+02:07:12 probe 19: k1=0.603 k2=0.319 k3=0.171
+02:07:22 probe 20: k1=0.628 k2=0.329 k3=0.175
+02:07:33 probe 21: k1=0.665 k2=0.343 k3=0.177
+02:07:43 probe 22: k1=0.689 k2=0.349 k3=0.180
+02:07:53 probe 23: k1=0.731 k2=0.358 k3=0.183
+02:08:03 probe 24: k1=0.755 k2=0.368 k3=0.183
+02:08:14 probe 25: k1=0.783 k2=0.374 k3=0.182
+02:08:24 probe 26: k1=0.801 k2=0.378 k3=0.183
+02:08:34 probe 27: k1=0.820 k2=0.378 k3=0.181
+02:08:45 probe 28: k1=0.837 k2=0.381 k3=0.176
+02:08:55 probe 29: k1=0.858 k2=0.386 k3=0.183
+02:09:05 probe 30: k1=0.868 k2=0.384 k3=0.183
+02:09:15 probe 31: k1=0.876 k2=0.373 k3=0.177
+02:09:26 probe 32: k1=0.845 k2=0.367 k3=0.171

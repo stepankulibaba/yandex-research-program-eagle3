@@ -1,0 +1,40 @@
+LlamaForCausalLM has generative capabilities, as `prepare_inputs_for_generation` is explicitly defined. However, it doesn't directly inherit from `GenerationMixin`. From 👉v4.50👈 onwards, `PreTrainedModel` will NOT inherit from `GenerationMixin`, and this model will lose the ability to call `generate` and other related functions.
+  - If you're using `trust_remote_code=True`, you can get rid of this warning by loading the model with an auto class. See https://huggingface.co/docs/transformers/en/model_doc/auto#auto-classes
+  - If you are the owner of the model architecture code, please modify your model class such that it inherits from `GenerationMixin` (after `PreTrainedModel`, otherwise you'll get an exception).
+  - If you are not the owner of the model architecture class, please contact the model code owner to update it.
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
+Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.35s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.23s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.25s/it]
+LlamaForCausalLM has generative capabilities, as `prepare_inputs_for_generation` is explicitly defined. However, it doesn't directly inherit from `GenerationMixin`. From 👉v4.50👈 onwards, `PreTrainedModel` will NOT inherit from `GenerationMixin`, and this model will lose the ability to call `generate` and other related functions.
+  - If you're using `trust_remote_code=True`, you can get rid of this warning by loading the model with an auto class. See https://huggingface.co/docs/transformers/en/model_doc/auto#auto-classes
+  - If you are the owner of the model architecture code, please modify your model class such that it inherits from `GenerationMixin` (after `PreTrainedModel`, otherwise you'll get an exception).
+  - If you are not the owner of the model architecture class, please contact the model code owner to update it.
+LlamaForCausalLM has generative capabilities, as `prepare_inputs_for_generation` is explicitly defined. However, it doesn't directly inherit from `GenerationMixin`. From 👉v4.50👈 onwards, `PreTrainedModel` will NOT inherit from `GenerationMixin`, and this model will lose the ability to call `generate` and other related functions.
+  - If you're using `trust_remote_code=True`, you can get rid of this warning by loading the model with an auto class. See https://huggingface.co/docs/transformers/en/model_doc/auto#auto-classes
+  - If you are the owner of the model architecture code, please modify your model class such that it inherits from `GenerationMixin` (after `PreTrainedModel`, otherwise you'll get an exception).
+  - If you are not the owner of the model architecture class, please contact the model code owner to update it.
+~/eagle-layers/EAGLE/eagle/model/ea_model.py:128: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ea_layer_state_dict = torch.load(load_model_path,
+~/eagle-layers/run.py:301: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  data = torch.load(out / "train_data.pt")[:n_train]
+~/eagle-layers/run.py:302: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  base_out = torch.load(out / "baseline_outputs.pt")
+22:38:14 sweep dsl-8b: 66 trainable variants, 3000 sequences
+22:40:07 sweep 200/3000 (113s)
+22:41:59 sweep 400/3000 (225s)
+22:43:52 sweep 600/3000 (338s)
+22:45:50 sweep 800/3000 (456s)
+22:47:44 sweep 1000/3000 (570s)
+22:49:41 sweep 1200/3000 (687s)
+22:51:41 sweep 1400/3000 (807s)
+22:53:36 sweep 1600/3000 (922s)
+22:55:31 sweep 1800/3000 (1037s)
+22:57:26 sweep 2000/3000 (1152s)
+22:59:20 sweep 2200/3000 (1266s)
+23:01:14 sweep 2400/3000 (1380s)
+23:03:07 sweep 2600/3000 (1493s)
+23:05:00 sweep 2800/3000 (1606s)
+23:06:54 sweep 3000/3000 (1720s)
+23:28:28 sweep: single_0=0.433 single_1=0.499 single_2=0.531 single_3=0.548 single_4=0.565 single_5=0.576 single_6=0.584 single_7=0.594 single_8=0.604 single_9=0.609 single_10=0.618 single_11=0.626 single_12=0.637 single_13=0.652 single_14=0.669 single_15=0.687 single_16=0.701 single_17=0.711 single_18=0.722 single_19=0.731 single_20=0.736 single_21=0.741 single_22=0.742 single_23=0.744 single_24=0.742 single_25=0.743 single_26=0.743 single_27=0.742 single_28=0.739 single_29=0.735 single_30=0.731 single_31=0.723 single_32=0.692

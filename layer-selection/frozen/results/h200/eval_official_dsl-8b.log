@@ -1,0 +1,30 @@
+LlamaForCausalLM has generative capabilities, as `prepare_inputs_for_generation` is explicitly defined. However, it doesn't directly inherit from `GenerationMixin`. From 👉v4.50👈 onwards, `PreTrainedModel` will NOT inherit from `GenerationMixin`, and this model will lose the ability to call `generate` and other related functions.
+  - If you're using `trust_remote_code=True`, you can get rid of this warning by loading the model with an auto class. See https://huggingface.co/docs/transformers/en/model_doc/auto#auto-classes
+  - If you are the owner of the model architecture code, please modify your model class such that it inherits from `GenerationMixin` (after `PreTrainedModel`, otherwise you'll get an exception).
+  - If you are not the owner of the model architecture class, please contact the model code owner to update it.
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
+Loading checkpoint shards:  50%|█████     | 1/2 [00:02<00:02,  2.06s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:03<00:00,  1.89s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:03<00:00,  1.91s/it]
+LlamaForCausalLM has generative capabilities, as `prepare_inputs_for_generation` is explicitly defined. However, it doesn't directly inherit from `GenerationMixin`. From 👉v4.50👈 onwards, `PreTrainedModel` will NOT inherit from `GenerationMixin`, and this model will lose the ability to call `generate` and other related functions.
+  - If you're using `trust_remote_code=True`, you can get rid of this warning by loading the model with an auto class. See https://huggingface.co/docs/transformers/en/model_doc/auto#auto-classes
+  - If you are the owner of the model architecture code, please modify your model class such that it inherits from `GenerationMixin` (after `PreTrainedModel`, otherwise you'll get an exception).
+  - If you are not the owner of the model architecture class, please contact the model code owner to update it.
+LlamaForCausalLM has generative capabilities, as `prepare_inputs_for_generation` is explicitly defined. However, it doesn't directly inherit from `GenerationMixin`. From 👉v4.50👈 onwards, `PreTrainedModel` will NOT inherit from `GenerationMixin`, and this model will lose the ability to call `generate` and other related functions.
+  - If you're using `trust_remote_code=True`, you can get rid of this warning by loading the model with an auto class. See https://huggingface.co/docs/transformers/en/model_doc/auto#auto-classes
+  - If you are the owner of the model architecture code, please modify your model class such that it inherits from `GenerationMixin` (after `PreTrainedModel`, otherwise you'll get an exception).
+  - If you are not the owner of the model architecture class, please contact the model code owner to update it.
+~/eagle-layers/EAGLE/eagle/model/ea_model.py:128: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ea_layer_state_dict = torch.load(load_model_path,
+20:24:48 dsl-8b: N=32 H=4096 triplet=(2, 16, 29) prompts=240
+20:38:05 baseline {'tau': 5.698803554584719, 'cycles': 20143, 'new_tokens': 114791, 'seconds': 796.2552739316598, 'tau_gsm8k': 6.081505261280542, 'tau_humaneval': 5.843059490084986, 'tau_mt_bench': 5.275548421615837}
+20:52:04 only_high: tau=3.272 ci=[-2.4337969104576556, -2.2635170270563543] prefix=(5.910406885758999, 3.366047448522829)
+20:58:35 drop_low: tau=5.497 ci=[-0.16845711192923712, -0.0820455414282695] prefix=(5.881698113207547, 5.757256424477722)
+21:07:37 drop_mid: tau=3.955 ci=[-1.7364510830230984, -1.5962904764382424] prefix=(5.877715927455558, 4.124509679868404)
+21:18:18 only_low_mid: tau=3.329 ci=[-2.3727476758381822, -2.2138793781542514] prefix=(5.882276603633667, 3.572703649305163)
+21:24:53 mid_16to22: tau=5.382 ci=[-0.2785311391587945, -0.19905339089966373] prefix=(5.878304961970301, 5.643578141315698)
+21:36:14 high_29to32: tau=4.803 ci=[-0.8673388402025517, -0.772572179129164] prefix=(5.910295003010234, 5.099149157839903)
+21:42:51 high_29to31: tau=5.496 ci=[-0.17232991858355423, -0.08054600275949489] prefix=(5.858573954036535, 5.709739263803681)
+21:49:46 fc_rank1024: tau=5.170 ci=[-0.5007527877240499, -0.40159069476126874] prefix=(5.882330021429963, 5.510424286759327)
+21:56:14 fc_rank2048: tau=5.511 ci=[-0.1507919305128012, -0.06635217193096252] prefix=(5.886303073370048, 5.797230984928146)
