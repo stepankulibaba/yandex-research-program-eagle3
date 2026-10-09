@@ -106,6 +106,7 @@ class Night:
         self.env['PATH'] = os.pathsep.join((str(self.py_original.parent), str(self.py_sglang.parent),
                                             self.env.get('PATH', '')))
         self.failures = []
+        self.failed_this_run = set()
         self.environment = {}          # package-list hashes of every environment, part of each result's settings
         self.deepspeed_cuda_home = None    # stub CUDA dir for DeepSpeed when there is no CUDA toolkit (setup)
         self.active_server_log = None
@@ -121,6 +122,8 @@ class Night:
         return min(left, cap)
 
     def status(self, name, status, **extra):
+        if status == 'FAILED':
+            self.failed_this_run.add(name)
         self.stages[name] = {'status': status, 'at': time.time(), **extra}
         atomic_json(self.stages_path, self.stages)
         print(f'{time.strftime("%F %T")} {name}: {status}', flush=True)
@@ -133,7 +136,7 @@ class Night:
             raise
         except Exception as exc:
             self.failures.append(name)
-            if self.stages.get(name, {}).get('status') != 'FAILED':
+            if name not in self.failed_this_run:     # keep a more specific reason recorded by an inner stage
                 self.status(name, 'FAILED', reason=f'{type(exc).__name__}: {exc}')
             print(f'{time.strftime("%F %T")} {name}: continuing with the next stage', flush=True)
 
@@ -422,8 +425,7 @@ class Night:
     def sglang_server(self, name, tree=None):
         """Start an SGLang server (plain, or EAGLE-3 with `tree` = (steps, topk, tokens)); yield its URL."""
         port = int(os.environ.get('SGLANG_PORT', '30000'))
-        with socket.socket() as sock:
-            sock.bind(('127.0.0.1', port))    # fails if the port is taken; we never kill its owner
+        self.wait_for_free_port(port)
         if not all(shutil.which(x, path=self.env['PATH']) for x in ('gcc', 'g++', 'ninja')):
             raise RuntimeError('Missing gcc/g++/ninja for runtime kernels; run setup before the allocation')
         if tree:     # without the tree-sampling kernel SGLang silently verifies T=1 greedily
@@ -456,6 +458,20 @@ class Night:
             finally:
                 self.active_server_log = None
                 terminate_owned(proc)
+
+    def wait_for_free_port(self, port, seconds=180):
+        """The previous server may need a moment to release the port; we wait, but never kill its owner."""
+        until = time.monotonic() + seconds
+        while True:
+            with socket.socket() as sock:
+                sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)   # ignore TIME_WAIT leftovers
+                try:
+                    sock.bind(('127.0.0.1', port))
+                    return
+                except OSError:
+                    if time.monotonic() > until:
+                        raise RuntimeError(f'Port {port} is still taken after {seconds} s')
+            time.sleep(2)
 
     def wait_until_ready(self, proc, url, log, tree):
         """Poll /server_info until the server answers, and check it runs the model and tree we asked for."""

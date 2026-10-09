@@ -44,7 +44,12 @@ POLICY = {'max_training_tokens': 1900, 'max_new_tokens_per_turn': 512, 'system':
 def normalize(item):
     """A dialogue as [{'role': 'user'|'assistant', 'content': ...}, ...] alternating from the user, or None."""
     messages = []
-    for m in item.get('messages', item.get('conversations', [])):
+    source = item.get('messages', item.get('conversations', []))
+    if not isinstance(source, list):
+        return None
+    for m in source:
+        if not isinstance(m, dict):      # some ShareGPT rows hold plain strings: not a usable dialogue
+            return None
         role = m.get('role', m.get('from'))
         role = {'human': 'user', 'gpt': 'assistant'}.get(role, role)
         if role == 'system':
