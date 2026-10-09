@@ -45,6 +45,12 @@ def normalize(item):
     """A dialogue as [{'role': 'user'|'assistant', 'content': ...}, ...] alternating from the user, or None."""
     messages = []
     source = item.get('messages', item.get('conversations', []))
+    if isinstance(source, dict):      # `datasets` returns a sequence of records as columns: {'from': [...], ...}
+        keys = list(source)
+        lengths = {len(source[k]) for k in keys if isinstance(source[k], list)}
+        if not keys or len(lengths) != 1:
+            return None
+        source = [{k: source[k][i] for k in keys} for i in range(lengths.pop())]
     if not isinstance(source, list):
         return None
     for m in source:

@@ -307,9 +307,12 @@ class Night:
 
         SGLang 0.5.9 initialises DeepGEMM on import (it asserts CUDA_HOME exists) and JIT-compiles some kernels
         (e.g. RoPE) with nvcc at start-up, so it needs a real CUDA toolkit (setup_cuda.sh)."""
+        # The draft's config says 2048 positions, the target's 131072; SGLang refuses the pair unless allowed.
+        # Our requests stay under 1979 tokens, so the shorter draft context never matters.
+        base = {**self.env, 'SGLANG_ALLOW_OVERWRITE_LONGER_CONTEXT_LEN': '1'}
         if not self.sglang_cuda_home:
-            return self.env
-        env = {**self.env, 'CUDA_HOME': self.sglang_cuda_home}
+            return base
+        env = {**base, 'CUDA_HOME': self.sglang_cuda_home}
         bin_dir = Path(self.sglang_cuda_home) / 'bin'
         env['PATH'] = os.pathsep.join((str(bin_dir), env.get('PATH', '')))
         if (bin_dir / 'g++').exists():     # setup_cuda.sh's gcc 13: CUDA 12.8 refuses the newer system gcc
