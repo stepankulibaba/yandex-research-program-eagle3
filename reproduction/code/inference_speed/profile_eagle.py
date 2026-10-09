@@ -71,7 +71,8 @@ def kernel_stats(prof):
     """(total kernel time in s, kernel launches) from a torch.profiler run."""
     total_us, launches = 0.0, 0
     for e in prof.key_averages():
-        if str(getattr(e, 'device_type', '')).endswith('CUDA'):
+        # our "phase: ..." labels also appear as GPU-side annotation spans: not kernels, do not count them
+        if str(getattr(e, 'device_type', '')).endswith('CUDA') and not e.key.startswith('phase: '):
             total_us += self_time_us(e, 'gpu')
             launches += e.count
     return total_us / 1e6, launches
@@ -85,7 +86,8 @@ def self_time_us(event, kind):
 
 
 def top_ops(prof, kind, n=12):
-    events = sorted(prof.key_averages(), key=lambda e: self_time_us(e, kind), reverse=True)[:n]
+    events = [e for e in prof.key_averages() if not e.key.startswith('phase: ')]   # our labels, not real ops
+    events = sorted(events, key=lambda e: self_time_us(e, kind), reverse=True)[:n]
     return [{'name': e.key[:70], 'count': e.count, 'ms': self_time_us(e, kind) / 1000} for e in events]
 
 
