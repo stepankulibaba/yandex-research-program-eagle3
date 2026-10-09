@@ -118,6 +118,32 @@ def gpu_busy_curve(kernels, bin_ms=2.0):
     return edges[:-1] / 1000, np.minimum(busy / (bin_ms * 1000), 1.0)
 
 
+def per_phase(kernels, launches, phases):
+    """Per phase: wall time of its spans, GPU kernel time and kernel launches attributed to it (by launch time).
+
+    Under the profiler wall times are inflated (the CPU is slower), kernel times are not.
+    """
+    rows = {}
+    for ts, dur, label in phases:
+        # exclusive wall time: minus phases nested inside (the draft runs inside update)
+        nested = sum(d for t, d, lab in phases if (t, d, lab) != (ts, dur, label) and t >= ts and t + d <= ts + dur)
+        rows.setdefault(label, {'spans': 0, 'wall_ms': 0.0, 'gpu_ms': 0.0, 'launches': 0})
+        rows[label]['spans'] += 1
+        rows[label]['wall_ms'] += (dur - nested) / 1000
+    for ts, dur, _, corr in kernels:
+        launch = launches.get(corr)
+        label = phase_at(phases, launch[0]) if launch else None
+        if label in rows:
+            rows[label]['gpu_ms'] += dur / 1000
+            rows[label]['launches'] += 1
+    for r in rows.values():
+        r['wall_ms_per_span'] = r['wall_ms'] / r['spans']
+        r['gpu_ms_per_span'] = r['gpu_ms'] / r['spans']
+        r['launches_per_span'] = r['launches'] / r['spans']
+        r['gpu_busy'] = r['gpu_ms'] / r['wall_ms'] if r['wall_ms'] else None
+    return rows
+
+
 def short(name):
     return name.split('<')[0].split('(')[0].replace('void ', '')[:48]
 
@@ -188,8 +214,19 @@ def main(folder='results/main/profile'):
     fig.savefig(out / 'kernels.png')
     plt.close(fig)
 
-    (out / 'stats.json').write_text(json.dumps(stats, indent=2), encoding='utf-8')
-    print('figures in', out, json.dumps(stats, indent=2))
+    stats['phases_eagle'] = per_phase(*eagle)
+    stats['phases_plain'] = per_phase(*plain)
+    (out / 'stats.json').write_text(json.dumps(stats, indent=2, ensure_ascii=False), encoding='utf-8')
+    lines = ['| phase (under the profiler) | spans | wall ms / span | GPU kernel ms / span | GPU busy | launches / span |',
+             '|---|---|---|---|---|---|']
+    for kind in ('eagle', 'plain'):
+        for label, r in sorted(stats[f'phases_{kind}'].items(), key=lambda kv: -kv[1]['wall_ms']):
+            busy = f"{100 * r['gpu_busy']:.0f}%" if r['gpu_busy'] is not None else '—'
+            lines.append(f"| {kind}: {label} | {r['spans']} | {r['wall_ms_per_span']:.2f} | {r['gpu_ms_per_span']:.2f} | "
+                         f"{busy} | {r['launches_per_span']:.0f} |")
+    (out / 'phases.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')
+    print('figures in', out)
+    print('\n'.join(lines))
 
 
 if __name__ == '__main__':
