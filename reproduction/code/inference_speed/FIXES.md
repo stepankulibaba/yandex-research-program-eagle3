@@ -92,3 +92,8 @@ SGLang 0.5.9 инициализирует DeepGEMM при импорте даж�
 (`assert cuda_home is not None`): все серверы падали на старте. Теперь процессы SGLang получают заглушку
 `venv_sglang/stub_cuda` (DeepGEMM только запоминает путь; компилирует он лишь для FP8). Импорт проверяется один раз
 на установке; если не помогло — удаляется сам пакет DeepGEMM (не sgl-kernel). Сбой здесь роняет только стадии SGLang.
+
+Заглушки мало: SGLang 0.5.9 на старте компилирует ядро RoPE (tvm_ffi + nvcc), со заглушкой сборка падает. pip-пакет NVIDIA
+с nvcc самого nvcc не содержит (только ptxas). Решение — `setup_cuda.sh`: CUDA 12.8 из conda-forge через micromamba
+без root, проверка компиляцией маленького ядра; оркестратор отдаёт `../cuda-home` процессам SGLang (CUDA_HOME и PATH).
+

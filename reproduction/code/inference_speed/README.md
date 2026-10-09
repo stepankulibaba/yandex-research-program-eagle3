@@ -38,6 +38,7 @@ bash check.sh                                                        # то же
 | `regen_probe.py` | 5: проба регенерации диалогов |
 | `budget.py` | 5: GPU-часы на полный датасет при 1–40 эпохах против 100 ч |
 | `download.py` | скачивание моделей по закреплённым ревизиям с проверкой целостности |
+| `setup_cuda.sh` | разово ставит компилятор CUDA 12.8 (conda-forge, без root) в `../cuda-home` — для SGLang |
 | `nemo_config.yaml` | шаблон конфига NeMo |
 | `night.sh`, `check.sh`, `run.sh`, `nemo_run.sh` | запуск `orchestrate.py` в нужном режиме |
 | `test_regressions.py` | быстрые тесты без GPU: `py -3.12 -X utf8 test_regressions.py` |
@@ -58,7 +59,7 @@ bash check.sh                                                        # то же
 ## Особенности сервера (без CUDA toolkit)
 
 - **DeepSpeed** спрашивает `nvcc -V` при установке и при каждом импорте. Ему даётся заглушка, которая печатает версию CUDA из torch. Ничего не компилируется, оптимизатор — AdamW из torch.
-- **SGLang** работает с Triton-attention и PyTorch-sampling и с `SGLANG_ENABLE_JIT_DEEPGEMM=0`. Пакет `kernels` удаляется: он ломает запуск сервера.
+- **SGLang** работает с Triton-attention и PyTorch-sampling. Пакет `kernels` удаляется: он ломает запуск сервера. SGLang 0.5.9 на старте компилирует часть ядер (RoPE) через `nvcc`, поэтому получает настоящий CUDA 12.8 из `setup_cuda.sh` (`../cuda-home`, только процессам SGLang).
 - **flash-attn 2** не ставится. Варианты с ним получают статус `UNSUPPORTED`.
 - **Скрипты с потоковым `datasets`** завершаются через `os._exit(0)`, потому что иначе Python падает на выходе.
 

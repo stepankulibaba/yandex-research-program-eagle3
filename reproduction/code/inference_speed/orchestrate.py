@@ -300,9 +300,26 @@ class Night:
         return str(stub.parent.parent)
 
     def sglang_process_env(self):
-        """SGLang 0.5.9 initialises DeepGEMM on import even with SGLANG_ENABLE_JIT_DEEPGEMM=0, and DeepGEMM asserts
-        that CUDA_HOME exists (it stores the path; it compiles only for FP8 models, not for this fp16 run)."""
-        return {**self.env, 'CUDA_HOME': self.sglang_cuda_home} if self.sglang_cuda_home else self.env
+        """Environment of SGLang processes: CUDA_HOME (and nvcc on PATH) for its start-up needs.
+
+        SGLang 0.5.9 initialises DeepGEMM on import (it asserts CUDA_HOME exists) and JIT-compiles some kernels
+        (e.g. RoPE) with nvcc at start-up, so it needs a real CUDA toolkit (setup_cuda.sh)."""
+        if not self.sglang_cuda_home:
+            return self.env
+        env = {**self.env, 'CUDA_HOME': self.sglang_cuda_home}
+        env['PATH'] = os.pathsep.join((str(Path(self.sglang_cuda_home) / 'bin'), env.get('PATH', '')))
+        return env
+
+    def sglang_cuda(self):
+        """A real CUDA 12.8 toolkit for SGLang: the system one, else ../cuda-home made by setup_cuda.sh (once)."""
+        if shutil.which('nvcc'):
+            return None                       # a system toolkit: SGLang finds it by itself
+        toolkit = HERE.parent / 'cuda-home'
+        if not (toolkit / 'bin/nvcc').exists():
+            self.attempt('cuda_toolkit', self.command, 'cuda_toolkit', ['bash', HERE / 'setup_cuda.sh'], timeout=3600)
+        if (toolkit / 'bin/nvcc').exists():
+            return str(toolkit)
+        return self.cuda_stub(self.py_sglang)  # last resort: at least the import-time check passes
 
     def setup_sglang_env(self):
         self.virtualenv(self.py_sglang, 'sglang_env', ['sglang[all]==0.5.9', 'requests', 'datasets'],
@@ -310,7 +327,7 @@ class Night:
         # A dependency pulls the newest `kernels` (needs huggingface_hub>=1.10, transformers 4.57 pins <1.0);
         # transformers imports it when present and every SGLang server dies at start. Without it: fine.
         self.command('sglang_drop_kernels', [self.py_sglang, '-m', 'pip', 'uninstall', '-y', 'kernels'], timeout=120)
-        self.sglang_cuda_home = self.cuda_stub(self.py_sglang)
+        self.sglang_cuda_home = self.sglang_cuda()
         # Check the import chain the servers need (it pulls in DeepGEMM) once, here. If DeepGEMM still refuses,
         # remove its own package (never sgl-kernel): SGLang then gets an ImportError and runs without it.
         # A failure here only takes the SGLang stages down, not the night.
