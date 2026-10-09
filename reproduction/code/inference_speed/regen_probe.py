@@ -14,8 +14,8 @@ Each split is its own stratum, weighted by its real size:
   2. regenerate the drawn dialogues on a plain SGLang server, many at a time (like a data job);
   3. per group: seconds per dialogue, kept training tokens per dialogue, share of dialogues kept.
 budget.py scales these to the full splits. Finished dialogues are journaled, so a restart continues.
-Limits of the pilot: only the start of each split is scanned; the ShareGPT version here (120,675 rows) is not the
-authors' cleaned 68K set, its weights are scaled to the paper's 68K.
+ShareGPT is ShareGPT_V4.3_unfiltered_cleaned_split.json, the file the EAGLE authors use: 68 623 dialogues, the
+paper's "~68K". Limit of the pilot: only the start of each split is scanned.
 """
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -34,7 +34,7 @@ from sglang_client import clean_text, stop_ids
 # and `datasets` would merge the two.
 SOURCES = {
     'sharegpt': ('Aeala/ShareGPT_Vicuna_unfiltered', '8b0048ad6ae8c22f46a78c15559dec98feef5539',
-                 {'train': 68000}, 'ShareGPT_V4.3_unfiltered_cleaned_split.json'),     # the paper's ~68K
+                 {'train': 68623}, 'ShareGPT_V4.3_unfiltered_cleaned_split.json'),     # all of it: the paper's ~68K
     'ultrachat': ('HuggingFaceH4/ultrachat_200k', '8049631c405ae6576f93f445c6b8166f76f5505a',
                   {'train_sft': 207865, 'train_gen': 256032}, None),   # real sizes; together the paper's ~464K
 }

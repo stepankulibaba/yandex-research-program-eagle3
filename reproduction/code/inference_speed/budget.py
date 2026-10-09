@@ -41,8 +41,11 @@ def estimate(probe, tokens_per_second):
     regen_seconds = epoch_tokens = 0.0
     for source in probe['sources'].values():
         for split in source['splits'].values():
+            # only the share of dialogues our policy can use at all (ShareGPT: ~63 %: odd turn counts, a model
+            # turn first, other roles or empty turns are skipped); the group weights are within that share
+            usable = split.get('valid', 1) / split.get('scanned', 1)
             for group in split['groups'].values():
-                count = split['dialogues'] * group['weight']
+                count = split['dialogues'] * usable * group['weight']
                 regen_seconds += count * group['seconds_per_dialogue']
                 epoch_tokens += count * group['mean_training_tokens']
     positive(tokens_per_second, 'training throughput')
@@ -76,7 +79,7 @@ def main():
              f'**This pilot does not establish that {args.gpu_hours:g} GPU-hours suffice for full paper reproduction.**',
              'Regeneration (our policy; the paper gives none): all assistant turns, greedy, the authors\' system',
              'prompt, <=512 tokens per turn, <=1900 per example; dialogues that do not fit are dropped.',
-             f'Sampling: {probe["sampling"]}. Dialogues: ShareGPT 68K (paper), UltraChat 208K + 256K (real splits).',
+             f'Sampling: {probe["sampling"]}. Dialogues: ShareGPT 68 623 (the V4.3 file = the paper 68K), UltraChat 208K + 256K, times the share our policy can use.',
              f'Reserve: {args.overhead_hours:g} GPU-hours for evaluation, checkpoints and retries.',
              f'Sensitivity: {args.fast_factor:g}x to {args.slow_factor:g}x of the measured cost; NOT a confidence interval.',
              'Trainer speed: measured on another corpus. Realistic rows: author-as-is and packed NeMo; matched rows',
