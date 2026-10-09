@@ -465,7 +465,7 @@ class Night:
                '--random-seed', '0']     # tree verification at T=1 uses the server's global RNG
         if tree:
             steps, topk, tokens = tree
-            cmd += ['--speculative-algorithm', 'EAGLE3', '--speculative-draft-model-path', self.draft,
+            cmd += ['--speculative-algorithm', 'EAGLE3', '--speculative-draft-model-path', self.sglang_draft(),
                     '--speculative-num-steps', str(steps), '--speculative-eagle-topk', str(topk),
                     '--speculative-num-draft-tokens', str(tokens)]
         log = self.logs / ('server_' + name + '.log')
@@ -483,6 +483,25 @@ class Night:
             finally:
                 self.active_server_log = None
                 terminate_owned(proc)
+
+    def sglang_draft(self):
+        """The official draft as SGLang needs it: the same weight file (a link), the config naming the EAGLE-3 class.
+
+        The authors' config says architectures=["LlamaForCausalLM"]; SGLang then loads the draft as a plain Llama
+        and fails on its 32K draft vocabulary. SGLang's own copy of this draft
+        (jamesliu1/sglang-EAGLE3-Llama-3.1-Instruct-8B) has the byte-identical pytorch_model.bin (sha256 16d5bf95...)
+        and differs only in architectures=["LlamaForCausalLMEagle3"]; we make the same change locally.
+        """
+        view = self.draft.parent / (self.draft.name + '-sglang')
+        view.mkdir(parents=True, exist_ok=True)
+        for f in self.draft.iterdir():
+            link = view / f.name
+            if f.is_file() and f.name != 'config.json' and not link.exists():
+                link.symlink_to(f.resolve())
+        config = read_json(self.draft / 'config.json')
+        config['architectures'] = ['LlamaForCausalLMEagle3']
+        atomic_json(view / 'config.json', config)
+        return view
 
     def wait_for_free_port(self, port, seconds=180):
         """The previous server may need a moment to release the port; we wait, but never kill its owner."""
