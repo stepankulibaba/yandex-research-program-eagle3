@@ -47,6 +47,11 @@ def normalize(item):
     """A dialogue as [{'role': 'user'|'assistant', 'content': ...}, ...] alternating from the user, or None."""
     messages = []
     source = item.get('messages', item.get('conversations', []))
+    if isinstance(source, str):       # a dialogue stored as a JSON string
+        try:
+            source = json.loads(source)
+        except ValueError:
+            return None
     if isinstance(source, dict):      # `datasets` returns a sequence of records as columns: {'from': [...], ...}
         keys = list(source)
         lengths = {len(source[k]) for k in keys if isinstance(source[k], list)}
@@ -78,13 +83,19 @@ def length_bucket(tokens):
 
 def sample_split(tok, repo, revision, split, per_bucket, scan_limit, data_file=None):
     """Step 1 for one split: reservoir sample of `per_bucket` dialogues per length group."""
-    from datasets import load_dataset
     rng = random.Random(0)
     groups = {b: [] for b in BUCKETS}
     counts = {b: 0 for b in BUCKETS}
     scanned = 0
-    extra = {'data_files': data_file} if data_file else {}
-    for i, item in enumerate(load_dataset(repo, revision=revision, split=split, streaming=True, **extra)):
+    if data_file:
+        # A plain JSON file (ShareGPT): read it as is. `datasets` streaming mangles its nested records.
+        from huggingface_hub import hf_hub_download
+        path = hf_hub_download(repo, data_file, repo_type='dataset', revision=revision)
+        rows = json.loads(Path(path).read_text(encoding='utf-8'))
+    else:
+        from datasets import load_dataset
+        rows = load_dataset(repo, revision=revision, split=split, streaming=True)
+    for i, item in enumerate(rows):
         if i >= scan_limit:
             break
         scanned += 1
