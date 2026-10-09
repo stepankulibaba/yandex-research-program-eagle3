@@ -307,7 +307,10 @@ class Night:
         if not self.sglang_cuda_home:
             return self.env
         env = {**self.env, 'CUDA_HOME': self.sglang_cuda_home}
-        env['PATH'] = os.pathsep.join((str(Path(self.sglang_cuda_home) / 'bin'), env.get('PATH', '')))
+        bin_dir = Path(self.sglang_cuda_home) / 'bin'
+        env['PATH'] = os.pathsep.join((str(bin_dir), env.get('PATH', '')))
+        if (bin_dir / 'g++').exists():     # setup_cuda.sh's gcc 13: CUDA 12.8 refuses the newer system gcc
+            env['NVCC_PREPEND_FLAGS'] = f'-ccbin {bin_dir / "g++"}'
         return env
 
     def sglang_cuda(self):
@@ -315,7 +318,7 @@ class Night:
         if shutil.which('nvcc'):
             return None                       # a system toolkit: SGLang finds it by itself
         toolkit = HERE.parent / 'cuda-home'
-        if not (toolkit / 'bin/nvcc').exists():
+        if not ((toolkit / 'bin/nvcc').exists() and (toolkit / 'bin/g++').exists()):
             self.attempt('cuda_toolkit', self.command, 'cuda_toolkit', ['bash', HERE / 'setup_cuda.sh'], timeout=3600)
         if (toolkit / 'bin/nvcc').exists():
             return str(toolkit)
