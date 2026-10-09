@@ -67,4 +67,4 @@
 ## Текущее состояние
 
 - `layer-selection/router`: DSL-8B посчитан, отчёт обновлён.
-- `reproduction`: идёт прогон — 3a с `--depth 7`, 3b (SGLang), задача 4 (обучение), задача 5 (бюджет). Результаты 3a в README пока с `--depth 5`.
+- `reproduction`: 3a (`--depth 7`) и задача 4 посчитаны, результаты в `reproduction/README.md` и `reproduction/results/`. 3b (SGLang) и задача 5 — в работе: SGLang 0.5.9 на сервере без CUDA toolkit не стартовал из-за DeepGEMM (исправление — заглушка `CUDA_HOME`, ещё не проверено).
