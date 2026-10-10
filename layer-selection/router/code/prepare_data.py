@@ -13,7 +13,6 @@ EAGLE is lossless, so both give the target's greedy text, up to rare bf16 ties.
 """
 import argparse
 import json
-from pathlib import Path
 
 import numpy as np
 import torch

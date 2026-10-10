@@ -49,6 +49,9 @@
 - `reproduction`, сервер без CUDA toolkit (нет `nvcc`/`CUDA_HOME`): DeepSpeed 0.16.4 спрашивает `nvcc -V` и при установке, и при **каждом импорте** — ему даётся заглушка `venv_orig/stub_cuda` (печатает версию CUDA из torch); SGLang — с `SGLANG_ENABLE_JIT_DEEPGEMM=0`, Triton-attention и PyTorch-sampling (flashinfer может требовать JIT); flash-attn 2 не ставится.
 - `reproduction`: в окружении SGLang 0.5.9 удалять пакет `kernels` (новая версия требует `huggingface_hub>=1.10`, transformers 4.57 держит <1.0 — сервер падает на старте). Счётчик принятых токенов в ответе SGLang — `meta_info.spec_accept_token_num`; при нуле раундов счётчиков нет вовсе.
 - `reproduction`: скрипты с потоковым `datasets` падают при завершении Python (`PyGILState_Release`) уже после записи результатов — выходить через `os._exit(0)`.
+- `reproduction`: SGLang грузит официальный драфт как обычную Llama, если в его `config.json` нет `architectures = ["LlamaForCausalLMEagle3"]`; оркестратор даёт SGLang копию конфига с этим полем (веса — ссылки) и `SGLANG_ALLOW_OVERWRITE_LONGER_CONTEXT_LEN=1`.
+- `reproduction`: ShareGPT читать из файла `ShareGPT_V4.3_unfiltered_cleaned_split.json` напрямую (`hf_hub_download` + `json`): потоковый `datasets` портит записи. UltraChat `train_gen` — только промпты.
+- `reproduction`: ускорение EAGLE зависит от машины, а не только от GPU: на виртуалке с медленным запуском ядер обычная генерация медленнее, и ускорение выше. Сравнивать машины — по ускорению **и** абсолютным ток/с.
 - Зеркало `unsloth/Meta-Llama-3.1-8B-Instruct`: в `tokenizer_config.json` класс `PreTrainedTokenizer`; скрипты EAGLE (`use_fast=False`) с ним не получают токенизатор — менять на `PreTrainedTokenizerFast` (так у Meta).
 
 ## Проверки перед PR
@@ -66,5 +69,6 @@
 
 ## Текущее состояние
 
-- `layer-selection/router`: DSL-8B посчитан, отчёт обновлён.
-- `reproduction`: 3a (`--depth 7`) и задача 4 посчитаны, результаты в `reproduction/README.md` и `reproduction/results/`. 3b (SGLang) и задача 5 — в работе: SGLang 0.5.9 на сервере без CUDA toolkit не стартовал из-за DeepGEMM (исправление — заглушка `CUDA_HOME`, ещё не проверено).
+- `layer-selection`: Qwen3-1.7B и DSL-8B посчитаны, отчёты готовы.
+- `extra-checks`: готово; сравнения со статьёй там на `--depth 5`.
+- `reproduction`: задачи 3a, 3b, 4, 5 посчитаны на H200, 3a (T = 0) и профиль повторены на A100 (DataSphere). Отчёты — `reproduction/reports/`, все числа отчётов — `reproduction/results/numbers.json`, графики строит `reproduction/code/make_report_figures.py`. LaTeX-исходники отчётов в репозиторий не входят. Драфт не обучали: стоимость обучения только оценена.

@@ -31,7 +31,9 @@
 | [`analyze_layers.py`](code/analyze_layers.py) | что в каждом слое: масштаб, сходство слоёв, вклад в вход драфта, знание о токенах на 1–3 шага вперёд | `analysis.json` |
 | [`sweep_layers.py`](code/sweep_layers.py) | обучаем вход драфта на каждом слое по отдельности и в паре с N−3 | `sweep.json` |
 | [`train_fusions.py`](code/train_fusions.py) | обучаем разные входы (нормализация, другие тройки, смесь слоёв, MoE) и меряем τ с каждым | `fusion/phase_b.json` |
-| [`languages.py`](code/languages.py) | τ и скорость на шести языках | `lang/lang.json` |
+| [`languages.py`](code/languages.py) | τ и скорость на шести языках | `lang/lang.json` (копия — в [`extra-checks/results/lang/`](../../extra-checks/results/lang/)) |
+
+Что именно обучается в опытах с входом драфта (`sweep_layers.py`, `train_fusions.py`) и как устроены варианты — на [схеме](../reports/method5_scheme.pdf): обучается только модуль входа вместо `fc`, большая модель и сам драфт заморожены.
 
 Общие модули: [`eagle_model.py`](code/eagle_model.py) — EAGLE с настраиваемым выбором слоёв, [`acceptance.py`](code/acceptance.py) — как меряем τ, [`target_states.py`](code/target_states.py) — состояния модели и один шаг драфта, [`draft_inputs.py`](code/draft_inputs.py) — варианты входа, [`layer_analysis.py`](code/layer_analysis.py) — анализ слоёв, [`config.py`](code/config.py) — пути и протокол.
 

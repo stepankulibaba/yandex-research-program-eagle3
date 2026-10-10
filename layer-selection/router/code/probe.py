@@ -12,7 +12,6 @@ Output: results/<pair>/probe.json and a table in the log. No training; a few min
 import json
 import sys
 
-import numpy as np
 import torch
 
 from config import PAIRS, DATA, RESULTS
