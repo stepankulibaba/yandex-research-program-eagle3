@@ -5,6 +5,7 @@
     python3 orchestrate.py setup       only environments and models
     python3 orchestrate.py inference   only 3a, 3b and the regeneration probe (run.sh)
     python3 orchestrate.py train       only the training speed (../nemo_speed/run.sh)
+    python3 orchestrate.py author      only the authors' code on this GPU: profile, then 3a (author.sh; e.g. an A100)
 
 Order of the night (most important first):
     1. 3a  the authors' evaluation scripts, unchanged: EAGLE-3 and plain generation, T=0 and T=1
@@ -106,6 +107,7 @@ class Night:
         self.env['PATH'] = os.pathsep.join((str(self.py_original.parent), str(self.py_sglang.parent),
                                             self.env.get('PATH', '')))
         self.failures = []
+        self.failed_this_run = set()
         self.environment = {}          # package-list hashes of every environment, part of each result's settings
         self.deepspeed_cuda_home = None    # stub CUDA dir for DeepSpeed when there is no CUDA toolkit (setup)
         self.active_server_log = None
@@ -121,6 +123,8 @@ class Night:
         return min(left, cap)
 
     def status(self, name, status, **extra):
+        if status == 'FAILED':
+            self.failed_this_run.add(name)
         self.stages[name] = {'status': status, 'at': time.time(), **extra}
         atomic_json(self.stages_path, self.stages)
         print(f'{time.strftime("%F %T")} {name}: {status}', flush=True)
@@ -133,7 +137,7 @@ class Night:
             raise
         except Exception as exc:
             self.failures.append(name)
-            if self.stages.get(name, {}).get('status') != 'FAILED':
+            if name not in self.failed_this_run:     # keep a more specific reason recorded by an inner stage
                 self.status(name, 'FAILED', reason=f'{type(exc).__name__}: {exc}')
             print(f'{time.strftime("%F %T")} {name}: continuing with the next stage', flush=True)
 
@@ -175,22 +179,32 @@ class Night:
     ADOPT_KEYS = ('stage', 'protocol', 'temperature', 'tree', 'models', 'eagle', 'count', 'hardware')
 
     def adopt_earlier_result(self, path, manifest, validator):
-        """Accept a 3a result finished by the previous code version (other marker format, SCHEMA 3).
+        """Accept a finished result whose marker no longer matches exactly; it is re-marked, nothing recomputed.
 
-        Only for the authors' benchmarks (their scripts are unchanged), and only if the result file is intact, is
-        complete, and was made with the same settings, model revisions, hardware and the same installed packages
-        of the eval environment. The result is then re-marked in the current format; nothing is recomputed.
+        Two cases, both only for an intact, complete result file:
+        - a 3a result of the previous code version (SCHEMA 3): same settings, model revisions, hardware and the
+          same installed packages of the eval environment;
+        - with REUSE_IGNORE_ENV=1, any result of this version whose settings are identical except the package
+          lists of the environments (e.g. after installing matplotlib for the profile pictures). Use it only when
+          the changed packages cannot affect the measurement.
         """
-        if manifest.get('protocol') != 'unchanged-author' or not path.exists():
+        if not path.exists():
             return False
         try:
             earlier = read_json(done_path(path))
+            if earlier['sha256'] != file_hash(path):
+                return False
             old = json.loads(json.dumps(earlier['manifest']))
             new = json.loads(json.dumps(manifest))
-            same = (earlier['sha256'] == file_hash(path)
-                    and all(old.get(k) == new.get(k) for k in self.ADOPT_KEYS)
-                    and old['environment']['eagle_env']['freeze_sha256']
-                    == new['environment']['eagle_env']['freeze_sha256'])
+            if os.environ.get('REUSE_IGNORE_ENV', '0') == '1' and earlier.get('schema') == SCHEMA:
+                without_env = lambda m: {k: v for k, v in m.items() if k != 'environment'}
+                same = without_env(old) == without_env(new)
+            elif manifest.get('protocol') == 'unchanged-author' and earlier.get('schema') != SCHEMA:
+                same = (all(old.get(k) == new.get(k) for k in self.ADOPT_KEYS)
+                        and old['environment']['eagle_env']['freeze_sha256']
+                        == new['environment']['eagle_env']['freeze_sha256'])
+            else:
+                return False
             if not same:
                 return False
             validator(path)
@@ -224,7 +238,15 @@ class Night:
         wanted = digest({'schema': SCHEMA, 'requirements': requirements, 'imports': import_check})
         marker = python.parent.parent / '.installed.json'
         if not python.exists():
-            self.command(name + '_venv', [sys.executable, '-m', 'venv', python.parent.parent], timeout=120)
+            try:
+                self.command(name + '_venv', [sys.executable, '-m', 'venv', python.parent.parent], timeout=120)
+            except subprocess.CalledProcessError:
+                # Some images (e.g. DataSphere) ship Python without ensurepip; `virtualenv` brings its own pip.
+                shutil.rmtree(python.parent.parent, ignore_errors=True)
+                self.command(name + '_virtualenv_install', [sys.executable, '-m', 'pip', 'install', '-q', 'virtualenv'],
+                             timeout=600)
+                self.command(name + '_virtualenv', [sys.executable, '-m', 'virtualenv', python.parent.parent],
+                             timeout=300)
         try:
             up_to_date = read_json(marker)['desired'] == wanted
         except (OSError, ValueError, KeyError):
@@ -242,7 +264,7 @@ class Night:
         self.virtualenv(self.py_eagle, 'eagle_env',
             ['torch==2.5.1', 'transformers==4.53.2', 'fschat==0.2.31', 'openai==0.28.1', 'anthropic==0.3.11',
              'pydantic<2', 'accelerate', 'shortuuid', 'sentencepiece', 'protobuf', 'numpy', 'huggingface_hub',
-             'requests', 'datasets', 'tqdm'],
+             'requests', 'datasets', 'tqdm', 'matplotlib'],
             'import torch, transformers, fastchat.llm_judge.common; '
             'assert torch.__version__.split("+")[0]=="2.5.1"; assert transformers.__version__=="4.53.2"')
 
@@ -257,16 +279,9 @@ class Night:
         # checks). Without a CUDA toolkit it gets a stub nvcc that prints torch's CUDA version; nothing is compiled
         # (DS_BUILD_OPS=0, and the trainer uses torch's AdamW).
         deepspeed_env = dict(self.env, DS_BUILD_OPS='0')
-        if not shutil.which('nvcc'):
-            version = subprocess.check_output([str(self.py_original), '-c', 'import torch; print(torch.version.cuda)'],
-                                              text=True, timeout=30).strip()
-            stub = self.py_original.parent.parent / 'stub_cuda/bin/nvcc'
-            stub.parent.mkdir(parents=True, exist_ok=True)
-            stub.write_text(f'#!/bin/sh\necho "Cuda compilation tools, release {version}, V{version}.0"\n',
-                            encoding='utf-8')
-            stub.chmod(0o755)
-            deepspeed_env['CUDA_HOME'] = str(stub.parent.parent)
-            self.deepspeed_cuda_home = str(stub.parent.parent)
+        self.deepspeed_cuda_home = self.cuda_stub(self.py_original)
+        if self.deepspeed_cuda_home:
+            deepspeed_env['CUDA_HOME'] = self.deepspeed_cuda_home
         self.command('deepspeed_install', [self.py_original, '-m', 'pip', 'install', '--no-build-isolation',
                                            'deepspeed==0.16.4'], env=deepspeed_env, timeout=900)
         self.command('deepspeed_import', [self.py_original, '-c', 'import deepspeed; '
@@ -289,12 +304,77 @@ class Night:
                                          text=True, timeout=60)
         self.environment['nemo_env'] = {'commit': NEMO_COMMIT, 'freeze_sha256': digest(sorted(freeze.splitlines()))}
 
+    def cuda_stub(self, python):
+        """Without a CUDA toolkit: <venv>/stub_cuda/bin/nvcc that only prints the venv torch's CUDA version.
+
+        Some packages only *ask* nvcc for the version or *store* CUDA_HOME at import (DeepSpeed's op checks,
+        DeepGEMM's init) and compile nothing on our path. Returns the directory for CUDA_HOME, or None.
+        """
+        if shutil.which('nvcc'):
+            return None
+        version = subprocess.check_output([str(python), '-c', 'import torch; print(torch.version.cuda)'],
+                                          text=True, timeout=60).strip()
+        stub = python.parent.parent / 'stub_cuda/bin/nvcc'
+        stub.parent.mkdir(parents=True, exist_ok=True)
+        stub.write_text(f'#!/bin/sh\necho "Cuda compilation tools, release {version}, V{version}.0"\n',
+                        encoding='utf-8')
+        stub.chmod(0o755)
+        return str(stub.parent.parent)
+
+    def sglang_process_env(self):
+        """Environment of SGLang processes: CUDA_HOME (and nvcc on PATH) for its start-up needs.
+
+        SGLang 0.5.9 initialises DeepGEMM on import (it asserts CUDA_HOME exists) and JIT-compiles some kernels
+        (e.g. RoPE) with nvcc at start-up, so it needs a real CUDA toolkit (setup_cuda.sh)."""
+        # The draft's config says 2048 positions, the target's 131072; SGLang refuses the pair unless allowed.
+        # Our requests stay under 1979 tokens, so the shorter draft context never matters.
+        base = {**self.env, 'SGLANG_ALLOW_OVERWRITE_LONGER_CONTEXT_LEN': '1'}
+        if not self.sglang_cuda_home:
+            return base
+        env = {**base, 'CUDA_HOME': self.sglang_cuda_home}
+        bin_dir = Path(self.sglang_cuda_home) / 'bin'
+        env['PATH'] = os.pathsep.join((str(bin_dir), env.get('PATH', '')))
+        if (bin_dir / 'g++').exists():     # setup_cuda.sh's gcc 13: CUDA 12.8 refuses the newer system gcc
+            env['NVCC_PREPEND_FLAGS'] = f'-ccbin {bin_dir / "g++"}'
+        return env
+
+    def sglang_cuda(self):
+        """A real CUDA 12.8 toolkit for SGLang: the system one, else ../cuda-home made by setup_cuda.sh (once)."""
+        if shutil.which('nvcc'):
+            return None                       # a system toolkit: SGLang finds it by itself
+        toolkit = HERE.parent / 'cuda-home'
+        if not ((toolkit / 'bin/nvcc').exists() and (toolkit / 'bin/g++').exists()):
+            self.attempt('cuda_toolkit', self.command, 'cuda_toolkit', ['bash', HERE / 'setup_cuda.sh'], timeout=3600)
+        if (toolkit / 'bin/nvcc').exists():
+            return str(toolkit)
+        return self.cuda_stub(self.py_sglang)  # last resort: at least the import-time check passes
+
     def setup_sglang_env(self):
         self.virtualenv(self.py_sglang, 'sglang_env', ['sglang[all]==0.5.9', 'requests', 'datasets'],
                         'import sglang, requests, datasets; assert sglang.__version__.split("+")[0]=="0.5.9"')
         # A dependency pulls the newest `kernels` (needs huggingface_hub>=1.10, transformers 4.57 pins <1.0);
         # transformers imports it when present and every SGLang server dies at start. Without it: fine.
         self.command('sglang_drop_kernels', [self.py_sglang, '-m', 'pip', 'uninstall', '-y', 'kernels'], timeout=120)
+        self.sglang_cuda_home = self.sglang_cuda()
+        # Check the import chain the servers need (it pulls in DeepGEMM) once, here. If DeepGEMM still refuses,
+        # remove its own package (never sgl-kernel): SGLang then gets an ImportError and runs without it.
+        # A failure here only takes the SGLang stages down, not the night.
+        self.attempt('sglang_import', self.import_sglang)
+
+    def import_sglang(self):
+        check = [self.py_sglang, '-c', 'import sglang.srt.speculative.spec_utils']
+        try:
+            self.command('sglang_import_check', check, env=self.sglang_process_env(), timeout=300)
+            return
+        except subprocess.CalledProcessError:
+            pass
+        owner = subprocess.check_output([str(self.py_sglang), '-c',
+            'import importlib.metadata as m; print(" ".join(sorted({d.metadata["Name"] for d in m.distributions() '
+            'if any(str(f).startswith("deep_gemm/") for f in (d.files or []))})))'], text=True, timeout=120).strip()
+        if not owner or len(owner.split()) != 1 or 'gemm' not in owner.lower():
+            raise RuntimeError(f'SGLang import fails and deep_gemm belongs to {owner!r}; not removing it')
+        self.command('sglang_drop_deep_gemm', [self.py_sglang, '-m', 'pip', 'uninstall', '-y', owner], timeout=300)
+        self.command('sglang_import_check', check, env=self.sglang_process_env(), timeout=300)
 
     def setup_models(self, inference):
         """Target (always) and draft (for inference) at their pinned revisions."""
@@ -332,7 +412,10 @@ class Night:
     # ================================================================================================================
     def author_benchmarks(self):
         """EAGLE-3 and plain generation with SafeAILab/EAGLE's own scripts, T=0 then T=1 (results/<mode>/eagle)."""
+        wanted = os.environ.get('AUTHOR_TEMPERATURES', '0,1').split(',')
         for temperature, prefix in ((0, ''), (1, 't1_')):
+            if str(temperature) not in wanted:
+                continue
             for bench in BENCHES:
                 expected = questions(HERE / 'EAGLE', bench, self.questions_per_bench)
                 for use_eagle, script in ((True, 'gen_ea_answer_llama3chat'),
@@ -367,14 +450,14 @@ class Night:
     def sglang_server(self, name, tree=None):
         """Start an SGLang server (plain, or EAGLE-3 with `tree` = (steps, topk, tokens)); yield its URL."""
         port = int(os.environ.get('SGLANG_PORT', '30000'))
-        with socket.socket() as sock:
-            sock.bind(('127.0.0.1', port))    # fails if the port is taken; we never kill its owner
+        self.wait_for_free_port(port)
         if not all(shutil.which(x, path=self.env['PATH']) for x in ('gcc', 'g++', 'ninja')):
             raise RuntimeError('Missing gcc/g++/ninja for runtime kernels; run setup before the allocation')
         if tree:     # without the tree-sampling kernel SGLang silently verifies T=1 greedily
             self.command('tree_sampling_kernel', [self.py_sglang, '-c',
                 'from sglang.srt.speculative.spec_utils import TREE_SPEC_KERNEL_AVAILABLE; '
-                'assert TREE_SPEC_KERNEL_AVAILABLE, "T=1 would fall back to greedy"'], timeout=120)
+                'assert TREE_SPEC_KERNEL_AVAILABLE, "T=1 would fall back to greedy"'],
+                env=self.sglang_process_env(), timeout=300)
         # Triton attention and PyTorch sampling: kernels that need no CUDA toolkit (flashinfer may JIT-compile).
         cmd = [self.py_sglang, '-m', 'sglang.launch_server', '--model-path', self.model, '--dtype', 'float16',
                '--host', '127.0.0.1', '--port', str(port), '--mem-fraction-static', '0.8',
@@ -382,7 +465,7 @@ class Night:
                '--random-seed', '0']     # tree verification at T=1 uses the server's global RNG
         if tree:
             steps, topk, tokens = tree
-            cmd += ['--speculative-algorithm', 'EAGLE3', '--speculative-draft-model-path', self.draft,
+            cmd += ['--speculative-algorithm', 'EAGLE3', '--speculative-draft-model-path', self.sglang_draft(),
                     '--speculative-num-steps', str(steps), '--speculative-eagle-topk', str(topk),
                     '--speculative-num-draft-tokens', str(tokens)]
         log = self.logs / ('server_' + name + '.log')
@@ -390,7 +473,7 @@ class Night:
         proc = None
         with log.open('w', encoding='utf-8') as stream:
             try:
-                proc = subprocess.Popen([str(x) for x in cmd], cwd=HERE, env=self.env, stdout=stream,
+                proc = subprocess.Popen([str(x) for x in cmd], cwd=HERE, env=self.sglang_process_env(), stdout=stream,
                                         stderr=subprocess.STDOUT, start_new_session=True)
                 self.wait_until_ready(proc, url, log, tree)
                 self.active_server_log = log
@@ -400,6 +483,39 @@ class Night:
             finally:
                 self.active_server_log = None
                 terminate_owned(proc)
+
+    def sglang_draft(self):
+        """The official draft as SGLang needs it: the same weight file (a link), the config naming the EAGLE-3 class.
+
+        The authors' config says architectures=["LlamaForCausalLM"]; SGLang then loads the draft as a plain Llama
+        and fails on its 32K draft vocabulary. SGLang's own copy of this draft
+        (jamesliu1/sglang-EAGLE3-Llama-3.1-Instruct-8B) has the byte-identical pytorch_model.bin (sha256 16d5bf95...)
+        and differs only in architectures=["LlamaForCausalLMEagle3"]; we make the same change locally.
+        """
+        view = self.draft.parent / (self.draft.name + '-sglang')
+        view.mkdir(parents=True, exist_ok=True)
+        for f in self.draft.iterdir():
+            link = view / f.name
+            if f.is_file() and f.name != 'config.json' and not link.exists():
+                link.symlink_to(f.resolve())
+        config = read_json(self.draft / 'config.json')
+        config['architectures'] = ['LlamaForCausalLMEagle3']
+        atomic_json(view / 'config.json', config)
+        return view
+
+    def wait_for_free_port(self, port, seconds=180):
+        """The previous server may need a moment to release the port; we wait, but never kill its owner."""
+        until = time.monotonic() + seconds
+        while True:
+            with socket.socket() as sock:
+                sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)   # ignore TIME_WAIT leftovers
+                try:
+                    sock.bind(('127.0.0.1', port))
+                    return
+                except OSError:
+                    if time.monotonic() > until:
+                        raise RuntimeError(f'Port {port} is still taken after {seconds} s')
+            time.sleep(2)
 
     def wait_until_ready(self, proc, url, log, tree):
         """Poll /server_info until the server answers, and check it runs the model and tree we asked for."""
@@ -598,7 +714,21 @@ class Night:
     # ================================================================================================================
     # The night
     # ================================================================================================================
+    def profile(self):
+        """Where the time of an EAGLE round goes on this GPU (profile_eagle.py), and its pictures."""
+        out = self.results / 'profile'
+        self.command('profile', [self.py_eagle, HERE / 'profile_eagle.py', '--model', self.model, '--draft', self.draft,
+                                 '--out', out], cwd=HERE / 'EAGLE', timeout=7200)
+        self.command('profile_plots', [self.py_eagle, HERE / 'plot_profile.py', out], timeout=1800)
+
     def run(self):
+        if self.mode == 'author':     # the authors' code only, e.g. on another GPU: profile first (fast), then 3a
+            self.setup(inference=True, training=False, sglang=False)
+            self.attempt('profile', self.profile)
+            self.attempt('author_benches', self.author_benchmarks)
+            if self.failures:
+                raise RuntimeError('Failed stages (the rest ran): ' + ', '.join(dict.fromkeys(self.failures)))
+            return
         inference = self.mode in ('night', 'inference', 'check')
         training = self.mode in ('night', 'train', 'check')
         self.setup(inference=self.mode != 'train', training=self.mode in ('night', 'train', 'check', 'setup'),
@@ -624,7 +754,7 @@ class Night:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('mode', choices=('night', 'inference', 'train', 'check', 'setup'))
+    parser.add_argument('mode', choices=('night', 'inference', 'train', 'check', 'setup', 'author'))
     args = parser.parse_args()
     if os.name != 'posix':
         raise SystemExit('GPU orchestration requires Linux; run tests locally on Windows')

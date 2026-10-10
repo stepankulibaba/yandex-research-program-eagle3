@@ -3,8 +3,6 @@
     py -3.12 -X utf8 test_regressions.py
 """
 import ast
-from contextlib import redirect_stdout
-import io
 import json
 from pathlib import Path
 import subprocess

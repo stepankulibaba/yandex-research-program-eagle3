@@ -14,8 +14,8 @@ Each split is its own stratum, weighted by its real size:
   2. regenerate the drawn dialogues on a plain SGLang server, many at a time (like a data job);
   3. per group: seconds per dialogue, kept training tokens per dialogue, share of dialogues kept.
 budget.py scales these to the full splits. Finished dialogues are journaled, so a restart continues.
-Limits of the pilot: only the start of each split is scanned; the ShareGPT version here (120,675 rows) is not the
-authors' cleaned 68K set, its weights are scaled to the paper's 68K.
+ShareGPT is ShareGPT_V4.3_unfiltered_cleaned_split.json, the file the EAGLE authors use: 68 623 dialogues, the
+paper's "~68K". Limit of the pilot: only the start of each split is scanned.
 """
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -29,12 +29,14 @@ import time
 from common import MODELS, SCHEMA, SYSTEM, atomic_json, digest, positive, read_json
 from sglang_client import clean_text, stop_ids
 
-# name: (Hugging Face dataset, pinned revision, {split: dialogues it stands for})
+# name: (Hugging Face dataset, pinned revision, {split: dialogues it stands for}, file to read or None)
+# ShareGPT: only the file the EAGLE authors use; the repo also holds another file with a different schema,
+# and `datasets` would merge the two.
 SOURCES = {
     'sharegpt': ('Aeala/ShareGPT_Vicuna_unfiltered', '8b0048ad6ae8c22f46a78c15559dec98feef5539',
-                 {'train': 68000}),                                   # the paper's ~68K
+                 {'train': 68623}, 'ShareGPT_V4.3_unfiltered_cleaned_split.json'),     # all of it: the paper's ~68K
     'ultrachat': ('HuggingFaceH4/ultrachat_200k', '8049631c405ae6576f93f445c6b8166f76f5505a',
-                  {'train_sft': 207865, 'train_gen': 256032}),        # real sizes; together the paper's ~464K
+                  {'train_sft': 207865, 'train_gen': 256032}, None),   # real sizes; together the paper's ~464K
 }
 BUCKETS = ('0-512', '513-1024', '1025+')
 POLICY = {'max_training_tokens': 1900, 'max_new_tokens_per_turn': 512, 'system': SYSTEM,
@@ -42,9 +44,30 @@ POLICY = {'max_training_tokens': 1900, 'max_new_tokens_per_turn': 512, 'system':
 
 
 def normalize(item):
-    """A dialogue as [{'role': 'user'|'assistant', 'content': ...}, ...] alternating from the user, or None."""
+    """A dialogue as [{'role': 'user'|'assistant', 'content': ...}, ...] alternating from the user, or None.
+
+    Only the user turns matter (every answer is regenerated), so, as in the authors' data preparation, leading
+    assistant turns are dropped and a dialogue may end with a user turn or be a single prompt (UltraChat's
+    train_gen split holds prompts only). Other roles, empty turns or broken alternation reject the dialogue.
+    """
     messages = []
-    for m in item.get('messages', item.get('conversations', [])):
+    source = item.get('messages', item.get('conversations', []))
+    if isinstance(source, str):       # a dialogue stored as a JSON string
+        try:
+            source = json.loads(source)
+        except ValueError:
+            return None
+    if isinstance(source, dict):      # `datasets` returns a sequence of records as columns: {'from': [...], ...}
+        keys = list(source)
+        lengths = {len(source[k]) for k in keys if isinstance(source[k], list)}
+        if not keys or len(lengths) != 1:
+            return None
+        source = [{k: source[k][i] for k in keys} for i in range(lengths.pop())]
+    if not isinstance(source, list):
+        return None
+    for m in source:
+        if not isinstance(m, dict):      # some ShareGPT rows hold plain strings: not a usable dialogue
+            return None
         role = m.get('role', m.get('from'))
         role = {'human': 'user', 'gpt': 'assistant'}.get(role, role)
         if role == 'system':
@@ -53,8 +76,10 @@ def normalize(item):
         if role not in ('user', 'assistant') or not isinstance(text, str) or not text.strip():
             return None
         messages.append({'role': role, 'content': text})
-    alternating = ['user', 'assistant'] * (len(messages) // 2)
-    if len(messages) < 2 or len(messages) % 2 or [m['role'] for m in messages] != alternating:
+    while messages and messages[0]['role'] == 'assistant':     # answers before the first question
+        messages.pop(0)
+    alternating = (['user', 'assistant'] * len(messages))[:len(messages)]
+    if not messages or [m['role'] for m in messages] != alternating:
         return None
     return messages
 
@@ -63,14 +88,21 @@ def length_bucket(tokens):
     return '0-512' if tokens <= 512 else ('513-1024' if tokens <= 1024 else '1025+')
 
 
-def sample_split(tok, repo, revision, split, per_bucket, scan_limit):
+def sample_split(tok, repo, revision, split, per_bucket, scan_limit, data_file=None):
     """Step 1 for one split: reservoir sample of `per_bucket` dialogues per length group."""
-    from datasets import load_dataset
     rng = random.Random(0)
     groups = {b: [] for b in BUCKETS}
     counts = {b: 0 for b in BUCKETS}
     scanned = 0
-    for i, item in enumerate(load_dataset(repo, revision=revision, split=split, streaming=True)):
+    if data_file:
+        # A plain JSON file (ShareGPT): read it as is. `datasets` streaming mangles its nested records.
+        from huggingface_hub import hf_hub_download
+        path = hf_hub_download(repo, data_file, repo_type='dataset', revision=revision)
+        rows = json.loads(Path(path).read_text(encoding='utf-8'))
+    else:
+        from datasets import load_dataset
+        rows = load_dataset(repo, revision=revision, split=split, streaming=True)
+    for i, item in enumerate(rows):
         if i >= scan_limit:
             break
         scanned += 1
@@ -209,16 +241,17 @@ def main():
             raise ValueError('Stale selection')
     except (OSError, ValueError, KeyError):
         selection = {'fingerprint': digest(provenance), 'sources': {
-            name: {split: sample_split(tok, repo, revision, split, args.samples_per_bucket, args.scan_limit)
+            name: {split: sample_split(tok, repo, revision, split, args.samples_per_bucket, args.scan_limit,
+                                       data_file)
                    for split in splits}
-            for name, (repo, revision, splits) in SOURCES.items()}}
+            for name, (repo, revision, splits, data_file) in SOURCES.items()}}
         atomic_json(selection_path, selection)
 
     # Steps 2-3.
     result = {'schema': SCHEMA, 'complete': True, 'policy': POLICY, 'provenance': provenance,
               'sampling': 'per split: reservoir within the first scan-limit rows; preliminary weights',
               'concurrency': args.concurrency, 'sources': {}}
-    for name, (repo, revision, splits) in SOURCES.items():
+    for name, (repo, revision, splits, _) in SOURCES.items():
         result['sources'][name] = {'repo': repo, 'revision': revision, 'splits': {}}
         for split, dialogues in splits.items():
             selected = selection['sources'][name][split]

@@ -21,7 +21,6 @@ import torch
 CODE = Path(__file__).resolve().parent
 ROOT = CODE.parent          # target/, zoo/, EAGLE/, results/ sit next to code/
 sys.path.insert(0, str(CODE))
-import zoo  # noqa: E402
 import zoo_eval  # noqa: E402
 
 OUT = ROOT / "results/zoo"
