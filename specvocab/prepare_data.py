@@ -12,6 +12,7 @@ Ukrainian), as in our earlier language study (layer-selection/frozen/code/langua
 """
 import argparse
 import json
+import os
 
 import numpy as np
 import torch
@@ -20,6 +21,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from config import DATA, EAGLE_REPO, LANGS, MAX_NEW_TOKENS, TARGET
 
 EVAL_BENCHES = ["mt_bench", "gsm8k", "humaneval"]
+GEN_BATCH = int(os.environ.get("SPECVOCAB_GEN_BATCH", "96"))     # answers generated at once (24 GB GPU: 32)
 ML_LANGS = ["ru", "uk", "de", "zh", "ja"]
 
 
@@ -58,10 +60,10 @@ def generate(tok, model, stop, texts, batch=96):
     return out
 
 
-def with_mask(prompt, answer, **info):
-    ids = torch.cat([prompt, answer])
+def with_mask(prompt_ids, answer, **info):
+    ids = torch.cat([prompt_ids, answer])
     mask = torch.zeros_like(ids)
-    mask[len(prompt):] = 1
+    mask[len(prompt_ids):] = 1
     return {"ids": ids, "mask": mask, **info}
 
 
@@ -128,10 +130,10 @@ def main():
     a = ap.parse_args()
     DATA.mkdir(parents=True, exist_ok=True)
     if a.what == "train":
-        rows, name, batch = train_prompts(a.ml), "train_ml.pt" if a.ml else "train_en.pt", 96
+        rows, name, batch = train_prompts(a.ml), "train_ml.pt" if a.ml else "train_en.pt", GEN_BATCH
     else:
         rows = eval_questions() if a.what == "eval" else lang_questions()
-        name, batch = ("eval_en.pt" if a.what == "eval" else "eval_lang.pt"), 32
+        name, batch = ("eval_en.pt" if a.what == "eval" else "eval_lang.pt"), max(1, GEN_BATCH // 3)
     if a.limit:
         if a.what == "lang":
             rows = [r for lang in LANGS for r in [x for x in rows if x["lang"] == lang][:a.limit]]
@@ -139,7 +141,7 @@ def main():
             rows = rows[:: max(1, len(rows) // a.limit)][:a.limit]
     tok, model, stop = load_target()
     pairs = generate(tok, model, stop, [chat_prompt(tok, r["text"]) for r in rows], batch=batch)
-    seqs = [with_mask(p, ans, **{k: v for k, v in r.items() if k != "text"}, prompt=r["text"])
+    seqs = [with_mask(p, ans, **{k: v for k, v in r.items() if k != "text"}, question=r["text"])
             for r, (p, ans) in zip(rows, pairs)]
     if a.what == "train":
         seqs = [seqs[i] for i in np.random.default_rng(0).permutation(len(seqs))]

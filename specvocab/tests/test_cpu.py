@@ -76,6 +76,25 @@ for name, head in heads.items():
     print(f"{name:9s} loss {first:.3f} -> {float(loss):.3f}")
 
 
+# 2b. chunked loss with recomputation gives the same loss and gradients as one call
+import train as train_module  # noqa: E402
+body = DraftBody(state, cfg, embedding)
+head = SpecVocabHead(full, rank=16)
+grads = []
+for chunk in (0, 7):
+    train_module.LOSS_CHUNK = chunk
+    body.zero_grad()
+    head.zero_grad()
+    loss = train_module.ttt_loss(body, head, states, ids, mask, teacher_logp)
+    loss.backward()
+    grads.append((float(loss), head.weight.grad.clone(), body.w["q"].grad.clone()))
+assert abs(grads[0][0] - grads[1][0]) < 1e-3 * abs(grads[0][0]), "chunked loss differs"
+rel = lambda a, b: float((a - b).norm() / b.norm())  # noqa: E731
+print(f"relative gradient difference: head {rel(grads[1][1], grads[0][1]):.2e}, body {rel(grads[1][2], grads[0][2]):.2e}")
+assert rel(grads[1][1], grads[0][1]) < 1e-2, "chunked head grads differ"
+assert rel(grads[1][2], grads[0][2]) < 1e-2, "chunked body grads differ"
+print(f"chunked loss = one-call loss: {grads[1][0]:.4f} vs {grads[0][0]:.4f}")
+
 # 3. evaluation end to end with a fake target
 class FakeTarget:
     device = "cpu"

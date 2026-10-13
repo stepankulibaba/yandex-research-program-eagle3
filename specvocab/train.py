@@ -18,8 +18,10 @@ import json
 import os
 import random
 import time
+from pathlib import Path
 
 import numpy as np
+from torch.utils.checkpoint import checkpoint
 import torch
 
 from config import DATA, DEPTH, DRAFT, RESULTS, STEP_DECAY, TARGET, VARIANTS
@@ -56,6 +58,22 @@ def build_variants(target, names, device="cuda"):
     return variants, off_ids
 
 
+LOSS_CHUNK = int(os.environ.get("SPECVOCAB_LOSS_CHUNK", "128"))
+
+
+def head_loss_sum(head, h, teacher):
+    """Sum of the head's loss over rows. In chunks of LOSS_CHUNK rows with recomputation in the backward
+    (activation checkpointing): logits over the full 152k vocabulary are never stored for a whole text,
+    which is what makes the full and SpecVocab heads fit on a 24-40 GB GPU. Same numbers as one call."""
+    if not LOSS_CHUNK or h.shape[0] <= LOSS_CHUNK:
+        return head.loss(h, teacher).sum()
+    total = 0.0
+    for i in range(0, h.shape[0], LOSS_CHUNK):
+        total = total + checkpoint(lambda a, b: head.loss(a, b).sum(), h[i:i + LOSS_CHUNK],
+                                   teacher[i:i + LOSS_CHUNK], use_reentrant=False)
+    return total
+
+
 def ttt_loss(body, head, states, ids, mask, teacher_logp):
     """Weighted loss over the unrolled draft steps. Step s at position t guesses x_{t+s+1}; the target's
     distribution for that token is its output at position t+s. Only guesses inside the answer are scored."""
@@ -68,8 +86,9 @@ def ttt_loss(body, head, states, ids, mask, teacher_logp):
         scored = torch.zeros(n, dtype=torch.bool, device=ids.device)
         scored[: n - 1] = mask[1:n].bool()                       # first guess x_{t+2} lies in the answer
         if scored.any():
-            ce = head.loss(h[:n][scored], teacher_logp[step:][scored])
-            loss = loss + STEP_DECAY ** (step - 1) * ce.mean()
+            rows = scored.nonzero()[:, 0]
+            ce_sum = head_loss_sum(head, h[rows], teacher_logp[rows + step])
+            loss = loss + STEP_DECAY ** (step - 1) * ce_sum / rows.numel()
     return loss
 
 
@@ -127,11 +146,14 @@ def main(a):
         log(f"eval step {step}: " + " | ".join(line))
         (out / "history.json").write_text(json.dumps(history))
 
-    ckpt_path = out / "resume.pt"
+    # the resume checkpoint (~12 GB with all three variants) can live elsewhere, e.g. off a small Google Drive
+    ckpt_dir = Path(os.environ.get("SPECVOCAB_CKPT_DIR", out))
+    ckpt_dir.mkdir(parents=True, exist_ok=True)
+    ckpt_path = ckpt_dir / f"resume_{a.run}.pt"
 
     def save_ckpt(step):
         try:
-            tmp = out / "resume.pt.tmp"
+            tmp = ckpt_path.with_suffix(".tmp")
             torch.save({"step": step, "history": history, "losses": losses,
                         "bodies": {n: b.state_dict() for n, (b, h) in variants.items()},
                         "heads": {n: h.state_dict() for n, (b, h) in variants.items()},

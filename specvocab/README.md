@@ -40,7 +40,21 @@ SpecVocab вместо фиксированного словаря выбира�
 
 `DATA=ml` добавляет многоязычные запросы (OpenAssistant oasst2: ru, uk, de, zh, ja, до 800 на язык) — чтобы отделить эффект головы от эффекта данных.
 
-## Запуск
+## Запуск в Colab
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/stepankulibaba/yandex-research-program-eagle3/blob/specvocab-languages/specvocab/colab.ipynb)
+
+Открыть [`colab.ipynb`](colab.ipynb) по кнопке выше:
+1. `Среда выполнения → Сменить тип среды → GPU`: лучше A100; L4 тоже подойдёт, но с двумя вариантами (`static32k`, `specvocab`), без `full`;
+2. `Среда выполнения → Выполнить все`.
+
+Настройки — в первой ячейке: данные `en`/`ml`, число эпох (по умолчанию 1 — укладывается в сессию), `SMOKE`.
+
+Данные, модели, результаты и логи лежат на Google Drive (`MyDrive/specvocab_run`). Если сессия оборвалась, снова «Выполнить все»: сделанные шаги пропускаются, обучение продолжается с чекпоинта. Чекпоинт продолжения весит ~12 ГБ: на Drive, если там больше 30 ГБ свободно, иначе на локальном диске Colab, и тогда после обрыва обучение начнётся заново. В конце ноутбук отдаёт архив результатов.
+
+Ноутбук генерируется скриптом [`make_colab.py`](make_colab.py).
+
+## Запуск на своей машине
 
 ```bash
 git clone -b specvocab-languages https://github.com/stepankulibaba/yandex-research-program-eagle3
