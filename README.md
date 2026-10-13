@@ -24,6 +24,7 @@ Yandex & Sirius Research Program 2026.
 | [Воспроизведение и скорость](reproduction/) | Ускорение кодом авторов (H200, A100) и в SGLang, скорость обучения: код авторов против NeMo, бюджет GPU-часов | готово: задачи 3a, 3b, 4, 5 | [всё](reproduction/reports/eagle3_reproduction.pdf), [профиль](reproduction/reports/eagle3_profile.pdf) |
 | [Выбор слоёв](layer-selection/) | Какие слои большой модели нужны драфту и стоит ли выбирать их автоматически | готово (Qwen3-1.7B, DSL-8B) | [замороженный драфт](layer-selection/reports/eagle3_layers.pdf), [роутер](layer-selection/reports/eagle3_routed.pdf) |
 | [Дополнительные проверки](extra-checks/) | Воспроизводимость, разные языки, 11 публичных драфтов | готово | [сводка](extra-checks/reports/eagle3_summary.pdf) |
+| [SpecVocab на языках](specvocab/) | Динамический словарь драфта (arXiv 2602.13836) против фиксированных 32K на шести языках, Qwen3-1.7B | код готов, запуск одной командой | [README](specvocab/README.md) |
 
 ## Как устроены папки
 

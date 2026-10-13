@@ -1,0 +1,9 @@
+.venv/
+EAGLE/
+models/
+data/
+data_smoke/
+results/
+logs/
+results_*.tgz
+__pycache__/
