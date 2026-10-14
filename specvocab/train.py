@@ -98,7 +98,8 @@ def lr_multiplier(step, total, warmup=50):
 
 def watch_set(n_en=64, n_per_lang=8):
     """Small fixed evaluation set for progress during training: English benchmarks + a few texts per language."""
-    seqs = random.Random(1).sample(torch.load(DATA / "eval_en.pt"), n_en)
+    en = torch.load(DATA / "eval_en.pt")
+    seqs = random.Random(1).sample(en, min(n_en, len(en)))
     lang = torch.load(DATA / "eval_lang.pt")
     for code in sorted({s["lang"] for s in lang}):
         pool = [s for s in lang if s["lang"] == code]
