@@ -1,5 +1,6 @@
 {
   "experiments_dates": [
+    "2026-10-06",
     "2026-10-07",
     "2026-10-08"
   ],
@@ -166,6 +167,12 @@
       "original_sha256": "235ef5041351e5d3c40bb310647e416ac4652ce40dc84630dd4fd79a0aee13bb",
       "export_sha256": "235ef5041351e5d3c40bb310647e416ac4652ce40dc84630dd4fd79a0aee13bb",
       "path_relocation_only": false
+    },
+    "run_ablation.py": {
+      "source_relative_path": "run_ablation.py",
+      "original_sha256": "953e5fe912f914e1ecefa9805e6cb0c7a676d7c8c12d699eed6c0508bee8818e",
+      "export_sha256": "abfeacbda9eeaeba1ff39f6d21c3a2382df905dc19a27695ee6304f7247e74c2",
+      "path_relocation_only": true
     }
   },
   "numerical_logic_changed": false,
@@ -280,6 +287,26 @@
       "source_relative_path": "results/factorial_20261008/baseline/artifacts/environment.json",
       "source_sha256": "0adfc038b29f0a3a2ec073ea585b5c237012075e298a049b35102f08dffd2e6f",
       "export_sha256": "0c043402a47b86cbffb4db0261727a86907e3c8ce653e27fd7b947a1446221d4"
+    },
+    "tree_generation_measurements.json": {
+      "source_relative_path": "results/rtx2070_20261006_night/heldout_fixed_b1/rows.json",
+      "source_sha256": "75f3358982b0e163e89973278eb182e164acf0020c3fd647a4fbab6b787ec01a",
+      "export_sha256": "f47a925c60b60c2a8edb48272654c520750f81843f93beb16a3596fb5b0ee235"
+    },
+    "tree_generation_exact_pairs.json": {
+      "source_relative_path": "results/rtx2070_20261006_night/heldout_fixed_b1/generated_tokens.pt",
+      "source_sha256": "66fcc6cb29bfa4e0516a0a64078639a4afa4a705c07f9d004f60bf7585c8e101",
+      "export_sha256": "c39b0e3e81786bedc8a77dfef9a5455b232773007e91e84b8ecd277510a5c1c1"
+    },
+    "tree_generation_analysis.json": {
+      "source_relative_path": "results/rtx2070_20261006_night/analysis.json",
+      "source_sha256": "207c0f61963716a2fd3a105a569976a26243f840fabc2f403cd6fee5ce1f5216",
+      "export_sha256": "4bc568554b83d6792145a87163362aec3b03a53c375a58a045f44518c91905be"
+    },
+    "tree_generation_metadata.json": {
+      "source_relative_path": "results/rtx2070_20261006_night/heldout_fixed_b1/config.json",
+      "source_sha256": "84ca53a7ebc08b1d5871ca23fb3337a1c7ff5f9ba4aaa9531bae3462f32899b9",
+      "export_sha256": "3b4561ef7d50c45bd5a3c518c63a0fa660dcf08d3f07fa7ee17062c013410cda"
     }
   },
   "compact_replay_note": "Event arrays replaced by canonical SHA-256; scalar counters retained. This permits repeat and paired-statistic checks, not reconstruction of token-level trees."

@@ -1,0 +1,17 @@
+{
+  "heldout_speedup": 1.066573501110918,
+  "heldout_group_bootstrap_95_interval": [
+    1.060311738051945,
+    1.0730287576995086
+  ],
+  "heldout_groups": 24,
+  "heldout_prompts": 48,
+  "dev_speedup": 1.0619809958179725,
+  "ablation": {
+    "leaf_with_python_ms": 0.6487328201940556,
+    "leaf_with_tensor_ms": 0.0367650100918695,
+    "tensor_with_gpu_leaf_ms": 7.916404567201766,
+    "tensor_with_cpu_leaf_ms": 7.30443675709958,
+    "interaction_ms": 0.6119678101021861
+  }
+}

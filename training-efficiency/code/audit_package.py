@@ -58,7 +58,9 @@ def audit():
     before = subprocess.check_output(['git', 'show', 'HEAD:README.md'], cwd=ROOT).decode()
     after = subprocess.check_output(['git', 'show', ':README.md'], cwd=ROOT).decode()
     added = [line for line in after.splitlines(keepends=True) if '](training-efficiency/)' in line]
-    if len(added) != 1 or after.replace(added[0], '', 1) != before:
+    previous_rows = [line for line in before.splitlines(keepends=True) if '](training-efficiency/)' in line]
+    unrelated_before = before.replace(previous_rows[0], '', 1) if len(previous_rows) == 1 else before
+    if len(added) != 1 or after.replace(added[0], '', 1) != unrelated_before:
         errors.append(('README.md', 'unrelated root edits'))
     assert not errors, '\n'.join(f'{name}: {kind}' for name, kind in errors)
     print(json.dumps({'staged_files': len(files), 'total_bytes': total, 'forbidden_files': 0,

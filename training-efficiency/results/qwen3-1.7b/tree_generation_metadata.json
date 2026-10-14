@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-06",
+  "models": {
+    "target": {
+      "path_kind": "hf_snapshot",
+      "repo_id": "Qwen/Qwen3-1.7B",
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e"
+    },
+    "draft": {
+      "path_kind": "hf_snapshot",
+      "repo_id": "AngelSlim/Qwen3-1.7B_eagle3",
+      "revision": "94441b48acc5804677ae12259617c83323b543a9"
+    }
+  },
+  "config": {
+    "base": {
+      "path_kind": "hf_snapshot",
+      "repo_id": "Qwen/Qwen3-1.7B",
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e"
+    },
+    "draft": {
+      "path_kind": "hf_snapshot",
+      "repo_id": "AngelSlim/Qwen3-1.7B_eagle3",
+      "revision": "94441b48acc5804677ae12259617c83323b543a9"
+    },
+    "modes": {
+      "upstream": "author CPU loops and GPU unique(parent).tolist()",
+      "tensor_cpu": "CPU tensor metadata and CPU leaf detection (pilot B1)"
+    },
+    "repeats": 2,
+    "tokens": 128,
+    "cache_capacity": 361,
+    "seed": 20261005,
+    "total_nodes": 64,
+    "depth": 2,
+    "top_k": 10,
+    "precision": "fp16",
+    "batch": 1,
+    "context_pad_tokens": 0,
+    "order": "Cyclic Latin rotation over 2 modes; balanced positions when repeats are a multiple of mode count",
+    "stopping": "EOS disabled, upstream strict > cap, actual overshoot recorded",
+    "timing_scope": "wall including prefill and initial draft; CUDA sync only at endpoints",
+    "source_sha256": {
+      "run_ablation.py": "953e5fe912f914e1ecefa9805e6cb0c7a676d7c8c12d699eed6c0508bee8818e",
+      "metadata.py": "dd3e163e4712f8aae58a9ab714cd70ab0d340cbad0a7b3c1d44653f8ee0f76b0",
+      "topk_patch.py": "9946645d9fae1ab6477af0a3372813225ccb3b8be2aa58ac50f0530f69c99a66",
+      "run_pilot.py": "f6a95e927de418d6df9908a8c78d85f9938c52e33e95c789eab14bb44ab450c1",
+      "loading.py": "fbbef88569c8aedad949e373ef3396775eecd0146c0bd65a6e9e67044858895a"
+    },
+    "loading": "read-only safetensors mapping; copies/conversions unchanged",
+    "prompts_sha256": "e6640ee756782f6486e49f25c26e1a0fd2e9d3f07018cd73ecba85fbfac924f8"
+  },
+  "environment": {
+    "python": "3.11.15",
+    "os": "Windows-10-10.0.19045-SP0",
+    "torch": "2.6.0+cu124",
+    "transformers": "4.53.1",
+    "gpu": "NVIDIA GeForce RTX 2070",
+    "cuda": "12.4",
+    "num_threads": 4,
+    "num_interop_threads": 4,
+    "eagle_commit": "cb7e0841fe0c206c6ed74a197ad5e2a1f13f5a2b",
+    "attention": "pinned explicit eager",
+    "free_total_bytes": [
+      1820303360,
+      8589475840
+    ]
+  },
+  "prompt_manifest_sha256": "e6640ee756782f6486e49f25c26e1a0fd2e9d3f07018cd73ecba85fbfac924f8",
+  "collection": "24 manually authored question groups, English/Russian versions; 48 prompts; not a standard representative benchmark",
+  "generation_checks": 96,
+  "replay_trees": 12,
+  "all_metadata_exact": true,
+  "all_candidate_generations_exact_to_upstream": true,
+  "ar_equality_claimed": false,
+  "bootstrap": {
+    "seed": 20261006,
+    "resamples": 10000,
+    "sampling_unit": "paired group with both languages and both repeats",
+    "confidence": 0.95
+  },
+  "primary_scope": "total generation wall time including prefill; EOS disabled; requested 128 tokens with actual overshoot retained",
+  "causal_limit": "tensor metadata factor also changes parent extraction and buffer cleanup lifetime; not isolated Python-loop elimination",
+  "small_tree_counterexample": {
+    "total_nodes": 32,
+    "extra_context": 0,
+    "speedup": 0.9998,
+    "note": "effect approximately zero in this checked regime"
+  }
+}

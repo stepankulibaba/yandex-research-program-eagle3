@@ -184,4 +184,4 @@ if __name__ == '__main__':
     print('Export integrity, paired intervals, token budgets, exact repeats, learning curve and memory counters: PASS')
     for condition, row in result['factorial']['conditions'].items():
         print(f'{condition}: {(row["relative_initial"]["geometric_ratio"] - 1) * 100:+.4f}%')
-    print('Generation equality: 14/16; no generation speed claim.')
+    print('Fine-tuning generation equality: 14/16; no fine-tuned generation speed claim.')
