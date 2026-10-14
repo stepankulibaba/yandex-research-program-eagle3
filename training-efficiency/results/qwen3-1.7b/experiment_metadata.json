@@ -1,0 +1,104 @@
+{
+  "target_model": {
+    "id": "Qwen/Qwen3-1.7B",
+    "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e"
+  },
+  "draft_model": {
+    "id": "AngelSlim/Qwen3-1.7B_eagle3",
+    "revision": "94441b48acc5804677ae12259617c83323b543a9"
+  },
+  "nemo_commit": "3914f200a4c782d44b58ee7a01b4685e4158e19c",
+  "eagle_commit": "cb7e0841fe0c206c6ed74a197ad5e2a1f13f5a2b",
+  "trainable_parameters": 136847360,
+  "trainable_tensors": 13,
+  "target_frozen": true,
+  "embeddings_frozen": true,
+  "fc_inherited_and_trainable": true,
+  "feature_block_outputs_zero_indexed": [
+    1,
+    13,
+    24
+  ],
+  "equivalent_block_inputs_zero_indexed": [
+    2,
+    14,
+    25
+  ],
+  "training_gpu": "RTX 2070 8GB",
+  "memory_gpu": "Tesla T4 16GB",
+  "precision": "FP16 eager computation; FP32 master parameters and AdamW states",
+  "dataset": {
+    "id": "HuggingFaceH4/ultrachat_200k",
+    "main_revision_observed_before_after": "8049631c405ae6576f93f445c6b8166f76f5505a",
+    "viewer_revision_pinned": false,
+    "pool_rows": 600,
+    "pool_train_rows": 400,
+    "pool_test_rows": 200,
+    "train_unique": 96,
+    "development_unique": 8,
+    "fresh_validation_unique": 32,
+    "unique_used_total": 136,
+    "original_24_subset_of_96": true,
+    "source_first_user_turn_only": true,
+    "original_assistant_answers_used": false,
+    "additional_72_selection": "nearest prompt length, three passes over the original 24; no answer or quality ranking",
+    "exact_id_and_normalized_prompt_dedup": true,
+    "semantic_dedup": false
+  },
+  "target_answers": {
+    "greedy": true,
+    "thinking": false,
+    "natural_eos": true,
+    "max_new_tokens": 128
+  },
+  "factorial": {
+    "train_sizes": [
+      24,
+      96
+    ],
+    "learning_rates": [
+      0.0001,
+      1e-05
+    ],
+    "input_tokens_per_condition": 79712,
+    "input_tokens_total": 318848,
+    "updates_24": 384,
+    "updates_96": 381,
+    "batch_size": 1,
+    "ttt_steps": 7,
+    "independent_training_seeds": 1,
+    "equal_flops": false
+  },
+  "metric": {
+    "name": "tau_fixed",
+    "tree_total_tokens": 64,
+    "tree_depth": 2,
+    "tree_top_k": 10,
+    "known_target_continuation": true,
+    "bonus_or_root_included": true,
+    "overshoot_excluded": true,
+    "generation_speed_measured": false
+  },
+  "memory": {
+    "synthetic_documents": 4,
+    "calibration_documents": 2,
+    "evaluation_documents": 2,
+    "batch_size": 2,
+    "ttt_steps": 7,
+    "allocator_cap_mib": 6144,
+    "maximum_passing_grid": {
+      "dense": 640,
+      "split": 768,
+      "stride": 768
+    },
+    "common_buffer_prior_art": "SpecForge",
+    "native_bf16_flashattention_recipe_tested": false
+  },
+  "limitations": [
+    "Single corpus and training order; query bootstrap does not cover training seed variability",
+    "Generation equality failed 2 of 16 checks; no dependent speed timings",
+    "Fixed-path calibration passed 14 cases on 7 previously correct prompts; not a calibration on the fresh 32",
+    "The memory optimization was not enabled in the dense factorial training",
+    "The original train96hi evaluation failed on status file IO; full evaluation rerun without retraining, failed attempt retained locally"
+  ]
+}

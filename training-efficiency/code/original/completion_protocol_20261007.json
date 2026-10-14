@@ -1,0 +1,96 @@
+{
+  "batch": 2,
+  "ttt_steps": 7,
+  "calibration_lengths": [
+    166,
+    256,
+    512
+  ],
+  "evaluation_lengths": [
+    384,
+    640,
+    896,
+    1024
+  ],
+  "capacity_lengths": [
+    512,
+    640,
+    768,
+    896,
+    1024
+  ],
+  "capture_length": 1024,
+  "updates": 3,
+  "loss_atol": 0.0002,
+  "grad_atol": 0.0002,
+  "rtol": 0.002,
+  "peak_absolute_error_mib": 128,
+  "peak_relative_error": 0.03,
+  "saving_error_mib": 32,
+  "dominance_gap_mib": 16,
+  "counter_control_error_mib": 1,
+  "allocator_budget_mib": 6144,
+  "timing_lengths": [
+    166,
+    768
+  ],
+  "timing_orders": [
+    [
+      "dense",
+      "split",
+      "stride"
+    ],
+    [
+      "split",
+      "stride",
+      "dense"
+    ],
+    [
+      "stride",
+      "dense",
+      "split"
+    ],
+    [
+      "stride",
+      "split",
+      "dense"
+    ],
+    [
+      "dense",
+      "stride",
+      "split"
+    ],
+    [
+      "split",
+      "dense",
+      "stride"
+    ]
+  ],
+  "capacity_orders": [
+    [
+      "dense",
+      "split",
+      "stride"
+    ],
+    [
+      "stride",
+      "split",
+      "dense"
+    ]
+  ],
+  "documents_sha256": "b2b4b690803ee3623864255263b67d0b49a1b00ad242fb211015b5ab12871d0b",
+  "runner_timeout_seconds": 1500,
+  "server_timeout_seconds": 1800,
+  "model": "quadratic fitted independently to forward and backward peaks on three calibration lengths; affine transfer/update on endpoint anchors; full=max of four phases; frozen before any evaluation-shape draft training execution or measurement; prior frozen teacher capture is input preparation",
+  "scope": "FP16 eager pretrained draft / FP32 master AdamW / actual Triton / offline teacher / B2; new synthetic fixtures; technical timing repeats; capacity under predeclared allocator cap",
+  "authorization": "User requested completing the entire remainder iteratively without per-stage waits; overrides previous finite-stage no-next-queue wording",
+  "limits": "No checkpoint writes, no precision/tolerance changes, no old heldout changes; failed correctness prohibits dependent timings; model rejection is retained; no convergence or full BF16 recipe claim",
+  "speedup_reporting": {
+    "ratio": "baseline_ms/candidate_ms within balanced order block",
+    "technical_pairs_per_length": 6,
+    "bootstrap_resamples": 10000,
+    "seed": 20261007,
+    "qualification": "measured full-step engineering speedup only if geometric ratio>=1.02 and technical pair bootstrap lower95>1; no independent workload generalization"
+  },
+  "transport": "Lossless row deduplication + gzip; original capture SHA remains canonical, every logical tensor shape/dtype/value SHA verified on local decode and CUDA runner CPU decode; no numeric changes"
+}

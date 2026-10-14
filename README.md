@@ -24,6 +24,7 @@ Yandex & Sirius Research Program 2026.
 | [Воспроизведение и скорость](reproduction/) | Ускорение кодом авторов (H200, A100) и в SGLang, скорость обучения: код авторов против NeMo, бюджет GPU-часов | готово: задачи 3a, 3b, 4, 5 | [всё](reproduction/reports/eagle3_reproduction.pdf), [профиль](reproduction/reports/eagle3_profile.pdf) |
 | [Выбор слоёв](layer-selection/) | Какие слои большой модели нужны драфту и стоит ли выбирать их автоматически | готово (Qwen3-1.7B, DSL-8B) | [замороженный драфт](layer-selection/reports/eagle3_layers.pdf), [роутер](layer-selection/reports/eagle3_routed.pdf) |
 | [Дополнительные проверки](extra-checks/) | Воспроизводимость, разные языки, 11 публичных драфтов | готово | [сводка](extra-checks/reports/eagle3_summary.pdf) |
+| [Память и малобюджетное дообучение](training-efficiency/) | Общий буфер вероятностей в NeMo; контроль 24/96 примеров и скорости обучения готового драфта | локальные серии завершены (Qwen3-1.7B); принятие по сохранённым ответам | [условия](training-efficiency/reports/PROTOCOL.md), [результаты](training-efficiency/reports/RESULTS.md) |
 
 ## Как устроены папки
 

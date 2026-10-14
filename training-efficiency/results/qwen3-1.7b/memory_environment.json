@@ -1,0 +1,25 @@
+{
+  "torch": "2.11.0+cu128",
+  "triton": "3.6.0",
+  "transformers": "4.53.1",
+  "gpu": "Tesla T4",
+  "actual_triton": true,
+  "precision": "FP16 eager / FP32 master AdamW",
+  "loss_scale": 128.0,
+  "initial_draft_sha256": "30c6371b837e5a66858b5b50f763cc77bb6e93bd83cd6695511fd50d10f71eda",
+  "original_capture_data_sha256": "51f7032ca89d5c4ca39089d5f59f6891d1f48e83324f40e475b17df9bc469246",
+  "transport_gzip_sha256": "775d1143402c04b1c5d50461b994f8a74f1b841f8c3fa42d1d88b409d230cd78",
+  "all_logical_tensors_SHA_verified": true,
+  "documents_sha256": "b2b4b690803ee3623864255263b67d0b49a1b00ad242fb211015b5ab12871d0b",
+  "legacy_data_sha256": "e14e857143aeb15e7cd5574b6e7f3336a9f7470a0c431b9233f275313c445f8f",
+  "source_sha256": {
+    "probe_nemo_completion.py": "56f946444bf1c3fb54c0678084fe7647f7bfeff53d0d0efc45b5ffbffbf070d7",
+    "stride_soft_cross_entropy.py": "7786f6de38b7ed9845c595488dd40324ddca3d15f6525d84199e993c590a1d1a",
+    "phase_separated_prediction.py": "1e337b58e6c2e2790c411a0ddd00d8069e3352177a4c4f6b178c316f898a7276",
+    "completion_protocol_20261007.json": "1a237e94f2de2c8339a02220638c3c498cd6dbca8a7537f2b53f90566ce356bb",
+    "fp32_master_adamw.py": "f2267193707a04d328a9f9dc2e61082b62c015c02b08eaee38a06dcce2f43716",
+    "lossless_input_transport.py": "1d6f5a6d52d10739d35542fdeae40c0660b2e66f949e49baaf307d4df1438988"
+  },
+  "pinned_fused_sha256": "71288c82f1f6a583463cb073bd96183aff406112ba5e4f3119a7705d02f666e4",
+  "scope": "FP16 eager pretrained draft / FP32 master AdamW / actual Triton / offline teacher / B2; new synthetic fixtures; technical timing repeats; capacity under predeclared allocator cap"
+}

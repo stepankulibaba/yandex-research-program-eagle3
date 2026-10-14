@@ -1,0 +1,9 @@
+{
+  "torch": "2.6.0+cu124",
+  "precision": "FP16/eager, FP32 master AdamW",
+  "seed": 20261008,
+  "target_revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "draft_revision": "94441b48acc5804677ae12259617c83323b543a9",
+  "nemo_revision": "3914f200a4c782d44b58ee7a01b4685e4158e19c",
+  "eagle_revision": "cb7e0841fe0c206c6ed74a197ad5e2a1f13f5a2b"
+}

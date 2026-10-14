@@ -1,0 +1,25 @@
+{
+  "commit": "3914f200a4c782d44b58ee7a01b4685e4158e19c",
+  "files": {
+    "nemo_automodel/components/loss/soft_ce.py": "9561682fe806ad48986537c9b9ee30d18658af4f9a9c098dfd08b7cd05914d1e",
+    "nemo_automodel/components/utils/compile_utils.py": "dbcd17522ae48094019210375dd2164884d26dfbfae4f72faeaacb0e831121b5",
+    "nemo_automodel/components/speculative/precompute_eagle3.py": "687a8a2013b1e7b46a2d2879fb5953896b3a64d7ce6bd451f6182e38a55fb2f2",
+    "nemo_automodel/components/speculative/decode_eval.py": "1b28176c9f3154bafedc87eb88e7c831c0b0a579d245d54ebceff8735faa7776",
+    "nemo_automodel/components/loss/triton/soft_cross_entropy.py": "71288c82f1f6a583463cb073bd96183aff406112ba5e4f3119a7705d02f666e4",
+    "nemo_automodel/components/datasets/llm/eagle3_cache.py": "cc49ee95589da76df27d6350afd99d7aaf65cc065f3b42b44988960d2cb983e2",
+    "nemo_automodel/components/speculative/eagle/backend.py": "7eb6bc05f4f5b49b877b313db7e3085379b033508edc9ed5fdf2ce022884e983",
+    "nemo_automodel/components/speculative/eagle/core.py": "8635891cef8f8684be941b077adc08ae094f5bacb2d9c8138c1b7f093c03ee86",
+    "nemo_automodel/components/speculative/eagle/msd_decode.py": "b97782911cded9b3d6ae82c4376186a2bd08350a3fb7f033786a08de43bfc070",
+    "nemo_automodel/components/speculative/eagle/target.py": "860b36a916c63d6cd7ba8b0ae83d294f10eb05a002f591778eb9cb58f0f7900b",
+    "nemo_automodel/components/speculative/eagle/draft_llama.py": "ab7d56b58c9a2485ff4eb6a4de64466831df7e70d8620569f4e02dc734dfa2ed",
+    "nemo_automodel/recipes/llm/train_eagle3.py": "b3ade43c018b2139c640126c8747b7d68ea73999d8435812cc70329b373466ec",
+    "nemo_automodel/recipes/llm/_spec_train_utils.py": "cb73d3d3ede2e86ec4c49ac92e0d8a0137771c77f4254c167fa46ee75f629c61",
+    "tests/unit_tests/speculative/test_eagle_draft_attn_support.py": "962876629d62258b176d17cc381ed004586b9993c6553984fefe7800f37d60dc",
+    "tests/functional_tests/speculative/test_eagle3_packing_fa2_parity.py": "1013ce60d162e90bc67dbf0a4a29c492b6cd6b1bba2cd8b5e4ac13efb20304bc",
+    "nemo_automodel/components/datasets/llm/packed_sequence.py": "88b78bad9869c65a8f1508f9c2bd8b8c55b2b8b005cad7cc350a15684eaf4aaf",
+    "nemo_automodel/components/models/common/__init__.py": "ebc0bb9d9394b758739310ae495c8edc3f2a87c004f078f3ad7e941294b81eaf",
+    "nemo_automodel/components/models/common/utils.py": "169486eefc99f7bcbea3c2c92048130c913388581eb9cecf604649d6a855cf1d",
+    "nemo_automodel/components/models/llama/rope_utils.py": "de5b239a77dbbc8cc9d4275bb718d0f2148bfff603a66707f2f3ab488a9df35b",
+    "nemo_automodel/components/datasets/llm/eagle3.py": "035fb6a0fe2567b332bd10fc1d5d481adaa64fbae93e9fb979b03cd980d69de0"
+  }
+}

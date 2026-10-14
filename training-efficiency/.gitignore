@@ -1,0 +1,27 @@
+# Raw datasets, models, upstream code and inherited GPU artifacts stay local.
+/Automodel/
+/EAGLE/
+/hf_cache/
+/models/
+/data/
+/artifacts/
+/data_budget_*/
+/draft_acceptance_*/
+/fixed_path_*/
+/learning_curve_*/
+/factorial_*/
+/nemo_*/
+*.pt
+*.bin
+*.safetensors
+*.zip
+*.tgz
+*.gz
+*.npz
+*.npy
+*.ipynb
+*.log
+__pycache__/
+.DS_Store
+.env*
+.venv/

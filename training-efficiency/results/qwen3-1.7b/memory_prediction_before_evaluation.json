@@ -1,0 +1,206 @@
+{
+  "model": "quadratic fitted independently to forward and backward peaks on three calibration lengths; affine transfer/update on endpoint anchors; full=max of four phases; frozen before any evaluation-shape draft training execution or measurement; prior frozen teacher capture is input preparation",
+  "anchors": [
+    166,
+    256,
+    512
+  ],
+  "coefficients": {
+    "dense": {
+      "transfer": {
+        "abc": [
+          2438.8268718388726,
+          0.27071243903540465,
+          0.0
+        ],
+        "anchor_peaks_mib": [
+          2483.76513671875,
+          2507.78662109375,
+          2577.431640625
+        ]
+      },
+      "forward": {
+        "abc": [
+          2492.8117233286166,
+          3.946544429654101,
+          0.0016684733680524197
+        ],
+        "anchor_peaks_mib": [
+          3193.91455078125,
+          3612.47216796875,
+          4950.82275390625
+        ]
+      },
+      "backward": {
+        "abc": [
+          2995.1611616640575,
+          2.782897780166656,
+          0.0019875320013165087
+        ],
+        "anchor_peaks_mib": [
+          3511.890625,
+          3837.837890625,
+          4941.0244140625
+        ]
+      },
+      "update": {
+        "abc": [
+          3460.8688640263726,
+          0.27071243903540465,
+          0.0
+        ],
+        "anchor_peaks_mib": [
+          3505.80712890625,
+          3529.82861328125,
+          3599.4736328125
+        ]
+      }
+    },
+    "split": {
+      "transfer": {
+        "abc": [
+          2440.3032762825146,
+          0.5148304845556358,
+          0.0
+        ],
+        "anchor_peaks_mib": [
+          2525.76513671875,
+          2571.78662109375,
+          2703.896484375
+        ]
+      },
+      "forward": {
+        "abc": [
+          2495.764527637283,
+          2.4827983304944343,
+          0.001652321787927881
+        ],
+        "anchor_peaks_mib": [
+          2953.4404296875,
+          3239.6474609375,
+          4200.103515625
+        ]
+      },
+      "backward": {
+        "abc": [
+          2977.029310924454,
+          2.0296267639924563,
+          0.0014220477222400977
+        ],
+        "anchor_peaks_mib": [
+          3353.13330078125,
+          3589.80908203125,
+          4388.9794921875
+        ]
+      },
+      "update": {
+        "abc": [
+          3462.8250372561415,
+          0.2677996861452312,
+          0.0
+        ],
+        "anchor_peaks_mib": [
+          3507.27978515625,
+          3531.32861328125,
+          3599.9384765625
+        ]
+      }
+    }
+  },
+  "forms": {
+    "384": {
+      "dense": {
+        "phase_peaks_mib": {
+          "transfer": 2542.780448428468,
+          "forward": 4254.311193275329,
+          "backward": 4356.86742803418,
+          "update": 3564.822440615968
+        },
+        "full_peak_mib": 4356.86742803418,
+        "dominance": "backward"
+      },
+      "split": {
+        "phase_peaks_mib": {
+          "transfer": 2637.9981823518788,
+          "forward": 3692.8038481078397,
+          "backward": 3966.095457228193,
+          "update": 3565.6601167359104
+        },
+        "full_peak_mib": 3966.095457228193,
+        "dominance": "backward"
+      },
+      "saved_mib": 390.77197080598717
+    },
+    "640": {
+      "dense": {
+        "phase_peaks_mib": {
+          "transfer": 2612.0828328215316,
+          "forward": 5702.006849861512,
+          "backward": 5590.308848709959,
+          "update": 3634.1248250090316
+        },
+        "full_peak_mib": 5702.006849861512,
+        "dominance": "forward"
+      },
+      "split": {
+        "phase_peaks_mib": {
+          "transfer": 2769.7947863981217,
+          "forward": 4761.546463488981,
+          "backward": 4858.4611869091705,
+          "update": 3634.2168363890896
+        },
+        "full_peak_mib": 4858.4611869091705,
+        "dominance": "backward"
+      },
+      "saved_mib": 843.5456629523414
+    },
+    "896": {
+      "dense": {
+        "phase_peaks_mib": {
+          "transfer": 2681.3852172145953,
+          "forward": 7368.392647745063,
+          "backward": 7084.260063862295,
+          "update": 3703.4272094020953
+        },
+        "full_peak_mib": 7368.392647745063,
+        "dominance": "forward"
+      },
+      "split": {
+        "phase_peaks_mib": {
+          "transfer": 2901.591390444364,
+          "forward": 6046.862200257407,
+          "backward": 5937.2175556396005,
+          "update": 3702.773556042269
+        },
+        "full_peak_mib": 6046.862200257407,
+        "dominance": "forward"
+      },
+      "saved_mib": 1321.5304474876566
+    },
+    "1024": {
+      "dense": {
+        "phase_peaks_mib": {
+          "transfer": 2716.036409411127,
+          "forward": 8283.59434967335,
+          "backward": 7928.926844367173,
+          "update": 3738.078401598627
+        },
+        "full_peak_mib": 8283.59434967335,
+        "dominance": "forward"
+      },
+      "split": {
+        "phase_peaks_mib": {
+          "transfer": 2967.489692467486,
+          "forward": 6770.73498916185,
+          "backward": 6546.492229648362,
+          "update": 3737.0519158688585
+        },
+        "full_peak_mib": 6770.73498916185,
+        "dominance": "forward"
+      },
+      "saved_mib": 1512.859360511501
+    }
+  },
+  "calibration_rows_sha256": "9b757765e8144da8fe230f871a413cb747e3cceeee712dc79eff14ffe9e0bafa",
+  "frozen_utc": "2026-10-07T12:42:24Z"
+}

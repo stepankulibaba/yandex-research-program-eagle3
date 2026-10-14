@@ -1,0 +1,20 @@
+{
+  "commit": "cb7e0841fe0c206c6ed74a197ad5e2a1f13f5a2b",
+  "files": {
+    "EAGLE/eagle/model/cnets.py": "b0e2512db4529c9689ffd768e9a2812059a5715d786686a131a751c56fbf3292",
+    "EAGLE/eagle/model/modeling_qwen2_kv.py": "a28ef08941952d894ca9cc0e726fd80ad9814283554f7775a82a5939db8db7d6",
+    "EAGLE/eagle/model/configs.py": "14ae62877cd9ab12c9076fc70fe940714b9ca980865b00ba974de340df2d1ac5",
+    "EAGLE/eagle/model/ea_model.py": "f834fc37d350b9109ad91ac27a29eb2be59153dc0aac48ab753c6e43aa91d506",
+    "EAGLE/eagle/model/modeling_qwen3_kv.py": "a3cc5ce2f78239da5d26c0dc19a5a6293a1ba330f0e43675fc857bb6a7957a46",
+    "EAGLE/eagle/model/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "EAGLE/eagle/model/modeling_mixtral_kv.py": "5758e029bac25ab4eaf564b62ea87a66bd71e50abc5b89f3bba29389df4e1fa0",
+    "EAGLE/eagle/model/modeling_llama_kv.py": "615ed5d1d0d702b69cab1383eeec1843bfa209273b8a8d90cd444f8a00a6c478",
+    "EAGLE/eagle/model/cnets1.py": "adf4cb86aba30610b05f3b78742d1e448c4523c8e96b92501b9de37419979261",
+    "EAGLE/eagle/model/utils.py": "68dadf1977dd76624f87d0dc5ce9f840783ccaeb7554861f1206daa664367fe9",
+    "EAGLE/eagle/model/kv_cache.py": "f41d85e0210583a25b2714fea78efceed1efcf68052bae7c156b1a477b0c337b",
+    "EAGLE/eagle/model/choices.py": "5ab95137f63b61f756057927b2af427ffa0bc351384d99e334a9da853fcbfa7e",
+    "EAGLE/eagle/model/utils_c.py": "fa7bee5ea870200756bd48bb27c1dbfb2e8f1d42f4e9c832d6b5d1681ca97f58",
+    "EAGLE/eagle/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "EAGLE/LICENSE": "2c042313b4fb4350fa09f81aabf6b77686855e1071a8af07845684e9cba6d3c7"
+  }
+}

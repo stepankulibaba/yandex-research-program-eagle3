@@ -1,0 +1,15 @@
+[
+  {"case": "small","step": 1,"exact_fp32_reference": true,"finite": true,"passed": true},
+  {"case": "small","step": 2,"exact_fp32_reference": true,"finite": true,"passed": true},
+  {"case": "small","step": 3,"exact_fp32_reference": true,"finite": true,"passed": true},
+  {"case": "zero","step": 1,"exact_fp32_reference": true,"finite": true,"passed": true},
+  {"case": "zero","step": 2,"exact_fp32_reference": true,"finite": true,"passed": true},
+  {"case": "zero","step": 3,"exact_fp32_reference": true,"finite": true,"passed": true},
+  {"case": "mixed","step": 1,"exact_fp32_reference": true,"finite": true,"passed": true},
+  {"case": "mixed","step": 2,"exact_fp32_reference": true,"finite": true,"passed": true},
+  {"case": "mixed","step": 3,"exact_fp32_reference": true,"finite": true,"passed": true},
+  {"case": "accumulate","step": 1,"exact_fp32_reference": true,"finite": true,"passed": true},
+  {"case": "accumulate","step": 2,"exact_fp32_reference": true,"finite": true,"passed": true},
+  {"case": "accumulate","step": 3,"exact_fp32_reference": true,"finite": true,"passed": true},
+  {"case": "nonfinite_rejected_before_update","passed": true}
+]

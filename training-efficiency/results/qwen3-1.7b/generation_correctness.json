@@ -1,0 +1,143 @@
+{
+  "checks_done": 16,
+  "checks_passed": 14,
+  "timings_qualified": false,
+  "source_integrity": true,
+  "ar_pilot_target_exact_cases": 8,
+  "forward_diagnostics": [
+    {
+      "variant": "original",
+      "id": "666b180b914958ca6a82728d0d645e1db1a49b1c6c046e543e0b43590aa3f821",
+      "shape": [
+        1,
+        315,
+        32000
+      ],
+      "hidden_max_abs": 0.25,
+      "logits_max_abs": 0.01953125,
+      "argmax_differences": 0,
+      "positions": 315,
+      "exact": false
+    },
+    {
+      "variant": "trained",
+      "id": "666b180b914958ca6a82728d0d645e1db1a49b1c6c046e543e0b43590aa3f821",
+      "shape": [
+        1,
+        315,
+        32000
+      ],
+      "hidden_max_abs": 0.25,
+      "logits_max_abs": 0.015625,
+      "argmax_differences": 0,
+      "positions": 315,
+      "exact": false
+    }
+  ],
+  "prompt_pairs": [
+    {
+      "id": "666b180b914958ca6a82728d0d645e1db1a49b1c6c046e543e0b43590aa3f821",
+      "original_tau": 2.888888888888889,
+      "trained_tau": 2.9545454545454546,
+      "original_cycles": 45,
+      "trained_cycles": 44,
+      "original_raw_tokens": 130,
+      "trained_raw_tokens": 130,
+      "original_passed": true,
+      "trained_passed": true,
+      "first_difference_original": null,
+      "first_difference_trained": null
+    },
+    {
+      "id": "9e4aa44baa3314a9eb02334894d7892788b50ad799b4d256b2b4ba2f834954ca",
+      "original_tau": 2.4615384615384617,
+      "trained_tau": 2.62,
+      "original_cycles": 52,
+      "trained_cycles": 50,
+      "original_raw_tokens": 128,
+      "trained_raw_tokens": 131,
+      "original_passed": false,
+      "trained_passed": false,
+      "first_difference_original": 21,
+      "first_difference_trained": 21
+    },
+    {
+      "id": "b584d03a41417f2d188effa0f8727bfd851386139a39ae815f2e823df32a5080",
+      "original_tau": 2.206896551724138,
+      "trained_tau": 2.245614035087719,
+      "original_cycles": 58,
+      "trained_cycles": 57,
+      "original_raw_tokens": 128,
+      "trained_raw_tokens": 128,
+      "original_passed": true,
+      "trained_passed": true,
+      "first_difference_original": null,
+      "first_difference_trained": null
+    },
+    {
+      "id": "5c213d33689e8fb6b54ab0b8dccedb0b5eed152cf93ab516d55cb58a56ed4650",
+      "original_tau": 2.723404255319149,
+      "trained_tau": 2.782608695652174,
+      "original_cycles": 47,
+      "trained_cycles": 46,
+      "original_raw_tokens": 128,
+      "trained_raw_tokens": 128,
+      "original_passed": true,
+      "trained_passed": true,
+      "first_difference_original": null,
+      "first_difference_trained": null
+    },
+    {
+      "id": "936f6a69a177f2aef422f59ad7c1c921a5d11b8722dd5c8a4d0d3f594a5b4a5f",
+      "original_tau": 3.25,
+      "trained_tau": 3.0952380952380953,
+      "original_cycles": 40,
+      "trained_cycles": 42,
+      "original_raw_tokens": 130,
+      "trained_raw_tokens": 130,
+      "original_passed": true,
+      "trained_passed": true,
+      "first_difference_original": null,
+      "first_difference_trained": null
+    },
+    {
+      "id": "78d38b73606c4bb65ff0dd5c6668720e51da90a476eec1e0f7c3f4301c3678d1",
+      "original_tau": 3.1219512195121952,
+      "trained_tau": 2.909090909090909,
+      "original_cycles": 41,
+      "trained_cycles": 44,
+      "original_raw_tokens": 128,
+      "trained_raw_tokens": 128,
+      "original_passed": true,
+      "trained_passed": true,
+      "first_difference_original": null,
+      "first_difference_trained": null
+    },
+    {
+      "id": "cff759deef0e564ab0147d9805537d3f4e3d0771e740ddc1c78313c3c9a3c34e",
+      "original_tau": 2.4150943396226414,
+      "trained_tau": 2.388888888888889,
+      "original_cycles": 53,
+      "trained_cycles": 54,
+      "original_raw_tokens": 128,
+      "trained_raw_tokens": 129,
+      "original_passed": true,
+      "trained_passed": true,
+      "first_difference_original": null,
+      "first_difference_trained": null
+    },
+    {
+      "id": "a2fb5d029d4a9c471dbe4e1bf79cb288ada8f04f3371448568ccd8cdf6ff23ed",
+      "original_tau": 2.6666666666666665,
+      "trained_tau": 3.046511627906977,
+      "original_cycles": 48,
+      "trained_cycles": 43,
+      "original_raw_tokens": 128,
+      "trained_raw_tokens": 131,
+      "original_passed": true,
+      "trained_passed": true,
+      "first_difference_original": null,
+      "first_difference_trained": null
+    }
+  ]
+}
