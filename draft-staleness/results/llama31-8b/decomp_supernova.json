@@ -1,0 +1,977 @@
+{
+  "target": "supernova",
+  "per_domain": 8,
+  "max_new_tokens": 384,
+  "depth": 6,
+  "layers": [
+    2,
+    16,
+    29
+  ],
+  "all": {
+    "n": 48,
+    "tau_base": 2.6593559133814546,
+    "tau_new_features": 2.4254445964432283,
+    "tau_old_features": 2.409622179940201,
+    "free_transfer": 0.01582241650302718,
+    "oov_stop_share": 0.5714723926380368,
+    "oov_answer_share": 0.13567720065455433,
+    "feature_shift": [
+      0.030531936208717525,
+      0.1535099265165627,
+      0.14301503791163364
+    ]
+  },
+  "domains": {
+    "code": {
+      "n": 8,
+      "tau_base": 4.4546875,
+      "tau_new_features": 4.2933753943217665,
+      "tau_old_features": 4.266457680250784,
+      "free_transfer": 0.026917714070982868,
+      "oov_stop_share": 0.23058823529411765,
+      "oov_answer_share": 0.04078128058688435,
+      "feature_shift": [
+        0.028545217588543892,
+        0.13764004036784172,
+        0.13109261449426413
+      ]
+    },
+    "general": {
+      "n": 8,
+      "tau_base": 3.455981941309255,
+      "tau_new_features": 3.2846347607052895,
+      "tau_old_features": 3.251870324189526,
+      "free_transfer": 0.03276443651576333,
+      "oov_stop_share": 0.01818181818181818,
+      "oov_answer_share": 0.008165104542177361,
+      "feature_shift": [
+        0.030463392613455653,
+        0.14365040697157383,
+        0.13328577484935522
+      ]
+    },
+    "math": {
+      "n": 8,
+      "tau_base": 4.035598705501618,
+      "tau_new_features": 3.2614840989399294,
+      "tau_old_features": 3.1718213058419242,
+      "free_transfer": 0.08966279309800518,
+      "oov_stop_share": 0.044534412955465584,
+      "oov_answer_share": 0.012124758366089453,
+      "feature_shift": [
+        0.030149788595736027,
+        0.14556125551462173,
+        0.15320649836212397
+      ]
+    },
+    "medicine": {
+      "n": 8,
+      "tau_base": 3.197969543147208,
+      "tau_new_features": 2.928205128205128,
+      "tau_old_features": 2.7718446601941746,
+      "free_transfer": 0.15636046801095338,
+      "oov_stop_share": 0.18128654970760233,
+      "oov_answer_share": 0.05327377872657418,
+      "feature_shift": [
+        0.032195875653997064,
+        0.16684342361986637,
+        0.14666379615664482
+      ]
+    },
+    "ru": {
+      "n": 8,
+      "tau_base": 1.5719557195571956,
+      "tau_new_features": 1.489593657086224,
+      "tau_old_features": 1.488118811881188,
+      "free_transfer": 0.001474845205035935,
+      "oov_stop_share": 0.8431967627718766,
+      "oov_answer_share": 0.5581403349286306,
+      "feature_shift": [
+        0.03247545030899346,
+        0.11395539995282888,
+        0.10818637441843748
+      ]
+    },
+    "tool": {
+      "n": 8,
+      "tau_base": 2.913793103448276,
+      "tau_new_features": 2.6484375,
+      "tau_old_features": 2.7560975609756095,
+      "free_transfer": -0.10766006097560954,
+      "oov_stop_share": 0.45454545454545453,
+      "oov_answer_share": 0.14157794677696994,
+      "feature_shift": [
+        0.029361892491579056,
+        0.21340903267264366,
+        0.1856551691889763
+      ]
+    }
+  },
+  "rows": [
+    {
+      "id": "code:65",
+      "domain": "code",
+      "new_tokens": 384,
+      "tokens": 384,
+      "cycles_new": 61,
+      "cycles_old": 62,
+      "tau_new_features": 6.295081967213115,
+      "tau_old_features": 6.193548387096774,
+      "oov_answer_share": 0.0078125,
+      "stops": 12,
+      "oov_stops": 2,
+      "feature_shift": [
+        0.02957734651863575,
+        0.16228795051574707,
+        0.12834390997886658
+      ]
+    },
+    {
+      "id": "code:30",
+      "domain": "code",
+      "new_tokens": 384,
+      "tokens": 384,
+      "cycles_new": 90,
+      "cycles_old": 92,
+      "tau_new_features": 4.266666666666667,
+      "tau_old_features": 4.173913043478261,
+      "oov_answer_share": 0.036458333333333336,
+      "stops": 59,
+      "oov_stops": 14,
+      "feature_shift": [
+        0.027458589524030685,
+        0.1258658617734909,
+        0.12945522367954254
+      ]
+    },
+    {
+      "id": "code:39",
+      "domain": "code",
+      "new_tokens": 268,
+      "tokens": 268,
+      "cycles_new": 65,
+      "cycles_old": 66,
+      "tau_new_features": 4.123076923076923,
+      "tau_old_features": 4.0606060606060606,
+      "oov_answer_share": 0.05970149253731343,
+      "stops": 48,
+      "oov_stops": 14,
+      "feature_shift": [
+        0.029150228947401047,
+        0.12462414801120758,
+        0.1283305287361145
+      ]
+    },
+    {
+      "id": "code:38",
+      "domain": "code",
+      "new_tokens": 384,
+      "tokens": 384,
+      "cycles_new": 120,
+      "cycles_old": 118,
+      "tau_new_features": 3.2,
+      "tau_old_features": 3.2542372881355934,
+      "oov_answer_share": 0.09635416666666667,
+      "stops": 106,
+      "oov_stops": 36,
+      "feature_shift": [
+        0.028526226058602333,
+        0.14312434196472168,
+        0.1429099440574646
+      ]
+    },
+    {
+      "id": "code:2",
+      "domain": "code",
+      "new_tokens": 219,
+      "tokens": 219,
+      "cycles_new": 50,
+      "cycles_old": 51,
+      "tau_new_features": 4.38,
+      "tau_old_features": 4.294117647058823,
+      "oov_answer_share": 0.0730593607305936,
+      "stops": 40,
+      "oov_stops": 15,
+      "feature_shift": [
+        0.02863619104027748,
+        0.14197272062301636,
+        0.13882692158222198
+      ]
+    },
+    {
+      "id": "code:8",
+      "domain": "code",
+      "new_tokens": 345,
+      "tokens": 345,
+      "cycles_new": 92,
+      "cycles_old": 94,
+      "tau_new_features": 3.75,
+      "tau_old_features": 3.6702127659574466,
+      "oov_answer_share": 0.028985507246376812,
+      "stops": 71,
+      "oov_stops": 10,
+      "feature_shift": [
+        0.029549559578299522,
+        0.11762413382530212,
+        0.11827252805233002
+      ]
+    },
+    {
+      "id": "code:72",
+      "domain": "code",
+      "new_tokens": 354,
+      "tokens": 354,
+      "cycles_new": 66,
+      "cycles_old": 69,
+      "tau_new_features": 5.363636363636363,
+      "tau_old_features": 5.130434782608695,
+      "oov_answer_share": 0.005649717514124294,
+      "stops": 32,
+      "oov_stops": 2,
+      "feature_shift": [
+        0.026823682710528374,
+        0.1287529319524765,
+        0.12332915514707565
+      ]
+    },
+    {
+      "id": "code:68",
+      "domain": "code",
+      "new_tokens": 384,
+      "tokens": 384,
+      "cycles_new": 90,
+      "cycles_old": 86,
+      "tau_new_features": 4.266666666666667,
+      "tau_old_features": 4.465116279069767,
+      "oov_answer_share": 0.018229166666666668,
+      "stops": 57,
+      "oov_stops": 5,
+      "feature_shift": [
+        0.028639916330575943,
+        0.15686823427677155,
+        0.13927270472049713
+      ]
+    },
+    {
+      "id": "general:82",
+      "domain": "general",
+      "new_tokens": 173,
+      "tokens": 173,
+      "cycles_new": 50,
+      "cycles_old": 50,
+      "tau_new_features": 3.46,
+      "tau_old_features": 3.46,
+      "oov_answer_share": 0.0,
+      "stops": 43,
+      "oov_stops": 0,
+      "feature_shift": [
+        0.0309807900339365,
+        0.10105322301387787,
+        0.10445438325405121
+      ]
+    },
+    {
+      "id": "general:124",
+      "domain": "general",
+      "new_tokens": 384,
+      "tokens": 384,
+      "cycles_new": 86,
+      "cycles_old": 86,
+      "tau_new_features": 4.465116279069767,
+      "tau_old_features": 4.465116279069767,
+      "oov_answer_share": 0.0,
+      "stops": 57,
+      "oov_stops": 0,
+      "feature_shift": [
+        0.02894679456949234,
+        0.1004314124584198,
+        0.10098225623369217
+      ]
+    },
+    {
+      "id": "general:133",
+      "domain": "general",
+      "new_tokens": 73,
+      "tokens": 73,
+      "cycles_new": 16,
+      "cycles_old": 17,
+      "tau_new_features": 4.5625,
+      "tau_old_features": 4.294117647058823,
+      "oov_answer_share": 0.0547945205479452,
+      "stops": 9,
+      "oov_stops": 3,
+      "feature_shift": [
+        0.028259845450520515,
+        0.2110506296157837,
+        0.1704530268907547
+      ]
+    },
+    {
+      "id": "general:132",
+      "domain": "general",
+      "new_tokens": 9,
+      "tokens": 9,
+      "cycles_new": 3,
+      "cycles_old": 3,
+      "tau_new_features": 3.0,
+      "tau_old_features": 3.0,
+      "oov_answer_share": 0.0,
+      "stops": 2,
+      "oov_stops": 0,
+      "feature_shift": [
+        0.030670708045363426,
+        0.24142800271511078,
+        0.1684742569923401
+      ]
+    },
+    {
+      "id": "general:112",
+      "domain": "general",
+      "new_tokens": 89,
+      "tokens": 89,
+      "cycles_new": 23,
+      "cycles_old": 26,
+      "tau_new_features": 3.869565217391304,
+      "tau_old_features": 3.423076923076923,
+      "oov_answer_share": 0.0,
+      "stops": 17,
+      "oov_stops": 0,
+      "feature_shift": [
+        0.030970346182584763,
+        0.14618989825248718,
+        0.1629212349653244
+      ]
+    },
+    {
+      "id": "general:98",
+      "domain": "general",
+      "new_tokens": 195,
+      "tokens": 195,
+      "cycles_new": 84,
+      "cycles_old": 86,
+      "tau_new_features": 2.3214285714285716,
+      "tau_old_features": 2.2674418604651163,
+      "oov_answer_share": 0.0,
+      "stops": 81,
+      "oov_stops": 0,
+      "feature_shift": [
+        0.03226422518491745,
+        0.09270235896110535,
+        0.11052314192056656
+      ]
+    },
+    {
+      "id": "general:90",
+      "domain": "general",
+      "new_tokens": 96,
+      "tokens": 96,
+      "cycles_new": 22,
+      "cycles_old": 22,
+      "tau_new_features": 4.363636363636363,
+      "tau_old_features": 4.363636363636363,
+      "oov_answer_share": 0.0,
+      "stops": 14,
+      "oov_stops": 0,
+      "feature_shift": [
+        0.03002386912703514,
+        0.17314693331718445,
+        0.15363477170467377
+      ]
+    },
+    {
+      "id": "general:85",
+      "domain": "general",
+      "new_tokens": 285,
+      "tokens": 285,
+      "cycles_new": 113,
+      "cycles_old": 111,
+      "tau_new_features": 2.52212389380531,
+      "tau_old_features": 2.5675675675675675,
+      "oov_answer_share": 0.010526315789473684,
+      "stops": 107,
+      "oov_stops": 3,
+      "feature_shift": [
+        0.03159056231379509,
+        0.08320079743862152,
+        0.09484312683343887
+      ]
+    },
+    {
+      "id": "math:65",
+      "domain": "math",
+      "new_tokens": 64,
+      "tokens": 64,
+      "cycles_new": 17,
+      "cycles_old": 17,
+      "tau_new_features": 3.764705882352941,
+      "tau_old_features": 3.764705882352941,
+      "oov_answer_share": 0.015625,
+      "stops": 15,
+      "oov_stops": 1,
+      "feature_shift": [
+        0.027035962790250778,
+        0.1655474454164505,
+        0.1726953238248825
+      ]
+    },
+    {
+      "id": "math:30",
+      "domain": "math",
+      "new_tokens": 75,
+      "tokens": 75,
+      "cycles_new": 24,
+      "cycles_old": 24,
+      "tau_new_features": 3.125,
+      "tau_old_features": 3.125,
+      "oov_answer_share": 0.0,
+      "stops": 22,
+      "oov_stops": 0,
+      "feature_shift": [
+        0.031478237360715866,
+        0.17914606630802155,
+        0.17628367245197296
+      ]
+    },
+    {
+      "id": "math:39",
+      "domain": "math",
+      "new_tokens": 92,
+      "tokens": 92,
+      "cycles_new": 22,
+      "cycles_old": 26,
+      "tau_new_features": 4.181818181818182,
+      "tau_old_features": 3.5384615384615383,
+      "oov_answer_share": 0.010869565217391304,
+      "stops": 17,
+      "oov_stops": 1,
+      "feature_shift": [
+        0.02775411121547222,
+        0.1494678109884262,
+        0.17140355706214905
+      ]
+    },
+    {
+      "id": "math:38",
+      "domain": "math",
+      "new_tokens": 95,
+      "tokens": 95,
+      "cycles_new": 28,
+      "cycles_old": 28,
+      "tau_new_features": 3.392857142857143,
+      "tau_old_features": 3.392857142857143,
+      "oov_answer_share": 0.0,
+      "stops": 25,
+      "oov_stops": 0,
+      "feature_shift": [
+        0.02952001988887787,
+        0.12916946411132812,
+        0.14022357761859894
+      ]
+    },
+    {
+      "id": "math:2",
+      "domain": "math",
+      "new_tokens": 53,
+      "tokens": 53,
+      "cycles_new": 13,
+      "cycles_old": 15,
+      "tau_new_features": 4.076923076923077,
+      "tau_old_features": 3.533333333333333,
+      "oov_answer_share": 0.018867924528301886,
+      "stops": 11,
+      "oov_stops": 0,
+      "feature_shift": [
+        0.03259126842021942,
+        0.1626025289297104,
+        0.17660394310951233
+      ]
+    },
+    {
+      "id": "math:8",
+      "domain": "math",
+      "new_tokens": 108,
+      "tokens": 108,
+      "cycles_new": 39,
+      "cycles_old": 36,
+      "tau_new_features": 2.769230769230769,
+      "tau_old_features": 3.0,
+      "oov_answer_share": 0.018518518518518517,
+      "stops": 37,
+      "oov_stops": 2,
+      "feature_shift": [
+        0.030458055436611176,
+        0.12338249385356903,
+        0.13239926099777222
+      ]
+    },
+    {
+      "id": "math:72",
+      "domain": "math",
+      "new_tokens": 162,
+      "tokens": 162,
+      "cycles_new": 54,
+      "cycles_old": 57,
+      "tau_new_features": 3.0,
+      "tau_old_features": 2.8421052631578947,
+      "oov_answer_share": 0.018518518518518517,
+      "stops": 47,
+      "oov_stops": 3,
+      "feature_shift": [
+        0.031063860282301903,
+        0.1546308398246765,
+        0.15853779017925262
+      ]
+    },
+    {
+      "id": "math:68",
+      "domain": "math",
+      "new_tokens": 274,
+      "tokens": 274,
+      "cycles_new": 86,
+      "cycles_old": 88,
+      "tau_new_features": 3.186046511627907,
+      "tau_old_features": 3.1136363636363638,
+      "oov_answer_share": 0.014598540145985401,
+      "stops": 73,
+      "oov_stops": 4,
+      "feature_shift": [
+        0.03129679337143898,
+        0.10054339468479156,
+        0.0975048616528511
+      ]
+    },
+    {
+      "id": "medicine:22154448",
+      "domain": "medicine",
+      "new_tokens": 72,
+      "tokens": 72,
+      "cycles_new": 30,
+      "cycles_old": 30,
+      "tau_new_features": 2.4,
+      "tau_old_features": 2.4,
+      "oov_answer_share": 0.08333333333333333,
+      "stops": 29,
+      "oov_stops": 6,
+      "feature_shift": [
+        0.0330711305141449,
+        0.1729002445936203,
+        0.1561056673526764
+      ]
+    },
+    {
+      "id": "medicine:22324545",
+      "domain": "medicine",
+      "new_tokens": 77,
+      "tokens": 77,
+      "cycles_new": 22,
+      "cycles_old": 21,
+      "tau_new_features": 3.5,
+      "tau_old_features": 3.6666666666666665,
+      "oov_answer_share": 0.09090909090909091,
+      "stops": 17,
+      "oov_stops": 6,
+      "feature_shift": [
+        0.03043781779706478,
+        0.1457638442516327,
+        0.1271585375070572
+      ]
+    },
+    {
+      "id": "medicine:12612531",
+      "domain": "medicine",
+      "new_tokens": 103,
+      "tokens": 103,
+      "cycles_new": 40,
+      "cycles_old": 38,
+      "tau_new_features": 2.575,
+      "tau_old_features": 2.710526315789474,
+      "oov_answer_share": 0.0970873786407767,
+      "stops": 37,
+      "oov_stops": 10,
+      "feature_shift": [
+        0.033827975392341614,
+        0.1808990091085434,
+        0.15036055445671082
+      ]
+    },
+    {
+      "id": "medicine:24434052",
+      "domain": "medicine",
+      "new_tokens": 70,
+      "tokens": 70,
+      "cycles_new": 22,
+      "cycles_old": 22,
+      "tau_new_features": 3.1818181818181817,
+      "tau_old_features": 3.1818181818181817,
+      "oov_answer_share": 0.014285714285714285,
+      "stops": 18,
+      "oov_stops": 1,
+      "feature_shift": [
+        0.03174154460430145,
+        0.1446567326784134,
+        0.13109415769577026
+      ]
+    },
+    {
+      "id": "medicine:22668712",
+      "domain": "medicine",
+      "new_tokens": 58,
+      "tokens": 58,
+      "cycles_new": 16,
+      "cycles_old": 24,
+      "tau_new_features": 3.625,
+      "tau_old_features": 2.4166666666666665,
+      "oov_answer_share": 0.017241379310344827,
+      "stops": 12,
+      "oov_stops": 0,
+      "feature_shift": [
+        0.03478383272886276,
+        0.1773499846458435,
+        0.16829150915145874
+      ]
+    },
+    {
+      "id": "medicine:16647887",
+      "domain": "medicine",
+      "new_tokens": 28,
+      "tokens": 28,
+      "cycles_new": 6,
+      "cycles_old": 7,
+      "tau_new_features": 4.666666666666667,
+      "tau_old_features": 4.0,
+      "oov_answer_share": 0.03571428571428571,
+      "stops": 3,
+      "oov_stops": 1,
+      "feature_shift": [
+        0.03257027268409729,
+        0.18878509104251862,
+        0.14128358662128448
+      ]
+    },
+    {
+      "id": "medicine:23379759",
+      "domain": "medicine",
+      "new_tokens": 100,
+      "tokens": 100,
+      "cycles_new": 36,
+      "cycles_old": 41,
+      "tau_new_features": 2.7777777777777777,
+      "tau_old_features": 2.4390243902439024,
+      "oov_answer_share": 0.04,
+      "stops": 34,
+      "oov_stops": 4,
+      "feature_shift": [
+        0.029299069195985794,
+        0.16795408725738525,
+        0.15765786170959473
+      ]
+    },
+    {
+      "id": "medicine:17113061",
+      "domain": "medicine",
+      "new_tokens": 63,
+      "tokens": 63,
+      "cycles_new": 23,
+      "cycles_old": 23,
+      "tau_new_features": 2.739130434782609,
+      "tau_old_features": 2.739130434782609,
+      "oov_answer_share": 0.047619047619047616,
+      "stops": 21,
+      "oov_stops": 3,
+      "feature_shift": [
+        0.03183536231517792,
+        0.15643839538097382,
+        0.14135849475860596
+      ]
+    },
+    {
+      "id": "ru:0122ab60646b4961bc39e9c03bdf6bcc",
+      "domain": "ru",
+      "new_tokens": 384,
+      "tokens": 384,
+      "cycles_new": 209,
+      "cycles_old": 212,
+      "tau_new_features": 1.8373205741626795,
+      "tau_old_features": 1.8113207547169812,
+      "oov_answer_share": 0.3828125,
+      "stops": 199,
+      "oov_stops": 144,
+      "feature_shift": [
+        0.0304573941975832,
+        0.10633618384599686,
+        0.11198066174983978
+      ]
+    },
+    {
+      "id": "ru:01b5156495464638b98e1f8d9be12c23",
+      "domain": "ru",
+      "new_tokens": 384,
+      "tokens": 384,
+      "cycles_new": 340,
+      "cycles_old": 339,
+      "tau_new_features": 1.1294117647058823,
+      "tau_old_features": 1.1327433628318584,
+      "oov_answer_share": 0.8619791666666666,
+      "stops": 339,
+      "oov_stops": 330,
+      "feature_shift": [
+        0.0344000868499279,
+        0.12711739540100098,
+        0.10240640491247177
+      ]
+    },
+    {
+      "id": "ru:01b8360985c04fac9a6911cf3723ad7f",
+      "domain": "ru",
+      "new_tokens": 363,
+      "tokens": 363,
+      "cycles_new": 228,
+      "cycles_old": 229,
+      "tau_new_features": 1.5921052631578947,
+      "tau_old_features": 1.5851528384279476,
+      "oov_answer_share": 0.5261707988980716,
+      "stops": 222,
+      "oov_stops": 189,
+      "feature_shift": [
+        0.03104269690811634,
+        0.10975852608680725,
+        0.10702086240053177
+      ]
+    },
+    {
+      "id": "ru:01f0684ccac74fdea8f21080cb61d591",
+      "domain": "ru",
+      "new_tokens": 384,
+      "tokens": 384,
+      "cycles_new": 231,
+      "cycles_old": 224,
+      "tau_new_features": 1.6623376623376624,
+      "tau_old_features": 1.7142857142857142,
+      "oov_answer_share": 0.4635416666666667,
+      "stops": 227,
+      "oov_stops": 177,
+      "feature_shift": [
+        0.031074929982423782,
+        0.09734916687011719,
+        0.10157886892557144
+      ]
+    },
+    {
+      "id": "ru:02b50e3f5bd94b70817a97dfb34f4e9d",
+      "domain": "ru",
+      "new_tokens": 339,
+      "tokens": 339,
+      "cycles_new": 222,
+      "cycles_old": 224,
+      "tau_new_features": 1.527027027027027,
+      "tau_old_features": 1.5133928571428572,
+      "oov_answer_share": 0.5457227138643068,
+      "stops": 216,
+      "oov_stops": 183,
+      "feature_shift": [
+        0.03392530977725983,
+        0.11029697209596634,
+        0.10611950606107712
+      ]
+    },
+    {
+      "id": "ru:02e11c26f2a646579be708c789341086",
+      "domain": "ru",
+      "new_tokens": 384,
+      "tokens": 384,
+      "cycles_new": 200,
+      "cycles_old": 200,
+      "tau_new_features": 1.92,
+      "tau_old_features": 1.92,
+      "oov_answer_share": 0.3125,
+      "stops": 195,
+      "oov_stops": 119,
+      "feature_shift": [
+        0.03163405507802963,
+        0.12428852170705795,
+        0.12759500741958618
+      ]
+    },
+    {
+      "id": "ru:037edf47ede9428b9ef91c737d6f7a9c",
+      "domain": "ru",
+      "new_tokens": 384,
+      "tokens": 384,
+      "cycles_new": 334,
+      "cycles_old": 335,
+      "tau_new_features": 1.1497005988023952,
+      "tau_old_features": 1.146268656716418,
+      "oov_answer_share": 0.8385416666666666,
+      "stops": 333,
+      "oov_stops": 321,
+      "feature_shift": [
+        0.036326855421066284,
+        0.09788133203983307,
+        0.08557501435279846
+      ]
+    },
+    {
+      "id": "ru:03917c9052f0457c97e6114e810747a9",
+      "domain": "ru",
+      "new_tokens": 384,
+      "tokens": 384,
+      "cycles_new": 254,
+      "cycles_old": 257,
+      "tau_new_features": 1.5118110236220472,
+      "tau_old_features": 1.4941634241245136,
+      "oov_answer_share": 0.5338541666666666,
+      "stops": 246,
+      "oov_stops": 204,
+      "feature_shift": [
+        0.030942274257540703,
+        0.13861510157585144,
+        0.12321466952562332
+      ]
+    },
+    {
+      "id": "tool:6311",
+      "domain": "tool",
+      "new_tokens": 17,
+      "tokens": 17,
+      "cycles_new": 5,
+      "cycles_old": 5,
+      "tau_new_features": 3.4,
+      "tau_old_features": 3.4,
+      "oov_answer_share": 0.058823529411764705,
+      "stops": 4,
+      "oov_stops": 1,
+      "feature_shift": [
+        0.0345795638859272,
+        0.22999350726604462,
+        0.20332542061805725
+      ]
+    },
+    {
+      "id": "tool:6890",
+      "domain": "tool",
+      "new_tokens": 35,
+      "tokens": 35,
+      "cycles_new": 14,
+      "cycles_old": 14,
+      "tau_new_features": 2.5,
+      "tau_old_features": 2.5,
+      "oov_answer_share": 0.11428571428571428,
+      "stops": 12,
+      "oov_stops": 4,
+      "feature_shift": [
+        0.027964791283011436,
+        0.23102355003356934,
+        0.2061769664287567
+      ]
+    },
+    {
+      "id": "tool:663",
+      "domain": "tool",
+      "new_tokens": 43,
+      "tokens": 43,
+      "cycles_new": 17,
+      "cycles_old": 15,
+      "tau_new_features": 2.5294117647058822,
+      "tau_old_features": 2.8666666666666667,
+      "oov_answer_share": 0.13953488372093023,
+      "stops": 15,
+      "oov_stops": 6,
+      "feature_shift": [
+        0.02880166471004486,
+        0.2276742160320282,
+        0.1765182763338089
+      ]
+    },
+    {
+      "id": "tool:4242",
+      "domain": "tool",
+      "new_tokens": 29,
+      "tokens": 29,
+      "cycles_new": 13,
+      "cycles_old": 12,
+      "tau_new_features": 2.230769230769231,
+      "tau_old_features": 2.4166666666666665,
+      "oov_answer_share": 0.2413793103448276,
+      "stops": 12,
+      "oov_stops": 7,
+      "feature_shift": [
+        0.029834426939487457,
+        0.22123239934444427,
+        0.17508244514465332
+      ]
+    },
+    {
+      "id": "tool:8376",
+      "domain": "tool",
+      "new_tokens": 33,
+      "tokens": 33,
+      "cycles_new": 12,
+      "cycles_old": 13,
+      "tau_new_features": 2.75,
+      "tau_old_features": 2.5384615384615383,
+      "oov_answer_share": 0.15151515151515152,
+      "stops": 10,
+      "oov_stops": 5,
+      "feature_shift": [
+        0.03085877001285553,
+        0.190196231007576,
+        0.15474848449230194
+      ]
+    },
+    {
+      "id": "tool:7961",
+      "domain": "tool",
+      "new_tokens": 53,
+      "tokens": 53,
+      "cycles_new": 26,
+      "cycles_old": 23,
+      "tau_new_features": 2.0384615384615383,
+      "tau_old_features": 2.3043478260869565,
+      "oov_answer_share": 0.20754716981132076,
+      "stops": 24,
+      "oov_stops": 10,
+      "feature_shift": [
+        0.027093859389424324,
+        0.2017451822757721,
+        0.22319497168064117
+      ]
+    },
+    {
+      "id": "tool:6634",
+      "domain": "tool",
+      "new_tokens": 17,
+      "tokens": 17,
+      "cycles_new": 7,
+      "cycles_old": 7,
+      "tau_new_features": 2.4285714285714284,
+      "tau_old_features": 2.4285714285714284,
+      "oov_answer_share": 0.058823529411764705,
+      "stops": 6,
+      "oov_stops": 1,
+      "feature_shift": [
+        0.027715107426047325,
+        0.2096039205789566,
+        0.18181422352790833
+      ]
+    },
+    {
+      "id": "tool:4969",
+      "domain": "tool",
+      "new_tokens": 112,
+      "tokens": 112,
+      "cycles_new": 34,
+      "cycles_old": 34,
+      "tau_new_features": 3.2941176470588234,
+      "tau_old_features": 3.2941176470588234,
+      "oov_answer_share": 0.16071428571428573,
+      "stops": 27,
+      "oov_stops": 16,
+      "feature_shift": [
+        0.028046956285834312,
+        0.19580325484275818,
+        0.16438056528568268
+      ]
+    }
+  ]
+}

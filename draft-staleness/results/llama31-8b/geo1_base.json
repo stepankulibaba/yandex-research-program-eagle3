@@ -1,0 +1,8 @@
+{
+  "base": {
+    "acc_base_test": 0.6886849999427795,
+    "target_top_outside_draft_vocab": 0.19836901128292084
+  },
+  "n_fit_tokens": 4626,
+  "n_test_tokens": 4905
+}

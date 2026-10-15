@@ -1,0 +1,41 @@
+1. How much do the weights move (relative Frobenius change, median over matrices of each kind)
+edit             q_proj   k_proj   v_proj   o_proj gate_pro  up_proj down_pro embed_to  lm_head     norm   tau loss
+limo_lora        0.0037   0.0025   0.0043   0.0043   0.0123   0.0078   0.0022   0.0000   0.0000   0.0000     4.7%
+toolace          0.0201   0.0145   0.0264   0.0264   0.0314   0.0270   0.0194   0.0000   0.0000   0.0000     9.1%
+supernova        0.0000   0.0000   0.0000   0.0000   0.0047   0.0053   0.0032   0.0000   0.0000   0.0000    12.6%
+vikhr            0.0191   0.0135   0.0310   0.0304   0.0276   0.0289   0.0181   0.0000   0.0000   0.0000    13.7%
+ultramedical     0.0266   0.0178   0.0392   0.0371   0.0309   0.0368   0.0368   0.0270   0.0439   0.0007    14.0%
+huatuo_o1        0.0058   0.0039   0.0089   0.0086   0.0069   0.0082   0.0082   0.0050   0.0088   0.0000    16.9%
+abliterated      0.1954   0.1396   0.1754   0.2025   0.1904   0.2076   0.2011   0.3021   0.2329   0.0270    33.3%
+r1_distill       0.1341   0.0905   0.1639   0.4310   0.1711   0.1852   0.1825   0.1469   0.1492   0.0173    43.9%
+nemotron_nano    0.3233   0.2194   0.3728   0.3737   0.3945   0.4306   0.4231   0.3080   0.2210   0.0187    51.7%
+
+2. Weight-only predictors of the tau loss (no forward pass, no text)
+  mean rel change, all layer matrices                     vs tau loss: pearson  0.96 spearman  0.83 | vs state shift: pearson  0.96
+  mean rel change, layers 0-28 (up to the last captured)  vs tau loss: pearson  0.95 spearman  0.83 | vs state shift: pearson  0.96
+  mean rel change, residual writers (o, down)             vs tau loss: pearson  0.98 spearman  0.87 | vs state shift: pearson  0.96
+  embed_tokens rel change                                 vs tau loss: pearson  0.88 spearman  0.97 | vs state shift: pearson  0.80
+
+3. How concentrated are the weight changes (energy of top-1 / top-8 / top-32 singular directions, median)
+  limo_lora      all: 0.735 / 0.888 / 0.893   residual writers: 0.689 / 0.818 / 0.825
+  toolace        all: 0.453 / 0.895 / 0.995   residual writers: 0.412 / 0.892 / 0.995
+  supernova      all: 0.047 / 0.137 / 0.254   residual writers: 0.055 / 0.165 / 0.282
+  vikhr          all: 0.103 / 0.332 / 0.576   residual writers: 0.079 / 0.275 / 0.510
+  ultramedical   all: 0.012 / 0.050 / 0.117   residual writers: 0.005 / 0.030 / 0.088
+  huatuo_o1      all: 0.033 / 0.114 / 0.216   residual writers: 0.020 / 0.080 / 0.164
+  abliterated    all: 0.009 / 0.022 / 0.056   residual writers: 0.011 / 0.023 / 0.040
+  r1_distill     all: 0.005 / 0.024 / 0.069   residual writers: 0.004 / 0.017 / 0.045
+  nemotron_nano  all: 0.009 / 0.041 / 0.102   residual writers: 0.006 / 0.039 / 0.094
+
+4. Do the weights write into the residual stream along the directions the states actually move?
+   share of the mean state shift (layers 16 and 29) inside the span of the top-8 left singular vectors of the
+   o_proj/down_proj changes of all earlier layers, vs a random subspace of the same dimension
+  limo_lora      layer 16: 0.361 (random 0.063, dims 240)   layer 29: 0.621 (random 0.105, dims 448)
+  toolace        layer 16: 0.121 (random 0.055, dims 240)   layer 29: 0.265 (random 0.094, dims 448)
+  supernova      layer 16: 0.257 (random 0.046, dims 176)   layer 29: 0.274 (random 0.073, dims 288)
+  vikhr          layer 16: 0.150 (random 0.065, dims 240)   layer 29: 0.268 (random 0.107, dims 448)
+  ultramedical   layer 16: 0.299 (random 0.053, dims 240)   layer 29: 0.311 (random 0.108, dims 448)
+  huatuo_o1      layer 16: 0.249 (random 0.056, dims 240)   layer 29: 0.506 (random 0.106, dims 448)
+  abliterated    layer 16: 0.689 (random 0.046, dims 240)   layer 29: 0.663 (random 0.104, dims 448)
+  r1_distill     layer 16: 0.266 (random 0.065, dims 240)   layer 29: 0.566 (random 0.115, dims 448)
+  nemotron_nano  layer 16: 0.099 (random 0.049, dims 240)   layer 29: 0.212 (random 0.125, dims 448)

@@ -1,0 +1,30 @@
+1. same / changed tokens (depth-1 agreement with the edited target's argmax)
+edit            changed | same: old / new / damage | changed: new follows NEW / OLD target (old features: NEW / OLD)
+limo_lora         0.051 | 0.885 / 0.882 / +0.003 | 0.516 / 0.339   (old features: 0.371 / 0.452)
+toolace           0.045 | 0.883 / 0.881 / +0.002 | 0.509 / 0.291   (old features: 0.327 / 0.473)
+supernova         0.033 | 0.874 / 0.872 / +0.002 | 0.415 / 0.415   (old features: 0.293 / 0.512)
+vikhr             0.073 | 0.890 / 0.882 / +0.008 | 0.483 / 0.281   (old features: 0.303 / 0.506)
+ultramedical      0.084 | 0.894 / 0.881 / +0.012 | 0.447 / 0.330   (old features: 0.243 / 0.524)
+huatuo_o1         0.072 | 0.884 / 0.870 / +0.014 | 0.432 / 0.386   (old features: 0.205 / 0.568)
+abliterated       0.072 | 0.880 / 0.846 / +0.034 | 0.352 / 0.489   (old features: 0.182 / 0.636)
+r1_distill        0.164 | 0.911 / 0.812 / +0.100 | 0.291 / 0.342   (old features: 0.206 / 0.618)
+nemotron_nano     0.145 | 0.918 / 0.725 / +0.193 | 0.288 / 0.198   (old features: 0.232 / 0.531)
+
+nemotron_nano: 228 tokens where the target did NOT change, old states right, new states wrong
+  wrong draft predictions: [("'.'", 8), ("' ('", 8), ("','", 7), ("' of'", 6), ("' in'", 5), ("' *'", 4), ("'f'", 3), ("' the'", 3), ("'.\\n'", 3), ("' list'", 3), ("'\\n'", 3), ("' \\n'", 3)]
+  true tokens there:      [("' the'", 8), ("','", 8), ("'.'", 7), ("' '", 7), ("' is'", 5), ("':'", 5), ("' ='", 5), ('"\'s"', 3), ("'.\\n\\n'", 3), ("' a'", 3), ("' and'", 3), ("'x'", 3)]
+
+r1_distill: 128 tokens where the target did NOT change, old states right, new states wrong
+  wrong draft predictions: [("'\\n'", 6), ("':'", 5), ("' the'", 4), ("'.\\n'", 4), ("' what'", 3), ("'.'", 3), ("','", 3), ("' is'", 2), ("' not'", 2), ("':\\n'", 2), ("' ('", 2), ("' of'", 2)]
+  true tokens there:      [("','", 8), ("' the'", 6), ("':'", 4), ("'.'", 4), ("' '", 4), ("' is'", 3), ("':\\n\\n'", 3), ("' a'", 3), ('"\'s"', 2), ("'.\\n\\n'", 2), ("' `'", 2), ("'def'", 2)]
+
+2. scale or direction (needs the full geometry1b npz)
+  limo_lora      |f1|/|f0| 1.00 cos 0.995 rescale 0.01 || |f1|/|f0| 1.00 cos 0.986 rescale 0.03 || |f1|/|f0| 1.01 cos 0.985 rescale 0.04 || fc output: cos 0.987 |u1|/|u0| 1.02 layer shares [0.0, 0.19, 0.8]
+  toolace        |f1|/|f0| 1.01 cos 0.995 rescale 0.02 || |f1|/|f0| 1.05 cos 0.981 rescale 0.04 || |f1|/|f0| 1.06 cos 0.985 rescale 0.06 || fc output: cos 0.986 |u1|/|u0| 1.05 layer shares [0.0, 0.27, 0.73]
+  supernova      |f1|/|f0| 1.00 cos 1.000 rescale 0.02 || |f1|/|f0| 0.99 cos 0.993 rescale 0.06 || |f1|/|f0| 0.99 cos 0.993 rescale 0.04 || fc output: cos 0.994 |u1|/|u0| 0.99 layer shares [0.0, 0.22, 0.78]
+  vikhr          |f1|/|f0| 1.06 cos 0.987 rescale 0.08 || |f1|/|f0| 1.00 cos 0.960 rescale 0.09 || |f1|/|f0| 1.04 cos 0.972 rescale 0.05 || fc output: cos 0.973 |u1|/|u0| 1.03 layer shares [0.0, 0.24, 0.76]
+  ultramedical   |f1|/|f0| 1.06 cos 0.977 rescale 0.04 || |f1|/|f0| 0.98 cos 0.938 rescale 0.09 || |f1|/|f0| 0.99 cos 0.962 rescale 0.05 || fc output: cos 0.963 |u1|/|u0| 1.00 layer shares [0.01, 0.26, 0.73]
+  huatuo_o1      |f1|/|f0| 1.00 cos 0.996 rescale 0.02 || |f1|/|f0| 1.00 cos 0.978 rescale 0.06 || |f1|/|f0| 1.00 cos 0.981 rescale 0.06 || fc output: cos 0.982 |u1|/|u0| 1.00 layer shares [0.0, 0.22, 0.78]
+  abliterated    |f1|/|f0| 0.83 cos 0.964 rescale 0.44 || |f1|/|f0| 0.78 cos 0.910 rescale 0.45 || |f1|/|f0| 0.78 cos 0.932 rescale 0.45 || fc output: cos 0.936 |u1|/|u0| 0.79 layer shares [0.01, 0.23, 0.76]
+  r1_distill     |f1|/|f0| 1.15 cos 0.910 rescale 0.02 || |f1|/|f0| 1.18 cos 0.777 rescale 0.05 || |f1|/|f0| 1.00 cos 0.775 rescale 0.15 || fc output: cos 0.816 |u1|/|u0| 1.13 layer shares [0.01, 0.25, 0.75]
+  nemotron_nano  |f1|/|f0| 1.46 cos 0.811 rescale 0.05 || |f1|/|f0| 1.63 cos 0.708 rescale 0.03 || |f1|/|f0| 1.39 cos 0.682 rescale 0.02 || fc output: cos 0.751 |u1|/|u0| 1.50 layer shares [0.01, 0.25, 0.74]
