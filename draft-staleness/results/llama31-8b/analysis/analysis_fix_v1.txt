@@ -1,0 +1,32 @@
+
+=== nemotron_nano: identical text 0.36 | English tau 2.580 -> 2.814 (+9.1%, 95% CI [+7.9, +10.3]) | prompts improved 0.94, worse 0.03
+   accepted draft tokens per cycle 0..7 (share of cycles):
+     without 0.234 0.310 0.250 0.121 0.050 0.020 0.009 0.004
+     with    0.196 0.279 0.257 0.148 0.063 0.030 0.014 0.007
+   tau by quarter of the answer (cycles): Q1 2.50->2.73 (+9%)  Q2 2.55->2.80 (+10%)  Q3 2.58->2.84 (+10%)  Q4 2.68->2.88 (+7%)
+   per domain: general 2.49->2.73  math 2.60->2.90  code 2.55->2.74  medicine 2.96->3.16  tool 2.30->2.52
+   measured speed-up (12 prompts) 1.51 -> 1.54; implied by English tau at constant cycle cost: 1.51 -> 1.65
+
+=== r1_distill: identical text 0.11 | English tau 2.987 -> 3.193 (+6.9%, 95% CI [+5.3, +8.4]) | prompts improved 0.90, worse 0.10
+   accepted draft tokens per cycle 0..7 (share of cycles):
+     without 0.207 0.252 0.241 0.138 0.072 0.040 0.020 0.015
+     with    0.179 0.229 0.243 0.151 0.086 0.046 0.029 0.020
+   tau by quarter of the answer (cycles): Q1 3.01->3.33 (+11%)  Q2 2.91->3.14 (+8%)  Q3 2.94->3.10 (+6%)  Q4 3.09->3.19 (+3%)
+   per domain: general 2.82->3.00  math 3.12->3.39  code 3.00->3.32  medicine 3.20->3.34  tool 2.83->2.94
+   measured speed-up (12 prompts) 1.74 -> 1.82; implied by English tau at constant cycle cost: 1.74 -> 1.86
+
+=== toolace: identical text 0.71 | English tau 5.185 -> 5.237 (+1.0%, 95% CI [-1.1, +3.2]) | prompts improved 0.24, worse 0.33
+   accepted draft tokens per cycle 0..7 (share of cycles):
+     without 0.097 0.107 0.119 0.116 0.118 0.098 0.079 0.073
+     with    0.097 0.104 0.117 0.107 0.125 0.089 0.089 0.078
+   tau by quarter of the answer (cycles): Q1 4.82->4.85 (+1%)  Q2 5.70->5.70 (-0%)  Q3 5.54->5.69 (+3%)  Q4 4.67->4.72 (+1%)
+   per domain: general 4.96->5.20  math 5.23->5.31  code 5.87->5.75  medicine 5.09->5.10  tool 3.65->3.56
+   measured speed-up (12 prompts) 2.09 -> 2.05; implied by English tau at constant cycle cost: 2.09 -> 2.11
+
+=== abliterated: identical text 0.65 | English tau 3.706 -> 3.335 (-10.0%, 95% CI [-11.4, -8.7]) | prompts improved 0.03, worse 0.89
+   accepted draft tokens per cycle 0..7 (share of cycles):
+     without 0.158 0.180 0.200 0.154 0.110 0.079 0.045 0.034
+     with    0.182 0.192 0.232 0.157 0.100 0.066 0.033 0.017
+   tau by quarter of the answer (cycles): Q1 3.70->3.28 (-11%)  Q2 3.70->3.30 (-11%)  Q3 3.58->3.25 (-9%)  Q4 3.83->3.50 (-9%)
+   per domain: general 3.38->3.01  math 3.41->3.14  code 4.36->3.83  medicine 4.02->3.69  tool 2.87->2.65
+   measured speed-up (12 prompts) 2.24 -> 2.18; implied by English tau at constant cycle cost: 2.24 -> 2.01

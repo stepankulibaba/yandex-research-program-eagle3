@@ -60,6 +60,18 @@
 - `big-training`: рецепт NeMo AutoModel для обучения драфта с нуля нестабилен (рост логитов q·k, см. `big-training/reports/eagle3_nemo_incident.pdf`); оба варианта учатся кодом авторов.
 - `big-training`: τ-оценка на валидации — цепочка из 7 позиций, $1 + \sum_k \prod_{j\le k} acc_j$; ниже реальной τ на дереве, сравнивать только варианты между собой.
 
+- `draft-staleness`: код авторов EAGLE с зеркалом `unsloth` получает вместо токенизатора `False` (медленный токенизатор
+  Llama-3 не собирается) — после загрузки `EaModel` подставлять быстрый: `model.tokenizer = AutoTokenizer.from_pretrained(...)`.
+- `draft-staleness`: при сравнении двух драфтов на одном target ответы НЕ всегда совпадают (bf16-проверка дерева иначе
+  разрешает почти равные варианты); сравнивать τ на общем начале ответов (`analysis_fix_prefix.py`).
+- `draft-staleness`: отображение «новые признаки → старые» по ridge подгонять как поправку к единичному
+  (`Y ≈ X + [X,1]B`); ridge к нулю переобучается (4097 × 4096 параметров на слой при ~6 тыс. токенов).
+- `draft-staleness`, Colab CLI: одно ssh-подключение на сессию; работа по ssh не считается активностью ядра, и сессия
+  пропадает — нужен `code/colab/keepalive_pull.sh`; `colab exec`/`colab ssh` при пропавшей сессии молча создают
+  новую CPU-сессию с тем же именем. Две задачи, которые качают и удаляют модели, одновременно не запускать.
+- `draft-staleness`: `results/llama31-8b/geo1b_*_ids.npz` — компактная часть `geometry1b`; полные состояния (~34 МБ
+  на модель) в git не хранятся.
+
 ## Проверки перед PR
 
 1. `python -m py_compile` для всех изменённых `.py`, `bash -n` для `.sh`.
@@ -79,3 +91,4 @@
 - `extra-checks`: готово; сравнения со статьёй там на `--depth 5`.
 - `big-training`: готово. baseline (2/16/29) и ours (16/22/29 + `fc_norm`) обучены до 546 600 диалогов (0,4 эпохи) и оценены в SGLang (с исправлением захвата слоёв) и кодом авторов. Все числа — `results/llama31-8b/results.json` и `tables.md`, графики — `code/make_results_figures.py`, данные собирает `code/collect_results.py` из копии логов сервера, дополнительные графики — `code/make_extra_figures.py`. Замер ours без исправления SGLang — `results/llama31-8b/final_eval/ours_sglang_capture_bug/`.
 - `reproduction`: задачи 3a, 3b, 4, 5 посчитаны на H200, 3a (T = 0) и профиль повторены на A100 (DataSphere). Отчёты — `reproduction/reports/`, все числа отчётов — `reproduction/results/numbers.json`, графики строит `reproduction/code/make_report_figures.py`. LaTeX-исходники отчётов в репозиторий не входят. Драфт не обучали: стоимость обучения только оценена.
+- `draft-staleness`: карта (10 target + 2×2 с R1-Distill), разложение, геометрия, поправка ранга 2 в `fc` проверена τ дерева на 4 моделях. Все числа — `draft-staleness/tables.md` и `results/llama31-8b/`, графики — `code/make_figures.py`, анализ — `code/analysis_*.py`. Отчёт и слайды с LaTeX-исходниками — `reports/`.

@@ -1,0 +1,57 @@
+[
+  {
+    "path": "vendor/eagle/model/cnets.py",
+    "sha256": "b0e2512db4529c9689ffd768e9a2812059a5715d786686a131a751c56fbf3292",
+    "repo": "SafeAILab/EAGLE",
+    "revision": "cb7e0841fe0c206c6ed74a197ad5e2a1f13f5a2b",
+    "source": "eagle/model/cnets.py"
+  },
+  {
+    "path": "vendor/eagle/model/configs.py",
+    "sha256": "14ae62877cd9ab12c9076fc70fe940714b9ca980865b00ba974de340df2d1ac5",
+    "repo": "SafeAILab/EAGLE",
+    "revision": "cb7e0841fe0c206c6ed74a197ad5e2a1f13f5a2b",
+    "source": "eagle/model/configs.py"
+  },
+  {
+    "path": "vendor/eagle/model/utils_c.py",
+    "sha256": "fa7bee5ea870200756bd48bb27c1dbfb2e8f1d42f4e9c832d6b5d1681ca97f58",
+    "repo": "SafeAILab/EAGLE",
+    "revision": "cb7e0841fe0c206c6ed74a197ad5e2a1f13f5a2b",
+    "source": "eagle/model/utils_c.py"
+  },
+  {
+    "path": "vendor/eagle/model/choices.py",
+    "sha256": "5ab95137f63b61f756057927b2af427ffa0bc351384d99e334a9da853fcbfa7e",
+    "repo": "SafeAILab/EAGLE",
+    "revision": "cb7e0841fe0c206c6ed74a197ad5e2a1f13f5a2b",
+    "source": "eagle/model/choices.py"
+  },
+  {
+    "path": "vendor/eagle/model/__init__.py",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "repo": "SafeAILab/EAGLE",
+    "revision": "cb7e0841fe0c206c6ed74a197ad5e2a1f13f5a2b",
+    "source": "eagle/model/__init__.py"
+  },
+  {
+    "path": "vendor/eagle/__init__.py",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "repo": "SafeAILab/EAGLE",
+    "revision": "cb7e0841fe0c206c6ed74a197ad5e2a1f13f5a2b",
+    "source": "eagle/__init__.py"
+  },
+  {
+    "path": "vendor/LICENSE",
+    "sha256": "2c042313b4fb4350fa09f81aabf6b77686855e1071a8af07845684e9cba6d3c7",
+    "repo": "SafeAILab/EAGLE",
+    "revision": "cb7e0841fe0c206c6ed74a197ad5e2a1f13f5a2b",
+    "source": "LICENSE"
+  },
+  {
+    "path": "vendor/zoo.py",
+    "sha256": "f875961431e039de11d202e9eea7f42dbbcee65aa9f4fc87796e648cfc29c3ec",
+    "source": "layer_study/h200/zoo.py",
+    "note": "Copied evaluator; native RMS adaptation is isolated in native_draft.py"
+  }
+]

@@ -1,0 +1,51 @@
+edits with geometry: 9: ['limo_lora', 'toolace', 'supernova', 'vikhr', 'ultramedical', 'huatuo_o1', 'abliterated', 'r1_distill', 'nemotron_nano']
+
+Q1. Does the shift of the captured states predict the tau loss?
+  shift mean of 3 layers   pearson  0.93 [ 0.55, 0.98]  spearman  0.83  LOO |error|  7.7 pp
+  shift layer 2            pearson  0.92 [ 0.55, 0.98]  spearman  0.75  LOO |error|  8.6 pp
+  shift layer 16           pearson  0.93 [ 0.58, 0.98]  spearman  0.83  LOO |error|  7.4 pp
+  shift layer 29           pearson  0.94 [ 0.65, 0.99]  spearman  0.90  LOO |error|  7.1 pp
+  shift through W_fc       pearson  0.94 [ 0.65, 0.99]  spearman  0.90  LOO |error|  7.1 pp
+  target argmax change     pearson  0.86 [ 0.42, 0.97]  spearman  0.78  LOO |error|  9.4 pp
+  target KL                pearson  0.85 [ 0.36, 0.99]  spearman  0.80  LOO |error| 10.1 pp
+  draft KL old->new        pearson  0.93 [ 0.78, 0.99]  spearman  0.90  LOO |error|  6.6 pp
+  (mean tau loss over edits 22.2%, a constant predictor errs 13.8 pp)
+  without R1-Distill and Nemotron (n=7): pearson 0.75 spearman 0.64
+  per domain points (n=45): pearson 0.83 spearman 0.72
+
+Q2. Do different edits move the states in the same directions?
+  layer  2: cosine of mean shifts between edits: median -0.01, min -0.37, max 0.86  (random directions in 4096d: ~0.016)
+  layer 16: cosine of mean shifts between edits: median 0.17, min -0.43, max 0.80  (random directions in 4096d: ~0.016)
+  layer 29: cosine of mean shifts between edits: median 0.20, min -0.47, max 0.57  (random directions in 4096d: ~0.016)
+  cosine matrix of mean shifts, layer 16:
+                 limo_l toolac supern  vikhr ultram huatuo ablite r1_dis nemotr
+  limo_lora        1.00  -0.16   0.09   0.08   0.06   0.15   0.07   0.08  -0.14
+  toolace         -0.16   1.00  -0.43  -0.30  -0.35   0.17  -0.36  -0.25  -0.01
+  supernova        0.09  -0.43   1.00   0.63   0.60   0.27   0.54   0.22   0.07
+  vikhr            0.08  -0.30   0.63   1.00   0.80   0.46   0.68   0.19   0.18
+  ultramedical     0.06  -0.35   0.60   0.80   1.00   0.35   0.72   0.26   0.22
+  huatuo_o1        0.15   0.17   0.27   0.46   0.35   1.00   0.36   0.09   0.12
+  abliterated      0.07  -0.36   0.54   0.68   0.72   0.36   1.00   0.23   0.24
+  r1_distill       0.08  -0.25   0.22   0.19   0.26   0.09   0.23   1.00   0.52
+  nemotron_nano   -0.14  -0.01   0.07   0.18   0.22   0.12   0.24   0.52   1.00
+  top- 4 shift subspaces (3 layers, 12288d): overlap between edits median 0.247 [0.164, 0.469], random 0.0003
+  top-16 shift subspaces (3 layers, 12288d): overlap between edits median 0.192 [0.100, 0.373], random 0.0013
+  offset share of the shift (constant part): {'limo_lora': [0.31, 0.1, 0.16], 'toolace': [0.18, 0.09, 0.14], 'supernova': [0.15, 0.18, 0.15], 'vikhr': [0.24, 0.15, 0.06], 'ultramedical': [0.2, 0.16, 0.08], 'huatuo_o1': [0.21, 0.08, 0.09], 'abliterated': [0.14, 0.21, 0.21], 'r1_distill': [0.15, 0.11, 0.13], 'nemotron_nano': [0.3, 0.1, 0.11]}
+  shift energy in the top-k input directions of W_fc vs the states' own energy there:
+    limo_lora      k=16: shift 0.000 / states 0.001  k=64: shift 0.000 / states 0.002  k=256: shift 0.003 / states 0.006
+    toolace        k=16: shift 0.000 / states 0.001  k=64: shift 0.001 / states 0.002  k=256: shift 0.004 / states 0.006
+    supernova      k=16: shift 0.000 / states 0.001  k=64: shift 0.001 / states 0.002  k=256: shift 0.003 / states 0.006
+    vikhr          k=16: shift 0.000 / states 0.001  k=64: shift 0.001 / states 0.002  k=256: shift 0.003 / states 0.006
+    ultramedical   k=16: shift 0.000 / states 0.001  k=64: shift 0.001 / states 0.002  k=256: shift 0.004 / states 0.006
+    huatuo_o1      k=16: shift 0.000 / states 0.001  k=64: shift 0.001 / states 0.002  k=256: shift 0.003 / states 0.006
+    abliterated    k=16: shift 0.000 / states 0.001  k=64: shift 0.001 / states 0.002  k=256: shift 0.004 / states 0.006
+    r1_distill     k=16: shift 0.000 / states 0.001  k=64: shift 0.001 / states 0.002  k=256: shift 0.004 / states 0.006
+    nemotron_nano  k=16: shift 0.000 / states 0.001  k=64: shift 0.001 / states 0.002  k=256: shift 0.004 / states 0.006
+
+Q3. Is there a shared subspace of what the draft has to learn (logit residual, rank-32 output basis)?
+  top- 4 output directions: overlap between edits median 0.820 [0.389, 0.960]   random in 32000d ~ 0.0001
+  top-16 output directions: overlap between edits median 0.763 [0.371, 0.967]   random in 32000d ~ 0.0005
+  top-32 output directions: overlap between edits median 0.744 [0.357, 0.933]   random in 32000d ~ 0.0010
+  residual spectrum (energy share of top-16 / top-64): {'limo_lora': (0.36, 0.54), 'toolace': (0.36, 0.54), 'supernova': (0.35, 0.54), 'vikhr': (0.34, 0.52), 'ultramedical': (0.33, 0.51), 'huatuo_o1': (0.34, 0.52), 'abliterated': (0.36, 0.53), 'r1_distill': (0.26, 0.42), 'nemotron_nano': (0.28, 0.43)}
+
+figure: figures/fig_predictor_and_gap.png

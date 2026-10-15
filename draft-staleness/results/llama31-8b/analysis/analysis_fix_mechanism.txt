@@ -1,0 +1,11 @@
+test half; u = W_fc [h2;h16;h29]; the draft RMS-normalises u (hidden_norm), so direction is what matters
+edit            cos(u0,u1)  cos(u0,u_fix)  dir.err removed  |u_fix|/|u1|  |u1|/|u0|  bias share
+limo_lora            0.987          0.989             0.18          0.99       1.02        0.75
+toolace              0.986          0.987             0.06          0.98       1.05        0.79
+supernova            0.994          0.995             0.11          1.01       0.99        0.85
+vikhr                0.973          0.976             0.10          1.00       1.03        0.75
+ultramedical         0.962          0.967             0.10          1.01       1.00        0.78
+huatuo_o1            0.982          0.984             0.12          1.00       1.00        0.71
+abliterated          0.935          0.949             0.18          1.11       0.79        0.89
+r1_distill           0.815          0.843             0.12          0.97       1.13        0.89
+nemotron_nano        0.750          0.764             0.04          0.95       1.49        0.82

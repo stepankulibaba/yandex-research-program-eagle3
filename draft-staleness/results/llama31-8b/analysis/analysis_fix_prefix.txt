@@ -1,0 +1,4 @@
+nemotron_nano  prompts 76 | shared prefix covers 0.64 of the answer | tau on identical text 2.545 -> 2.765 (+8.6%, 95% CI [+7.4, +10.0])
+r1_distill     prompts 78 | shared prefix covers 0.43 of the answer | tau on identical text 3.011 -> 3.300 (+9.6%, 95% CI [+8.4, +10.8])
+toolace        prompts 73 | shared prefix covers 0.80 of the answer | tau on identical text 5.477 -> 5.489 (+0.2%, 95% CI [-0.5, +1.0])
+abliterated    prompts 74 | shared prefix covers 0.79 of the answer | tau on identical text 3.812 -> 3.443 (-9.7%, 95% CI [-11.0, -8.3])

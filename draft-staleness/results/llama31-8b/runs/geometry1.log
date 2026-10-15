@@ -1,0 +1,50 @@
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.61s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:03<00:03,  1.65s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.65s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:05<00:00,  1.13s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:05<00:00,  1.32s/it]
+20:36:33 T0 writes the common texts
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+20:43:01 base: depth-1 agreement of the draft with T0 on the test half 0.689
+20:43:01 downloading mlabonne/Meta-Llama-3.1-8B-Instruct-abliterated
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.49s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:02,  1.50s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.49s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.03s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.20s/it]
+20:44:07 abliterated: shift [0.307, 0.462, 0.416] fc 0.404 offset [0.14, 0.21, 0.21] | acc old 0.672 new 0.642 meanfix 0.648 generic 0.608 rank16 0.627 rank64 0.628 full 0.610
+20:44:09 downloading t83714/llama-3.1-8b-instruct-limo-lora-adapter
+20:44:12 merging t83714/llama-3.1-8b-instruct-limo-lora-adapter into unsloth/Meta-Llama-3.1-8B-Instruct
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 87.81it/s]
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.46s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:02,  1.50s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.50s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.05s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.21s/it]
+20:45:30 limo_lora: shift [0.101, 0.189, 0.193] fc 0.183 offset [0.31, 0.1, 0.16] | acc old 0.680 new 0.681 meanfix 0.684 generic 0.646 rank16 0.672 rank64 0.671 full 0.642
+20:45:32 downloading Team-ACE/ToolACE-8B
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.59s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:03<00:03,  1.58s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.55s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:05<00:00,  1.08s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:05<00:00,  1.26s/it]
+20:46:37 toolace: shift [0.105, 0.249, 0.219] fc 0.212 offset [0.18, 0.09, 0.14] | acc old 0.682 new 0.687 meanfix 0.687 generic 0.652 rank16 0.675 rank64 0.676 full 0.651
+20:46:39 FAILED huatuo_o1: OSError('Error no file named pytorch_model.bin, model.safetensors, tf_model.h5, model.ckpt.index or flax_model.msgpack found in directory /content/staleness/models/huatuo_o1.')
+Traceback (most recent call last):
+  File "/content/staleness/geometry1.py", line 186, in main
+    t1 = load_target(target_dir(name))
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/content/staleness/geometry1.py", line 50, in load_target
+    return AutoModelForCausalLM.from_pretrained(str(path), torch_dtype=torch.bfloat16, device_map="cuda:0").eval()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/content/staleness/.venv/lib/python3.11/site-packages/transformers/models/auto/auto_factory.py", line 600, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/content/staleness/.venv/lib/python3.11/site-packages/transformers/modeling_utils.py", line 311, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/content/staleness/.venv/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4680, in from_pretrained
+    checkpoint_files, sharded_metadata = _get_resolved_checkpoint_files(
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/content/staleness/.venv/lib/python3.11/site-packages/transformers/modeling_utils.py", line 1089, in _get_resolved_checkpoint_files
+    raise OSError(
+OSError: Error no file named pytorch_model.bin, model.safetensors, tf_model.h5, model.ckpt.index or flax_model.msgpack found in directory /content/staleness/models/huatuo_o1.
+20:46:41 downloading TsinghuaC3I/Llama-3.1-8B-UltraMedical
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.58s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:03<00:03,  1.56s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.53s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.06s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.24s/it]
+20:47:43 ultramedical: shift [0.237, 0.388, 0.311] fc 0.307 offset [0.2, 0.16, 0.08] | acc old 0.665 new 0.666 meanfix 0.666 generic 0.628 rank16 0.655 rank64 0.655 full 0.628
+20:47:46 downloading arcee-ai/Llama-3.1-SuperNova-Lite
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:05,  1.67s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:03<00:03,  1.66s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.62s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:05<00:00,  1.12s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:05<00:00,  1.31s/it]
+20:48:47 supernova: shift [0.03, 0.134, 0.129] fc 0.119 offset [0.15, 0.18, 0.15] | acc old 0.683 new 0.680 meanfix 0.682 generic 0.646 rank16 0.673 rank64 0.670 full 0.642
+20:48:49 downloading Vikhrmodels/Vikhr-Llama3.1-8B-Instruct-R-21-09-24
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.56s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:03<00:03,  1.54s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.52s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.06s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.24s/it]
+20:49:53 vikhr: shift [0.179, 0.317, 0.278] fc 0.271 offset [0.24, 0.15, 0.06] | acc old 0.671 new 0.670 meanfix 0.672 generic 0.632 rank16 0.659 rank64 0.657 full 0.630
+20:49:55 downloading nvidia/Llama-3.1-Nemotron-Nano-8B-v1
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.61s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:03<00:03,  1.60s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.61s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:05<00:00,  1.12s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:05<00:00,  1.30s/it]
+20:50:57 nemotron_nano: shift [0.871, 1.201, 1.046] fc 1.033 offset [0.3, 0.1, 0.11] | acc old 0.651 new 0.535 meanfix 0.573 generic 0.503 rank16 0.533 rank64 0.540 full 0.465
+20:51:00 downloading deepseek-ai/DeepSeek-R1-Distill-Llama-8B
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:02<00:02,  2.70s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:04<00:00,  2.44s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:04<00:00,  2.48s/it]
+20:52:02 r1_distill: shift [0.493, 0.803, 0.709] fc 0.698 offset [0.15, 0.11, 0.13] | acc old 0.630 new 0.579 meanfix 0.601 generic 0.547 rank16 0.574 rank64 0.576 full 0.540
