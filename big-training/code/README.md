@@ -95,9 +95,10 @@ CLEARML_API_SECRET_KEY=...
 | `reference_eval.py` | официальный драфт на той же валидации — уровень для сравнения |
 | `eval_tau.py` | настоящий τ кодом авторов (дерево 60 / глубина 8 / top-k 10) |
 | `export.py` | веса для SGLang и для NeMo / vLLM (`fc_norm`, слои в их нумерации) |
-| `sglang_eagle31/` | драфт с `fc_norm` для SGLang 0.5.9 (`SGLANG_EXTERNAL_MODEL_PACKAGE=sglang_eagle31`) |
+| `sglang_eagle31/` | для SGLang 0.5.9 (`SGLANG_EXTERNAL_MODEL_PACKAGE=sglang_eagle31`): драфт с `fc_norm` и исправление захвата слоёв цели в CUDA-графах (без него драфт со слоями не по умолчанию получает слои 2/16/29) |
 | `setup.sh`, `smoke.sh`, `smoke_report.py` | подготовка и первая проверка |
 | `test_local.py`, `test_tiny_gpu.py` | тесты: без GPU и на крошечной модели |
+| `collect_final_eval.py` | компактная копия итоговой оценки для репозитория → `../results/llama31-8b/final_eval/` |
 | `final_eval.py`, `final_eval_part2.sh` | итоговая оценка: экспорт в SGLang, реальная τ и скорость в SGLang (дерево 8/10/60), τ кодом авторов, обычный сервер для ускорения |
 | `clearml_sync.py`, `clearml_report.py` | кривые и статус в ClearML (два процесса: скаляры и статус) |
 | `relay.py` | бот с ноутбука, если узел не видит Telegram: зеркало прогона из ClearML |

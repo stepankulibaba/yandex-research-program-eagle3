@@ -1,0 +1,8 @@
+{
+ "bench": "mt_bench",
+ "temperature": 0,
+ "questions": 80,
+ "tau": 4.978073027966181,
+ "tokens_per_s": 71.84791045318786,
+ "gpu_shared": true
+}

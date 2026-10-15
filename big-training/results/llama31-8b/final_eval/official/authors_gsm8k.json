@@ -1,0 +1,8 @@
+{
+ "bench": "gsm8k",
+ "temperature": 0,
+ "questions": 80,
+ "tau": 6.260429323612799,
+ "tokens_per_s": 91.50225675508187,
+ "gpu_shared": true
+}

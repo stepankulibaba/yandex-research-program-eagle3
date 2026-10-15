@@ -56,6 +56,7 @@
 - Зеркало `unsloth/Meta-Llama-3.1-8B-Instruct`: в `tokenizer_config.json` класс `PreTrainedTokenizer`; скрипты EAGLE (`use_fast=False`) с ним не получают токенизатор — менять на `PreTrainedTokenizerFast` (так у Meta).
 
 - `big-training`: SGLang и NeMo нумеруют слои как «выход слоя i» — наши 16, 22, 29 у них 15, 21, 28 (`export.py`). `fc_norm` в SGLang 0.5.9 — только через внешний пакет `SGLANG_EXTERNAL_MODEL_PACKAGE=sglang_eagle31`; без него SGLang молча пропускает незнакомые веса. Серверу SGLang нужен `ninja` в `PATH` (он лежит в `venv_sglang/bin`).
+- `big-training`: **SGLang 0.5.9 записывает в CUDA-графы слои цели по умолчанию** (2, N/2, N−3): `CudaGraphRunner` вызывает `set_eagle3_layers_to_capture()` без аргументов до того, как выставлены слои из конфига драфта, и те доходят только до prefill. Драфт с другими слоями тихо теряет τ (у ours −13 %). Пакет `sglang_eagle31` это исправляет; проверка — строка `target layers to capture (output ids) …, also in CUDA graphs` в логе сервера. Сравнивать SGLang с кодом авторов на каждом новом драфте.
 - `big-training`: рецепт NeMo AutoModel для обучения драфта с нуля нестабилен (рост логитов q·k, см. `big-training/reports/eagle3_nemo_incident.pdf`); оба варианта учатся кодом авторов.
 - `big-training`: τ-оценка на валидации — цепочка из 7 позиций, $1 + \sum_k \prod_{j\le k} acc_j$; ниже реальной τ на дереве, сравнивать только варианты между собой.
 
@@ -76,5 +77,5 @@
 
 - `layer-selection`: Qwen3-1.7B и DSL-8B посчитаны, отчёты готовы.
 - `extra-checks`: готово; сравнения со статьёй там на `--depth 5`.
-- `big-training`: baseline (2/16/29) обучен до 546 600 диалогов и оценён в SGLang и кодом авторов; ours (16/22/29 + `fc_norm`) остановился на 526 000 диалогах — узел H200 недоступен с 14.10 17:03. Не хватает: доучить ours до шага 68 325 и запустить `code/final_eval_part2.sh`. Все числа — `results/llama31-8b/results.json`, графики — `code/make_results_figures.py`.
+- `big-training`: готово. baseline (2/16/29) и ours (16/22/29 + `fc_norm`) обучены до 546 600 диалогов (0,4 эпохи) и оценены в SGLang (с исправлением захвата слоёв) и кодом авторов. Все числа — `results/llama31-8b/results.json` и `tables.md`, графики — `code/make_results_figures.py`, данные оценки собирает `code/collect_final_eval.py`. Замер ours без исправления SGLang — `results/llama31-8b/final_eval/ours_sglang_capture_bug/`.
 - `reproduction`: задачи 3a, 3b, 4, 5 посчитаны на H200, 3a (T = 0) и профиль повторены на A100 (DataSphere). Отчёты — `reproduction/reports/`, все числа отчётов — `reproduction/results/numbers.json`, графики строит `reproduction/code/make_report_figures.py`. LaTeX-исходники отчётов в репозиторий не входят. Драфт не обучали: стоимость обучения только оценена.

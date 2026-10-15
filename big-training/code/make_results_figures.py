@@ -1,12 +1,12 @@
-"""Everything we can show from the from-scratch run without the server: curves, gap, data efficiency, forecast.
+"""All numbers and figures of the report: validation curves, gap, data efficiency, real tau and speed, forecast.
 
     python code/make_results_figures.py    -> figures/*.png, results/llama31-8b/results.json, tables.md
 
-Inputs (results/llama31-8b/, copied from the ClearML mirror and the final evaluation, part 1):
+Inputs (results/llama31-8b/):
   <variant>/val.jsonl      validation tau estimate every 16k dialogues (400 held-out PerfectBlend dialogues)
   <variant>/metrics.jsonl  last 300 training log rows (every 50 steps)
   reference.json           the authors' official draft on the same validation set
-  final_eval_part1.json    real tau in SGLang and in the authors' code (official, baseline)
+  final_eval/<draft>/      real tau per question in SGLang, aggregates of the authors' code (collect_final_eval.py)
 """
 import json
 from pathlib import Path
@@ -25,6 +25,8 @@ COLORS = {'baseline': '#1baf7a', 'ours': '#2a78d6', 'official': '#52514e'}
 LABELS = {'baseline': 'baseline · слои 2/16/29', 'ours': 'ours · слои 16/22/29 + fc_norm',
           'official': 'официальный драфт авторов'}
 BENCH = {'mt_bench': 'MT-bench', 'humaneval': 'HumanEval', 'gsm8k': 'GSM8K', 'alpaca': 'Alpaca', 'sum': 'CNN/DM'}
+DRAFTS = ('official', 'baseline', 'ours')
+BOOT = 10000
 
 
 def jsonl(path):
@@ -49,6 +51,50 @@ def dialogues_for(tau, p):
     return float((b / (a - tau)) ** (1 / c)) if tau < a else float('inf')
 
 
+def tau_of(rows):
+    """Real tau of a set of answers: generated tokens minus one per turn, per verification round."""
+    return sum(r['tokens'] - r['turns'] for r in rows) / sum(r['rounds'] for r in rows)
+
+
+def load_eval():
+    """SGLang answers per draft and benchmark, the plain server's speed, the authors' code aggregates."""
+    ev = DATA / 'final_eval'
+
+    def read(f):
+        return json.loads(f.read_text(encoding='utf-8'))
+    sg = {d: {b: read(ev / d / f'sglang_{b}.json') for b in BENCH}
+          for d in (*DRAFTS, 'ours_sglang_capture_bug', 'plain')}
+    authors = {d: {b: read(ev / d / f'authors_{b}.json')['tau'] for b in BENCH if (ev / d / f'authors_{b}.json').exists()}
+               for d in DRAFTS}
+    return sg, authors
+
+
+def paired_delta(sg, a, b, rng):
+    """tau(a) - tau(b) per benchmark and the mean over benchmarks, with a paired bootstrap over questions."""
+    res, boots = {}, []
+    for bench in BENCH:
+        qa = {r['question_id']: r for r in sg[a][bench]['per_question']}
+        qb = {r['question_id']: r for r in sg[b][bench]['per_question']}
+        ids = sorted(set(qa) & set(qb))
+        ra, rb = [qa[i] for i in ids], [qb[i] for i in ids]
+
+        def arr(rows, k):
+            return np.array([r[k] for r in rows], dtype=float)
+        na, da = arr(ra, 'tokens') - arr(ra, 'turns'), arr(ra, 'rounds')
+        nb, db = arr(rb, 'tokens') - arr(rb, 'turns'), arr(rb, 'rounds')
+        idx = rng.integers(0, len(ids), size=(BOOT, len(ids)))
+        boot = na[idx].sum(1) / da[idx].sum(1) - nb[idx].sum(1) / db[idx].sum(1)
+        boots.append(boot)
+        res[bench] = {'delta': float(tau_of(ra) - tau_of(rb)),
+                      'ci95': [float(np.percentile(boot, 2.5)), float(np.percentile(boot, 97.5))],
+                      'p_le_0': float((boot <= 0).mean()), 'questions': len(ids)}
+    mean = np.mean(boots, axis=0)
+    res['mean'] = {'delta': float(np.mean([res[b]['delta'] for b in BENCH])),
+                   'ci95': [float(np.percentile(mean, 2.5)), float(np.percentile(mean, 97.5))],
+                   'p_le_0': float((mean <= 0).mean())}
+    return res
+
+
 def style():
     plt.rcParams.update({'font.size': 10, 'axes.spines.top': False, 'axes.spines.right': False, 'axes.grid': True,
                          'grid.color': '#e6e5e1', 'grid.linewidth': 0.6, 'axes.edgecolor': '#52514e',
@@ -63,7 +109,7 @@ def main():
     n = {v: np.array([x['samples'] / 1e3 for x in val[v]]) for v in val}
     t = {v: np.array([x['tau_estimate'] for x in val[v]]) for v in val}
     ref = json.loads((DATA / 'reference.json').read_text(encoding='utf-8'))
-    real = json.loads((DATA / 'final_eval_part1.json').read_text(encoding='utf-8'))
+    sg, authors = load_eval()
     out = {'compare_k_dialogues': COMPARE, 'epoch_k_dialogues': EPOCH, 'official_val_tau': ref['tau_estimate']}
 
     # 1. gap at equal dialogues
@@ -71,7 +117,7 @@ def main():
     common = [(k, tau, base_at[k]) for k, tau in zip(n['ours'], t['ours']) if k in base_at and k > 0]
     ks = np.array([c[0] for c in common])
     gap = np.array([c[1] - c[2] for c in common])
-    windows = [(0, 128), (128, 320), (320, 520)]
+    windows = [(0, 128), (128, 320), (320, 547)]
     out['gap'] = {
         'points': len(gap), 'ours_ahead': int((gap > 0).sum()),
         'mean': float(gap.mean()), 'last_5_mean': float(gap[-5:].mean()),
@@ -109,7 +155,6 @@ def main():
         for name, k in marks.items():
             vals = [float(law(k, *f[0])) for f in fits[v].values()]
             fc[v][name] = {'mid': float(law(k, *fits[v][64][0])), 'low': min(vals), 'high': max(vals)}
-    fc['ours_at_compare_by_gap'] = float(t['baseline'][-1] + out['gap']['last_5_mean'])
     # the asymptote itself is poorly pinned down by 0.4 epoch of data; what is robust is the gain per doubling
     fc['gain_per_doubling_measured'] = {v: {f'{a}->{2 * a}k': float(np.interp(2 * a, n[v], t[v]) - np.interp(a, n[v], t[v]))
                                             for a in (64, 128, 256)} for v in val}
@@ -135,24 +180,30 @@ def main():
                            'acc0_ours_ahead_share': float((d_acc > 0).mean()),
                            'ploss0_diff_mean': float(d_loss.mean()), 'ploss0_diff_se': float(d_loss.std() / len(steps) ** .5)}
 
-    # 7. real tau (part 1 of the final evaluation)
-    s = real['sglang']
-    out['real_tau'] = {d: {**s[d], 'mean': float(np.mean(list(s[d].values())))} for d in s}
-    out['real_tau_authors_code'] = real['authors_code']
-    out['real_tau_ours_projection'] = {
-        'method': 'baseline real tau x (ours / baseline) on validation at the comparison point; not a measurement',
-        'ratio': fc['ours_at_compare_by_gap'] / float(t['baseline'][-1]),
-        **{b: float(s['baseline'][b] * fc['ours_at_compare_by_gap'] / t['baseline'][-1]) for b in s['baseline']}}
+    # 7. real tau and speed in SGLang (tree 8/10/60, T = 0, 80 questions, a free GPU), the authors' code
+    rt = {}
+    for d in (*DRAFTS, 'ours_sglang_capture_bug'):
+        rt[d] = {b: {'tau': tau_of(sg[d][b]['per_question']), 'tok_s': sg[d][b]['tok_s'],
+                     'speedup': sg[d][b]['tok_s'] / sg['plain'][b]['tok_s'], 'gpu_shared': sg[d][b]['gpu_shared']}
+                 for b in BENCH}
+        rt[d]['mean'] = {k: float(np.mean([rt[d][b][k] for b in BENCH])) for k in ('tau', 'speedup')}
+    out['real_tau'] = rt
+    out['plain_tok_s'] = {b: sg['plain'][b]['tok_s'] for b in BENCH}
+    out['real_tau_authors_code'] = authors
+    out['real_tau_ours_minus_baseline'] = paired_delta(sg, 'ours', 'baseline', np.random.default_rng(0))
+    out['real_tau_ours_minus_baseline_authors_code'] = {b: authors['ours'][b] - authors['baseline'][b]
+                                                        for b in authors['ours']}
+    out['val_tau_at_compare'] = {v: float(t[v][-1]) for v in val}
 
     (DATA / 'results.json').write_text(json.dumps(out, indent=1, ensure_ascii=False), encoding='utf-8')
-    plots(n, t, fits, ref, ks, gap, noise, eff, acc, real, steps, met)
-    tables(out, real)
-    print(json.dumps({k: out[k] for k in ('gap', 'val_noise_std', 'gap_in_noise_units',
-                                           'data_efficiency_mean_ratio_last_8', 'forecast', 'train_paired')},
-                     indent=1, ensure_ascii=False)[:6000])
+    plots(n, t, fits, ref, ks, gap, noise, eff, acc, out, steps, met)
+    tables(out)
+    keys = ('val_tau_at_compare', 'val_noise_std', 'gap_in_noise_units', 'data_efficiency_mean_ratio_last_8',
+            'train_paired', 'real_tau_ours_minus_baseline', 'real_tau_ours_minus_baseline_authors_code')
+    print(json.dumps({k: out[k] for k in keys}, indent=1, ensure_ascii=False))
 
 
-def plots(n, t, fits, ref, ks, gap, noise, eff, acc, real, steps, met):
+def plots(n, t, fits, ref, ks, gap, noise, eff, acc, out, steps, met):
     # validation curves + gap
     fig, (ax, dx) = plt.subplots(2, 1, figsize=(8, 6.4), sharex=True, gridspec_kw={'height_ratios': [2.2, 1]})
     for v in ('baseline', 'ours'):
@@ -160,8 +211,6 @@ def plots(n, t, fits, ref, ks, gap, noise, eff, acc, real, steps, met):
     ax.axhline(ref['tau_estimate'], color=COLORS['official'], ls='--', lw=1)
     ax.text(10, ref['tau_estimate'] + 0.03, f'официальный драфт: {ref["tau_estimate"]:.2f} (другие данные)',
             color=COLORS['official'], fontsize=8.5)
-    ax.annotate('узел пропал\n(17:03, 526 тыс.)', xy=(n['ours'][-1], t['ours'][-1]), xytext=(380, 3.25),
-                fontsize=8.5, color='#b23a48', arrowprops=dict(arrowstyle='->', color='#b23a48', lw=0.8))
     for a in (ax, dx):
         a.axvline(COMPARE, color='#b23a48', ls=':', lw=1)
     ax.set_ylim(2.0, 3.95)
@@ -212,7 +261,7 @@ def plots(n, t, fits, ref, ks, gap, noise, eff, acc, real, steps, met):
     pos = np.arange(1, 8)
     for i, v in enumerate(('official', 'baseline', 'ours')):
         ax.bar(pos + (i - 1) * 0.27, acc[v], width=0.26, color=COLORS[v], label=LABELS[v])
-    ax.set_ylim(0.6, 0.875)
+    ax.set_ylim(0.6, 0.9)
     ax.set_xticks(pos)
     ax.set_xlabel('позиция в цепочке драфта (шаг TTT)')
     ax.set_ylabel('доля верных токенов')
@@ -221,21 +270,40 @@ def plots(n, t, fits, ref, ks, gap, noise, eff, acc, real, steps, met):
     plt.close(fig)
 
     # real tau
-    fig, ax = plt.subplots(figsize=(8, 3.6))
+    rt, authors = out['real_tau'], out['real_tau_authors_code']
+    fig, ax = plt.subplots(figsize=(8.6, 3.8))
     benches = list(BENCH)
     x = np.arange(len(benches))
-    for i, d in enumerate(('official', 'baseline')):
-        vals = [real['sglang'][d][b] for b in benches]
-        bars = ax.bar(x + (i - 0.5) * 0.36, vals, width=0.34, color=COLORS[d], label=LABELS[d] + ' (SGLang)')
-        ax.bar_label(bars, fmt='%.2f', fontsize=8, padding=2)
-        ac = real['authors_code'][d]
-        ax.plot([x[j] + (i - 0.5) * 0.36 for j, b in enumerate(benches) if b in ac], [ac[b] for b in benches if b in ac],
-                'k_', ms=14, mew=1.6, label='код авторов' if i == 0 else None)
+    w = 0.27
+    for i, d in enumerate(DRAFTS):
+        bars = ax.bar(x + (i - 1) * w, [rt[d][b]['tau'] for b in benches], width=w * 0.95, color=COLORS[d],
+                      label=LABELS[d])
+        ax.bar_label(bars, fmt='%.2f', fontsize=7.5, padding=2)
+        ac = authors[d]
+        ax.plot([x[j] + (i - 1) * w for j, b in enumerate(benches) if b in ac], [ac[b] for b in benches if b in ac],
+                'k_', ms=11, mew=1.5, label='код авторов' if i == 0 else None)
     ax.set_xticks(x, [BENCH[b] for b in benches])
-    ax.set_ylim(0, 9.6)
-    ax.set_ylabel('реальная τ (дерево 8/10/60)')
-    ax.legend(frameon=False, fontsize=8.5, loc='upper right', ncol=3)
+    ax.set_ylim(0, 10.2)
+    ax.set_ylabel('реальная τ (SGLang, дерево 8/10/60)')
+    ax.legend(frameon=False, fontsize=8.5, loc='upper right', ncol=2)
     fig.savefig(FIG / 'real_tau.png')
+    plt.close(fig)
+
+    # ours - baseline in real tau, with the paired bootstrap interval
+    dl = out['real_tau_ours_minus_baseline']
+    keys = benches + ['mean']
+    fig, ax = plt.subplots(figsize=(8, 3.2))
+    y = np.arange(len(keys))[::-1]
+    for yy, k in zip(y, keys):
+        lo, hi = dl[k]['ci95']
+        color = COLORS['ours'] if k != 'mean' else '#0b0b0b'
+        ax.plot([lo, hi], [yy, yy], color=color, lw=2.2, solid_capstyle='round')
+        ax.plot(dl[k]['delta'], yy, 'o', color=color, ms=7)
+        ax.text(hi + 0.01, yy, f"{dl[k]['delta']:+.3f}", va='center', fontsize=8.5, color=color)
+    ax.axvline(0, color='#52514e', lw=0.8)
+    ax.set_yticks(y, [BENCH.get(k, 'среднее по 5') for k in keys])
+    ax.set_xlabel('реальная τ: ours − baseline (SGLang); 95 % интервал — парный bootstrap по вопросам')
+    fig.savefig(FIG / 'real_tau_delta.png')
     plt.close(fig)
 
     # paired training accuracy
@@ -253,18 +321,33 @@ def plots(n, t, fits, ref, ks, gap, noise, eff, acc, real, steps, met):
     plt.close(fig)
 
 
-def tables(out, real):
+def tables(out):
     g = out['gap']
     lines = ['# Таблицы', '', '## Валидация: τ-оценка при равном числе диалогов', '',
              '| тыс. диалогов | ours | baseline | ours − baseline |', '|---|---|---|---|']
     lines += [f"| {r['k_dialogues']:.0f} | {r['ours']:.3f} | {r['baseline']:.3f} | {r['gap']:+.3f} |" for r in g['table']]
-    lines += ['', '## Реальная τ, SGLang (дерево 8/10/60, T = 0, 80 вопросов)', '',
-              '| драфт | ' + ' | '.join(BENCH.values()) + ' | среднее |', '|---' * (len(BENCH) + 2) + '|']
-    for d, r in out['real_tau'].items():
-        lines.append(f'| {d} | ' + ' | '.join(f'{r[b]:.2f}' for b in BENCH) + f" | {r['mean']:.2f} |")
-    p = out['real_tau_ours_projection']
-    lines.append('| ours (прогноз, не замер) | ' + ' | '.join(f'≈{p[b]:.2f}' for b in BENCH) + ' | ' +
-                 f"≈{np.mean([p[b] for b in BENCH]):.2f} |")
+    rt, au, dl = out['real_tau'], out['real_tau_authors_code'], out['real_tau_ours_minus_baseline']
+    head = '| драфт | ' + ' | '.join(BENCH.values()) + ' | среднее |'
+    sep = '|---' * (len(BENCH) + 2) + '|'
+    lines += ['', '## Реальная τ, SGLang 0.5.9 (дерево 8/10/60, T = 0, 80 вопросов; в скобках — код авторов)', '',
+              head, sep]
+    for d in DRAFTS:
+        lines.append(f'| {d} | ' + ' | '.join(f"{rt[d][b]['tau']:.2f}" + (f" ({au[d][b]:.2f})" if b in au[d] else '')
+                                             for b in BENCH) + f" | {rt[d]['mean']['tau']:.2f} |")
+    lines.append('| ours − baseline, 95 % ДИ | ' + ' | '.join(
+        f"{dl[b]['delta']:+.3f} [{dl[b]['ci95'][0]:+.2f}; {dl[b]['ci95'][1]:+.2f}]" for b in BENCH) +
+        f" | {dl['mean']['delta']:+.3f} [{dl['mean']['ci95'][0]:+.3f}; {dl['mean']['ci95'][1]:+.3f}] |")
+    lines += ['', '## Ускорение в SGLang (к обычной генерации на той же GPU, batch 1)', '', head, sep]
+    for d in DRAFTS:
+        lines.append(f'| {d} | ' + ' | '.join(f"{rt[d][b]['speedup']:.2f}× ({rt[d][b]['tok_s']:.0f} ток/с)"
+                                             for b in BENCH) + f" | {rt[d]['mean']['speedup']:.2f}× |")
+    lines.append('| обычная генерация | ' + ' | '.join(f"{out['plain_tok_s'][b]:.0f} ток/с" for b in BENCH) + ' | |')
+    bug = rt['ours_sglang_capture_bug']
+    lines += ['', '## ours в SGLang 0.5.9 без исправления захвата слоёв (CUDA-графы брали слои 2/16/29)', '', head, sep,
+              '| ours, без исправления | ' + ' | '.join(f"{bug[b]['tau']:.2f}" for b in BENCH)
+              + f" | {bug['mean']['tau']:.2f} |",
+              '| ours, с исправлением | ' + ' | '.join(f"{rt['ours'][b]['tau']:.2f}" for b in BENCH)
+              + f" | {rt['ours']['mean']['tau']:.2f} |"]
     lines += ['', '## Прогноз τ-оценки на валидации (степенной закон, разброс — по трём окнам подгонки)', '',
               '| | 0.4 эпохи | 1 эпоха | 2 эпохи | 3 эпохи | асимптота |', '|---|---|---|---|---|---|']
     for v in ('baseline', 'ours'):
