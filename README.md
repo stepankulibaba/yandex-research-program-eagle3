@@ -26,6 +26,7 @@ Yandex & Sirius Research Program 2026.
 | [Выбор слоёв](layer-selection/) | Какие слои большой модели нужны драфту и стоит ли выбирать их автоматически | готово (Qwen3-1.7B, DSL-8B) | [замороженный драфт](layer-selection/reports/eagle3_layers.pdf), [роутер](layer-selection/reports/eagle3_routed.pdf) |
 | [Обучение с нуля](big-training/) | Драфт для LLaMA-3.1-8B с нуля: слои статьи против наших 16/22/29 + `fc_norm`, код авторов, 0,4 эпохи PerfectBlend; реальная τ и ускорение в SGLang | готово | [результаты](big-training/reports/eagle3_big_training_results.pdf), [NeMo](big-training/reports/eagle3_nemo_incident.pdf) |
 | [Дополнительные проверки](extra-checks/) | Воспроизводимость, разные языки, 11 публичных драфтов | готово | [сводка](extra-checks/reports/eagle3_summary.pdf) |
+| [SpecVocab на языках](specvocab/) | Динамический словарь драфта (arXiv 2602.13836) против фиксированных 32K на шести языках, Qwen3-1.7B | код готов, запуск одной командой | [README](specvocab/README.md) |
 
 ## Как устроены папки
 
