@@ -98,11 +98,12 @@ CLEARML_API_SECRET_KEY=...
 | `sglang_eagle31/` | для SGLang 0.5.9 (`SGLANG_EXTERNAL_MODEL_PACKAGE=sglang_eagle31`): драфт с `fc_norm` и исправление захвата слоёв цели в CUDA-графах (без него драфт со слоями не по умолчанию получает слои 2/16/29) |
 | `setup.sh`, `smoke.sh`, `smoke_report.py` | подготовка и первая проверка |
 | `test_local.py`, `test_tiny_gpu.py` | тесты: без GPU и на крошечной модели |
-| `collect_final_eval.py` | компактная копия итоговой оценки для репозитория → `../results/llama31-8b/final_eval/` |
+| `collect_results.py` | компактная копия логов и оценки из копии папки сервера → `../results/llama31-8b/` |
+| `milestone_analysis.py` | на GPU: вклад каждого слоя цели в `fc` и реальная τ в SGLang на промежуточных чекпоинтах |
 | `final_eval.py`, `final_eval_part2.sh` | итоговая оценка: экспорт в SGLang, реальная τ и скорость в SGLang (дерево 8/10/60), τ кодом авторов, обычный сервер для ускорения |
 | `clearml_sync.py`, `clearml_report.py` | кривые и статус в ClearML (два процесса: скаляры и статус) |
 | `relay.py` | бот с ноутбука, если узел не видит Telegram: зеркало прогона из ClearML |
 | `dashboard.py` | картинка-сводка для бота |
 | `train_nemo_full.py` | вариант ours на рецепте NeMo AutoModel (не используется, см. отчёт об инциденте) |
-| `make_results_figures.py`, `make_incident_figures.py`, `make_diag_figure.py` | графики и числа отчётов → `../figures/`, `../results/llama31-8b/` |
+| `make_results_figures.py`, `make_extra_figures.py`, `make_incident_figures.py`, `make_diag_figure.py` | графики и числа отчётов → `../figures/`, `../results/llama31-8b/` |
 | `PLAN.md` | исходный план подготовки (10.10): что известно о протоколе авторов, бюджет, риски |

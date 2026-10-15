@@ -6,7 +6,7 @@ Inputs (results/llama31-8b/):
   <variant>/val.jsonl      validation tau estimate every 16k dialogues (400 held-out PerfectBlend dialogues)
   <variant>/metrics.jsonl  last 300 training log rows (every 50 steps)
   reference.json           the authors' official draft on the same validation set
-  final_eval/<draft>/      real tau per question in SGLang, aggregates of the authors' code (collect_final_eval.py)
+  final_eval/<draft>/      real tau per question in SGLang, aggregates of the authors' code (collect_results.py)
 """
 import json
 from pathlib import Path

@@ -1,0 +1,25 @@
+{
+ "dataset": "frankleeeee/PerfectBlend-Regenerated-Llama-3.1-8B-Instruct",
+ "revision": "c8cf5337f3a4bed5ba9da7362446cc5111fd24f1",
+ "limit": 0,
+ "dialogues_read": 1418731,
+ "kept": 1368504,
+ "dropped": {
+  "too_long": 50189,
+  "format": 38
+ },
+ "train": 1366504,
+ "val": 2000,
+ "train_tokens": 941415191,
+ "train_supervised_tokens": 589324208,
+ "length_histogram_512": {
+  "0-512": 622584,
+  "512-1024": 488668,
+  "1024-1536": 179607,
+  "1536-2048": 75645
+ },
+ "draft_vocab_coverage": 0.982058288364085,
+ "train_ids_sha256": "7218fa04921a15e11d0d672dac725b26a3fc953135cee48ca2c277444e0df9e1",
+ "vocab_sha256": "164f91cbcb0743458a4e09461cd483d16a09329bc0f5bf687141b58796d91380",
+ "preprocessor": "traineagle3/main.py build_dataset_rank.preprocess_function (pinned EAGLE)"
+}

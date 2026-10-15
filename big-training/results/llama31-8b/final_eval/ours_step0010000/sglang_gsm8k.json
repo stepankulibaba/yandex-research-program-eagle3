@@ -1,0 +1,1534 @@
+{
+"engine": "sglang 0.5.9",
+"tree": [
+8,
+10,
+60
+],
+"gpu_shared": true,
+"questions": 80,
+"tau": 6.112760834670947,
+"tok_s": 581.2003039687226,
+"per_question": [
+{
+"question_id": 0,
+"turns": 1,
+"tokens": 206,
+"rounds": 34,
+"accepted": 172,
+"seconds": 0.36118298699148,
+"accept_hist": [
+6,
+3,
+0,
+3,
+2,
+1,
+1,
+3,
+15
+]
+},
+{
+"question_id": 1,
+"turns": 1,
+"tokens": 412,
+"rounds": 70,
+"accepted": 341,
+"seconds": 0.7638384229503572,
+"accept_hist": [
+3,
+4,
+9,
+4,
+13,
+8,
+6,
+5,
+18
+]
+},
+{
+"question_id": 2,
+"turns": 1,
+"tokens": 167,
+"rounds": 36,
+"accepted": 131,
+"seconds": 0.3820688771083951,
+"accept_hist": [
+9,
+4,
+3,
+1,
+1,
+5,
+6,
+3,
+4
+]
+},
+{
+"question_id": 3,
+"turns": 1,
+"tokens": 210,
+"rounds": 35,
+"accepted": 175,
+"seconds": 0.37779629905708134,
+"accept_hist": [
+4,
+1,
+6,
+1,
+1,
+3,
+2,
+8,
+9
+]
+},
+{
+"question_id": 4,
+"turns": 1,
+"tokens": 201,
+"rounds": 33,
+"accepted": 168,
+"seconds": 0.3573989300057292,
+"accept_hist": [
+0,
+5,
+3,
+3,
+2,
+4,
+3,
+2,
+11
+]
+},
+{
+"question_id": 5,
+"turns": 1,
+"tokens": 205,
+"rounds": 39,
+"accepted": 166,
+"seconds": 0.4220743919722736,
+"accept_hist": [
+3,
+6,
+3,
+5,
+2,
+7,
+3,
+2,
+8
+]
+},
+{
+"question_id": 6,
+"turns": 1,
+"tokens": 171,
+"rounds": 31,
+"accepted": 140,
+"seconds": 0.3365464920643717,
+"accept_hist": [
+5,
+0,
+4,
+3,
+3,
+3,
+3,
+2,
+8
+]
+},
+{
+"question_id": 7,
+"turns": 1,
+"tokens": 222,
+"rounds": 38,
+"accepted": 183,
+"seconds": 0.4059825309086591,
+"accept_hist": [
+3,
+1,
+2,
+6,
+5,
+5,
+5,
+3,
+8
+]
+},
+{
+"question_id": 8,
+"turns": 1,
+"tokens": 175,
+"rounds": 27,
+"accepted": 147,
+"seconds": 0.2881331609096378,
+"accept_hist": [
+3,
+2,
+2,
+1,
+1,
+1,
+2,
+3,
+12
+]
+},
+{
+"question_id": 9,
+"turns": 1,
+"tokens": 183,
+"rounds": 31,
+"accepted": 152,
+"seconds": 0.33753161295317113,
+"accept_hist": [
+0,
+2,
+4,
+4,
+4,
+3,
+6,
+1,
+7
+]
+},
+{
+"question_id": 10,
+"turns": 1,
+"tokens": 303,
+"rounds": 49,
+"accepted": 254,
+"seconds": 0.5381293490063399,
+"accept_hist": [
+0,
+5,
+6,
+4,
+2,
+8,
+5,
+5,
+14
+]
+},
+{
+"question_id": 11,
+"turns": 1,
+"tokens": 144,
+"rounds": 20,
+"accepted": 124,
+"seconds": 0.21648947591893375,
+"accept_hist": [
+0,
+2,
+1,
+0,
+2,
+2,
+1,
+0,
+12
+]
+},
+{
+"question_id": 12,
+"turns": 1,
+"tokens": 263,
+"rounds": 43,
+"accepted": 220,
+"seconds": 0.46149834617972374,
+"accept_hist": [
+3,
+2,
+2,
+4,
+8,
+4,
+4,
+2,
+14
+]
+},
+{
+"question_id": 13,
+"turns": 1,
+"tokens": 152,
+"rounds": 22,
+"accepted": 130,
+"seconds": 0.23727221484296024,
+"accept_hist": [
+0,
+2,
+0,
+3,
+0,
+4,
+1,
+3,
+9
+]
+},
+{
+"question_id": 14,
+"turns": 1,
+"tokens": 238,
+"rounds": 34,
+"accepted": 204,
+"seconds": 0.366413437994197,
+"accept_hist": [
+0,
+3,
+2,
+2,
+2,
+1,
+4,
+6,
+14
+]
+},
+{
+"question_id": 15,
+"turns": 1,
+"tokens": 141,
+"rounds": 22,
+"accepted": 119,
+"seconds": 0.23531402088701725,
+"accept_hist": [
+1,
+1,
+1,
+3,
+1,
+3,
+3,
+2,
+7
+]
+},
+{
+"question_id": 16,
+"turns": 1,
+"tokens": 209,
+"rounds": 34,
+"accepted": 175,
+"seconds": 0.36258151987567544,
+"accept_hist": [
+1,
+3,
+0,
+4,
+5,
+7,
+2,
+3,
+9
+]
+},
+{
+"question_id": 17,
+"turns": 1,
+"tokens": 106,
+"rounds": 12,
+"accepted": 94,
+"seconds": 0.13252620911225677,
+"accept_hist": [
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+2,
+10
+]
+},
+{
+"question_id": 18,
+"turns": 1,
+"tokens": 189,
+"rounds": 31,
+"accepted": 158,
+"seconds": 0.33065404114313424,
+"accept_hist": [
+1,
+5,
+2,
+1,
+2,
+4,
+4,
+2,
+10
+]
+},
+{
+"question_id": 19,
+"turns": 1,
+"tokens": 132,
+"rounds": 20,
+"accepted": 112,
+"seconds": 0.21744248806498945,
+"accept_hist": [
+0,
+1,
+1,
+3,
+1,
+3,
+2,
+3,
+6
+]
+},
+{
+"question_id": 20,
+"turns": 1,
+"tokens": 168,
+"rounds": 23,
+"accepted": 145,
+"seconds": 0.25025071995332837,
+"accept_hist": [
+0,
+0,
+2,
+1,
+0,
+3,
+4,
+5,
+8
+]
+},
+{
+"question_id": 21,
+"turns": 1,
+"tokens": 116,
+"rounds": 17,
+"accepted": 99,
+"seconds": 0.18494398705661297,
+"accept_hist": [
+1,
+0,
+1,
+2,
+0,
+3,
+1,
+2,
+7
+]
+},
+{
+"question_id": 22,
+"turns": 1,
+"tokens": 255,
+"rounds": 36,
+"accepted": 219,
+"seconds": 0.38726614718325436,
+"accept_hist": [
+0,
+1,
+1,
+5,
+5,
+0,
+3,
+5,
+16
+]
+},
+{
+"question_id": 23,
+"turns": 1,
+"tokens": 216,
+"rounds": 35,
+"accepted": 181,
+"seconds": 0.375286074122414,
+"accept_hist": [
+2,
+0,
+3,
+6,
+3,
+2,
+7,
+3,
+9
+]
+},
+{
+"question_id": 24,
+"turns": 1,
+"tokens": 137,
+"rounds": 27,
+"accepted": 110,
+"seconds": 0.286122287157923,
+"accept_hist": [
+3,
+3,
+4,
+3,
+2,
+2,
+3,
+2,
+5
+]
+},
+{
+"question_id": 25,
+"turns": 1,
+"tokens": 212,
+"rounds": 31,
+"accepted": 181,
+"seconds": 0.33517921809107065,
+"accept_hist": [
+1,
+2,
+1,
+4,
+2,
+2,
+2,
+1,
+16
+]
+},
+{
+"question_id": 26,
+"turns": 1,
+"tokens": 244,
+"rounds": 43,
+"accepted": 201,
+"seconds": 0.4627042680513114,
+"accept_hist": [
+5,
+3,
+5,
+2,
+5,
+3,
+3,
+7,
+10
+]
+},
+{
+"question_id": 27,
+"turns": 1,
+"tokens": 279,
+"rounds": 43,
+"accepted": 236,
+"seconds": 0.45981297292746603,
+"accept_hist": [
+0,
+3,
+1,
+4,
+5,
+9,
+5,
+4,
+12
+]
+},
+{
+"question_id": 28,
+"turns": 1,
+"tokens": 257,
+"rounds": 34,
+"accepted": 222,
+"seconds": 0.3674701100680977,
+"accept_hist": [
+0,
+1,
+1,
+1,
+1,
+5,
+5,
+3,
+17
+]
+},
+{
+"question_id": 29,
+"turns": 1,
+"tokens": 206,
+"rounds": 28,
+"accepted": 178,
+"seconds": 0.30026005394756794,
+"accept_hist": [
+0,
+2,
+3,
+1,
+0,
+2,
+1,
+1,
+18
+]
+},
+{
+"question_id": 30,
+"turns": 1,
+"tokens": 135,
+"rounds": 19,
+"accepted": 116,
+"seconds": 0.20480217412114143,
+"accept_hist": [
+0,
+0,
+0,
+4,
+2,
+1,
+1,
+3,
+8
+]
+},
+{
+"question_id": 31,
+"turns": 1,
+"tokens": 154,
+"rounds": 28,
+"accepted": 126,
+"seconds": 0.29900140105746686,
+"accept_hist": [
+3,
+3,
+2,
+3,
+3,
+3,
+1,
+3,
+7
+]
+},
+{
+"question_id": 32,
+"turns": 1,
+"tokens": 128,
+"rounds": 17,
+"accepted": 110,
+"seconds": 0.18691691104322672,
+"accept_hist": [
+0,
+0,
+1,
+1,
+2,
+1,
+2,
+0,
+10
+]
+},
+{
+"question_id": 33,
+"turns": 1,
+"tokens": 234,
+"rounds": 44,
+"accepted": 190,
+"seconds": 0.47009094222448766,
+"accept_hist": [
+4,
+2,
+6,
+8,
+8,
+1,
+2,
+1,
+12
+]
+},
+{
+"question_id": 34,
+"turns": 1,
+"tokens": 218,
+"rounds": 47,
+"accepted": 171,
+"seconds": 0.509399286005646,
+"accept_hist": [
+4,
+5,
+8,
+6,
+10,
+3,
+5,
+1,
+5
+]
+},
+{
+"question_id": 35,
+"turns": 1,
+"tokens": 288,
+"rounds": 51,
+"accepted": 236,
+"seconds": 0.5476076570339501,
+"accept_hist": [
+4,
+4,
+7,
+7,
+3,
+2,
+6,
+5,
+13
+]
+},
+{
+"question_id": 36,
+"turns": 1,
+"tokens": 162,
+"rounds": 28,
+"accepted": 134,
+"seconds": 0.29941862216219306,
+"accept_hist": [
+1,
+2,
+3,
+2,
+7,
+1,
+3,
+3,
+6
+]
+},
+{
+"question_id": 37,
+"turns": 1,
+"tokens": 327,
+"rounds": 53,
+"accepted": 274,
+"seconds": 0.5768293419387192,
+"accept_hist": [
+0,
+4,
+6,
+4,
+6,
+8,
+8,
+2,
+15
+]
+},
+{
+"question_id": 38,
+"turns": 1,
+"tokens": 137,
+"rounds": 24,
+"accepted": 113,
+"seconds": 0.25752312294207513,
+"accept_hist": [
+1,
+2,
+4,
+3,
+0,
+3,
+4,
+1,
+6
+]
+},
+{
+"question_id": 39,
+"turns": 1,
+"tokens": 217,
+"rounds": 31,
+"accepted": 186,
+"seconds": 0.3336926461197436,
+"accept_hist": [
+0,
+1,
+2,
+2,
+5,
+2,
+3,
+1,
+15
+]
+},
+{
+"question_id": 40,
+"turns": 1,
+"tokens": 221,
+"rounds": 31,
+"accepted": 190,
+"seconds": 0.33457563794218004,
+"accept_hist": [
+1,
+1,
+0,
+1,
+3,
+5,
+5,
+1,
+14
+]
+},
+{
+"question_id": 41,
+"turns": 1,
+"tokens": 151,
+"rounds": 34,
+"accepted": 117,
+"seconds": 0.35924804396927357,
+"accept_hist": [
+10,
+3,
+2,
+0,
+5,
+4,
+3,
+4,
+3
+]
+},
+{
+"question_id": 42,
+"turns": 1,
+"tokens": 124,
+"rounds": 20,
+"accepted": 104,
+"seconds": 0.2152922530658543,
+"accept_hist": [
+1,
+1,
+1,
+3,
+3,
+1,
+2,
+1,
+7
+]
+},
+{
+"question_id": 43,
+"turns": 1,
+"tokens": 169,
+"rounds": 23,
+"accepted": 146,
+"seconds": 0.2478143449407071,
+"accept_hist": [
+1,
+1,
+0,
+0,
+1,
+1,
+7,
+2,
+10
+]
+},
+{
+"question_id": 44,
+"turns": 1,
+"tokens": 213,
+"rounds": 35,
+"accepted": 178,
+"seconds": 0.3773869280703366,
+"accept_hist": [
+0,
+2,
+3,
+5,
+6,
+4,
+4,
+1,
+10
+]
+},
+{
+"question_id": 45,
+"turns": 1,
+"tokens": 204,
+"rounds": 33,
+"accepted": 171,
+"seconds": 0.3552239260170609,
+"accept_hist": [
+3,
+2,
+2,
+3,
+2,
+5,
+1,
+3,
+12
+]
+},
+{
+"question_id": 46,
+"turns": 1,
+"tokens": 177,
+"rounds": 27,
+"accepted": 150,
+"seconds": 0.28943189210258424,
+"accept_hist": [
+0,
+1,
+1,
+4,
+4,
+3,
+2,
+4,
+8
+]
+},
+{
+"question_id": 47,
+"turns": 1,
+"tokens": 134,
+"rounds": 22,
+"accepted": 112,
+"seconds": 0.23667482403106987,
+"accept_hist": [
+2,
+1,
+1,
+4,
+1,
+2,
+1,
+3,
+7
+]
+},
+{
+"question_id": 48,
+"turns": 1,
+"tokens": 235,
+"rounds": 34,
+"accepted": 201,
+"seconds": 0.36690391786396503,
+"accept_hist": [
+0,
+0,
+1,
+5,
+1,
+7,
+6,
+3,
+11
+]
+},
+{
+"question_id": 49,
+"turns": 1,
+"tokens": 210,
+"rounds": 37,
+"accepted": 173,
+"seconds": 0.3968108440749347,
+"accept_hist": [
+5,
+5,
+2,
+1,
+1,
+6,
+4,
+1,
+12
+]
+},
+{
+"question_id": 50,
+"turns": 1,
+"tokens": 220,
+"rounds": 29,
+"accepted": 191,
+"seconds": 0.30969303101301193,
+"accept_hist": [
+1,
+0,
+0,
+0,
+3,
+4,
+2,
+5,
+14
+]
+},
+{
+"question_id": 51,
+"turns": 1,
+"tokens": 199,
+"rounds": 28,
+"accepted": 171,
+"seconds": 0.2996701719239354,
+"accept_hist": [
+1,
+0,
+1,
+1,
+4,
+4,
+1,
+4,
+12
+]
+},
+{
+"question_id": 52,
+"turns": 1,
+"tokens": 195,
+"rounds": 26,
+"accepted": 169,
+"seconds": 0.2788755730725825,
+"accept_hist": [
+0,
+1,
+1,
+1,
+0,
+2,
+6,
+3,
+12
+]
+},
+{
+"question_id": 53,
+"turns": 1,
+"tokens": 132,
+"rounds": 25,
+"accepted": 107,
+"seconds": 0.26868792390450835,
+"accept_hist": [
+2,
+2,
+6,
+1,
+2,
+4,
+1,
+0,
+7
+]
+},
+{
+"question_id": 54,
+"turns": 1,
+"tokens": 178,
+"rounds": 30,
+"accepted": 147,
+"seconds": 0.32078111195005476,
+"accept_hist": [
+1,
+3,
+5,
+4,
+0,
+2,
+3,
+2,
+10
+]
+},
+{
+"question_id": 55,
+"turns": 1,
+"tokens": 151,
+"rounds": 24,
+"accepted": 127,
+"seconds": 0.26030497811734676,
+"accept_hist": [
+0,
+2,
+2,
+3,
+1,
+4,
+2,
+4,
+6
+]
+},
+{
+"question_id": 56,
+"turns": 1,
+"tokens": 127,
+"rounds": 23,
+"accepted": 104,
+"seconds": 0.2454102709889412,
+"accept_hist": [
+1,
+3,
+2,
+1,
+3,
+5,
+3,
+1,
+4
+]
+},
+{
+"question_id": 57,
+"turns": 1,
+"tokens": 141,
+"rounds": 22,
+"accepted": 119,
+"seconds": 0.23964526900090277,
+"accept_hist": [
+2,
+1,
+1,
+3,
+1,
+2,
+1,
+1,
+10
+]
+},
+{
+"question_id": 58,
+"turns": 1,
+"tokens": 315,
+"rounds": 48,
+"accepted": 267,
+"seconds": 0.5228807311505079,
+"accept_hist": [
+3,
+2,
+4,
+3,
+2,
+6,
+5,
+4,
+19
+]
+},
+{
+"question_id": 59,
+"turns": 1,
+"tokens": 106,
+"rounds": 17,
+"accepted": 89,
+"seconds": 0.18489402602426708,
+"accept_hist": [
+1,
+0,
+1,
+4,
+1,
+2,
+1,
+1,
+6
+]
+},
+{
+"question_id": 60,
+"turns": 1,
+"tokens": 182,
+"rounds": 38,
+"accepted": 144,
+"seconds": 0.40244460478425026,
+"accept_hist": [
+9,
+2,
+2,
+3,
+5,
+6,
+4,
+1,
+6
+]
+},
+{
+"question_id": 61,
+"turns": 1,
+"tokens": 152,
+"rounds": 28,
+"accepted": 124,
+"seconds": 0.300890444079414,
+"accept_hist": [
+1,
+3,
+1,
+7,
+2,
+5,
+3,
+1,
+5
+]
+},
+{
+"question_id": 62,
+"turns": 1,
+"tokens": 111,
+"rounds": 18,
+"accepted": 93,
+"seconds": 0.19428788498044014,
+"accept_hist": [
+0,
+0,
+2,
+3,
+4,
+2,
+1,
+0,
+6
+]
+},
+{
+"question_id": 63,
+"turns": 1,
+"tokens": 247,
+"rounds": 37,
+"accepted": 210,
+"seconds": 0.39593186182901263,
+"accept_hist": [
+0,
+3,
+1,
+4,
+4,
+4,
+4,
+3,
+14
+]
+},
+{
+"question_id": 64,
+"turns": 1,
+"tokens": 178,
+"rounds": 30,
+"accepted": 147,
+"seconds": 0.3221857340540737,
+"accept_hist": [
+1,
+1,
+3,
+4,
+5,
+3,
+3,
+5,
+5
+]
+},
+{
+"question_id": 65,
+"turns": 1,
+"tokens": 88,
+"rounds": 11,
+"accepted": 77,
+"seconds": 0.12159452796913683,
+"accept_hist": [
+0,
+1,
+0,
+0,
+0,
+0,
+0,
+4,
+6
+]
+},
+{
+"question_id": 66,
+"turns": 1,
+"tokens": 176,
+"rounds": 31,
+"accepted": 145,
+"seconds": 0.33513307897374034,
+"accept_hist": [
+4,
+2,
+3,
+3,
+3,
+2,
+1,
+4,
+9
+]
+},
+{
+"question_id": 67,
+"turns": 1,
+"tokens": 208,
+"rounds": 36,
+"accepted": 172,
+"seconds": 0.38514261203818023,
+"accept_hist": [
+1,
+4,
+5,
+4,
+2,
+4,
+4,
+2,
+10
+]
+},
+{
+"question_id": 68,
+"turns": 1,
+"tokens": 237,
+"rounds": 37,
+"accepted": 200,
+"seconds": 0.3960835631005466,
+"accept_hist": [
+1,
+1,
+2,
+6,
+2,
+4,
+7,
+5,
+9
+]
+},
+{
+"question_id": 69,
+"turns": 1,
+"tokens": 137,
+"rounds": 28,
+"accepted": 108,
+"seconds": 0.2987073799595237,
+"accept_hist": [
+2,
+3,
+4,
+4,
+3,
+6,
+2,
+1,
+3
+]
+},
+{
+"question_id": 70,
+"turns": 1,
+"tokens": 267,
+"rounds": 51,
+"accepted": 216,
+"seconds": 0.5496542311739177,
+"accept_hist": [
+3,
+6,
+5,
+5,
+9,
+6,
+7,
+3,
+7
+]
+},
+{
+"question_id": 71,
+"turns": 1,
+"tokens": 209,
+"rounds": 31,
+"accepted": 178,
+"seconds": 0.33259806386195123,
+"accept_hist": [
+0,
+0,
+5,
+1,
+3,
+4,
+5,
+1,
+12
+]
+},
+{
+"question_id": 72,
+"turns": 1,
+"tokens": 213,
+"rounds": 43,
+"accepted": 169,
+"seconds": 0.4603552329353988,
+"accept_hist": [
+8,
+5,
+3,
+2,
+4,
+8,
+3,
+2,
+8
+]
+},
+{
+"question_id": 73,
+"turns": 1,
+"tokens": 144,
+"rounds": 22,
+"accepted": 122,
+"seconds": 0.23730335501022637,
+"accept_hist": [
+0,
+1,
+0,
+4,
+2,
+4,
+2,
+3,
+6
+]
+},
+{
+"question_id": 74,
+"turns": 1,
+"tokens": 132,
+"rounds": 18,
+"accepted": 114,
+"seconds": 0.19431220507249236,
+"accept_hist": [
+1,
+1,
+0,
+0,
+2,
+1,
+0,
+4,
+9
+]
+},
+{
+"question_id": 75,
+"turns": 1,
+"tokens": 191,
+"rounds": 34,
+"accepted": 157,
+"seconds": 0.3623392090667039,
+"accept_hist": [
+0,
+7,
+5,
+2,
+3,
+2,
+2,
+4,
+9
+]
+},
+{
+"question_id": 76,
+"turns": 1,
+"tokens": 170,
+"rounds": 26,
+"accepted": 144,
+"seconds": 0.28455072408542037,
+"accept_hist": [
+1,
+0,
+3,
+1,
+3,
+4,
+3,
+3,
+8
+]
+},
+{
+"question_id": 77,
+"turns": 1,
+"tokens": 198,
+"rounds": 28,
+"accepted": 170,
+"seconds": 0.302285416983068,
+"accept_hist": [
+1,
+1,
+0,
+1,
+3,
+3,
+5,
+3,
+11
+]
+},
+{
+"question_id": 78,
+"turns": 1,
+"tokens": 213,
+"rounds": 33,
+"accepted": 180,
+"seconds": 0.3558309969957918,
+"accept_hist": [
+1,
+2,
+4,
+3,
+1,
+3,
+4,
+2,
+13
+]
+},
+{
+"question_id": 79,
+"turns": 1,
+"tokens": 139,
+"rounds": 24,
+"accepted": 115,
+"seconds": 0.2595654360484332,
+"accept_hist": [
+1,
+1,
+3,
+3,
+5,
+1,
+1,
+4,
+5
+]
+}
+]
+}

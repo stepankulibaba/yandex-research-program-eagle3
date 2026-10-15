@@ -1,0 +1,101 @@
+{"time": "2026-10-12 15:26:39", "event": "new run: baseline, layers [2, 16, 29], fc_norm False, lr schedule over 170813 steps, this variant stops at 68325"}
+{"time": "2026-10-12 15:27:46", "event": "validation at step 0: tau estimate 1.000, acc [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]"}
+{"time": "2026-10-12 16:12:50", "event": "checkpoint step0001879 (periodic) in 3 s"}
+{"time": "2026-10-12 16:15:50", "event": "validation at step 2000: tau estimate 2.156, acc [0.59, 0.517, 0.48, 0.457, 0.44, 0.423, 0.409]"}
+{"time": "2026-10-12 16:57:55", "event": "checkpoint step0003248 (periodic) in 3 s"}
+{"time": "2026-10-12 17:25:41", "event": "validation at step 4000: tau estimate 2.505, acc [0.663, 0.596, 0.561, 0.537, 0.517, 0.5, 0.483]"}
+{"time": "2026-10-12 17:42:59", "event": "checkpoint step0004474 (periodic) in 3 s"}
+{"time": "2026-10-12 18:28:04", "event": "checkpoint step0005717 (periodic) in 4 s"}
+{"time": "2026-10-12 18:39:33", "event": "validation at step 6000: tau estimate 2.742, acc [0.701, 0.639, 0.606, 0.581, 0.564, 0.545, 0.526]"}
+{"time": "2026-10-12 19:13:08", "event": "checkpoint step0006942 (periodic) in 3 s"}
+{"time": "2026-10-12 19:52:08", "event": "validation at step 8000: tau estimate 2.893, acc [0.72, 0.664, 0.633, 0.61, 0.592, 0.573, 0.554]"}
+{"time": "2026-10-12 19:58:12", "event": "checkpoint step0008354 (periodic) in 3 s"}
+{"time": "2026-10-12 20:43:17", "event": "checkpoint step0009810 (periodic) in 4 s"}
+{"time": "2026-10-12 20:51:28", "event": "validation at step 10000: tau estimate 3.021, acc [0.735, 0.683, 0.653, 0.635, 0.616, 0.599, 0.582]"}
+{"time": "2026-10-12 21:28:21", "event": "checkpoint step0011033 (periodic) in 4 s"}
+{"time": "2026-10-12 22:04:18", "event": "validation at step 12000: tau estimate 3.118, acc [0.745, 0.696, 0.67, 0.65, 0.633, 0.615, 0.596]"}
+{"time": "2026-10-12 22:13:25", "event": "checkpoint step0012270 (periodic) in 3 s"}
+{"time": "2026-10-12 22:17:55", "event": "checkpoint step0012394 (signal SIGUSR1) in 3 s"}
+{"time": "2026-10-12 22:17:55", "event": "stopped at step 12394 (resume later)"}
+{"time": "2026-10-12 22:32:57", "event": "resumed from step0012394: step 12394, epoch 0 position 99152"}
+{"time": "2026-10-12 23:18:21", "event": "validation at step 14000: tau estimate 3.172, acc [0.75, 0.701, 0.677, 0.66, 0.644, 0.627, 0.609]"}
+{"time": "2026-10-12 23:18:24", "event": "checkpoint step0014000 (periodic) in 3 s"}
+{"time": "2026-10-13 00:03:29", "event": "checkpoint step0015823 (periodic) in 3 s"}
+{"time": "2026-10-13 00:10:56", "event": "validation at step 16000: tau estimate 3.256, acc [0.759, 0.712, 0.689, 0.671, 0.657, 0.64, 0.623]"}
+{"time": "2026-10-13 00:48:34", "event": "checkpoint step0017222 (periodic) in 3 s"}
+{"time": "2026-10-13 01:14:53", "event": "validation at step 18000: tau estimate 3.307, acc [0.764, 0.719, 0.696, 0.678, 0.663, 0.647, 0.631]"}
+{"time": "2026-10-13 01:33:38", "event": "checkpoint step0018574 (periodic) in 3 s"}
+{"time": "2026-10-13 02:18:42", "event": "checkpoint step0019975 (periodic) in 3 s"}
+{"time": "2026-10-13 02:20:40", "event": "validation at step 20000: tau estimate 3.363, acc [0.768, 0.726, 0.703, 0.686, 0.671, 0.655, 0.638]"}
+{"time": "2026-10-13 03:03:46", "event": "checkpoint step0021335 (periodic) in 3 s"}
+{"time": "2026-10-13 03:26:18", "event": "validation at step 22000: tau estimate 3.399, acc [0.772, 0.73, 0.707, 0.691, 0.675, 0.661, 0.643]"}
+{"time": "2026-10-13 03:48:50", "event": "checkpoint step0022694 (periodic) in 3 s"}
+{"time": "2026-10-13 04:32:11", "event": "validation at step 24000: tau estimate 3.417, acc [0.773, 0.732, 0.709, 0.694, 0.68, 0.665, 0.649]"}
+{"time": "2026-10-13 04:33:55", "event": "checkpoint step0024053 (periodic) in 3 s"}
+{"time": "2026-10-13 05:18:59", "event": "checkpoint step0025463 (periodic) in 3 s"}
+{"time": "2026-10-13 05:37:24", "event": "validation at step 26000: tau estimate 3.459, acc [0.777, 0.736, 0.716, 0.7, 0.687, 0.671, 0.654]"}
+{"time": "2026-10-13 06:04:04", "event": "checkpoint step0026821 (periodic) in 3 s"}
+{"time": "2026-10-13 06:17:21", "event": "checkpoint step0027238 (session deadline) in 3 s"}
+{"time": "2026-10-13 06:17:21", "event": "stopped at step 27238 (resume later)"}
+{"time": "2026-10-13 10:40:31", "event": "resumed from step0027238: step 27238, epoch 0 position 217904"}
+{"time": "2026-10-13 11:05:57", "event": "validation at step 28000: tau estimate 3.489, acc [0.78, 0.74, 0.719, 0.703, 0.69, 0.677, 0.661]"}
+{"time": "2026-10-13 11:25:35", "event": "checkpoint step0028614 (periodic) in 4 s"}
+{"time": "2026-10-13 12:11:13", "event": "validation at step 30000: tau estimate 3.531, acc [0.783, 0.744, 0.725, 0.709, 0.696, 0.68, 0.664]"}
+{"time": "2026-10-13 12:11:16", "event": "checkpoint step0030000 (periodic) in 3 s"}
+{"time": "2026-10-13 12:56:20", "event": "checkpoint step0031408 (periodic) in 3 s"}
+{"time": "2026-10-13 13:16:37", "event": "validation at step 32000: tau estimate 3.560, acc [0.786, 0.748, 0.728, 0.712, 0.698, 0.682, 0.668]"}
+{"time": "2026-10-13 13:41:25", "event": "checkpoint step0032769 (periodic) in 3 s"}
+{"time": "2026-10-13 14:22:12", "event": "validation at step 34000: tau estimate 3.571, acc [0.785, 0.749, 0.729, 0.714, 0.702, 0.687, 0.673]"}
+{"time": "2026-10-13 14:26:29", "event": "checkpoint step0034134 (periodic) in 4 s"}
+{"time": "2026-10-13 15:11:35", "event": "checkpoint step0035534 (periodic) in 4 s"}
+{"time": "2026-10-13 15:27:49", "event": "validation at step 36000: tau estimate 3.576, acc [0.786, 0.749, 0.729, 0.715, 0.704, 0.689, 0.674]"}
+{"time": "2026-10-13 15:56:39", "event": "checkpoint step0036893 (periodic) in 4 s"}
+{"time": "2026-10-13 16:33:29", "event": "validation at step 38000: tau estimate 3.600, acc [0.787, 0.752, 0.732, 0.719, 0.707, 0.692, 0.678]"}
+{"time": "2026-10-13 16:41:44", "event": "checkpoint step0038259 (periodic) in 3 s"}
+{"time": "2026-10-13 17:26:48", "event": "checkpoint step0039661 (periodic) in 3 s"}
+{"time": "2026-10-13 17:38:53", "event": "validation at step 40000: tau estimate 3.629, acc [0.79, 0.755, 0.735, 0.721, 0.709, 0.695, 0.681]"}
+{"time": "2026-10-13 18:11:51", "event": "checkpoint step0041023 (periodic) in 3 s"}
+{"time": "2026-10-13 18:27:22", "event": "checkpoint step0041504 (session deadline) in 3 s"}
+{"time": "2026-10-13 18:27:23", "event": "stopped at step 41504 (resume later)"}
+{"time": "2026-10-13 19:50:00", "event": "resumed from step0041504: step 41504, epoch 0 position 332032"}
+{"time": "2026-10-13 20:06:49", "event": "validation at step 42000: tau estimate 3.653, acc [0.791, 0.758, 0.739, 0.725, 0.712, 0.699, 0.685]"}
+{"time": "2026-10-13 20:35:04", "event": "checkpoint step0042895 (periodic) in 3 s"}
+{"time": "2026-10-13 21:11:25", "event": "validation at step 44000: tau estimate 3.660, acc [0.793, 0.757, 0.739, 0.726, 0.714, 0.7, 0.687]"}
+{"time": "2026-10-13 21:20:09", "event": "checkpoint step0044267 (periodic) in 3 s"}
+{"time": "2026-10-13 22:05:12", "event": "checkpoint step0045687 (periodic) in 3 s"}
+{"time": "2026-10-13 22:16:15", "event": "validation at step 46000: tau estimate 3.679, acc [0.794, 0.76, 0.742, 0.728, 0.715, 0.701, 0.687]"}
+{"time": "2026-10-13 22:50:16", "event": "checkpoint step0047060 (periodic) in 3 s"}
+{"time": "2026-10-13 23:21:40", "event": "validation at step 48000: tau estimate 3.703, acc [0.795, 0.763, 0.743, 0.73, 0.719, 0.707, 0.691]"}
+{"time": "2026-10-13 23:35:20", "event": "checkpoint step0048426 (periodic) in 3 s"}
+{"time": "2026-10-14 00:20:24", "event": "checkpoint step0049833 (periodic) in 3 s"}
+{"time": "2026-10-14 00:26:58", "event": "validation at step 50000: tau estimate 3.702, acc [0.795, 0.762, 0.745, 0.73, 0.72, 0.706, 0.692]"}
+{"time": "2026-10-14 01:05:28", "event": "checkpoint step0051199 (periodic) in 3 s"}
+{"time": "2026-10-14 01:21:41", "event": "checkpoint step0051707 (signal SIGUSR1) in 3 s"}
+{"time": "2026-10-14 01:21:41", "event": "stopped at step 51707 (resume later)"}
+{"time": "2026-10-14 01:26:05", "event": "resumed from step0051707: step 51707, epoch 0 position 413656"}
+{"time": "2026-10-14 01:36:35", "event": "validation at step 52000: tau estimate 3.731, acc [0.797, 0.765, 0.747, 0.734, 0.722, 0.711, 0.698]"}
+{"time": "2026-10-14 02:11:09", "event": "checkpoint step0052986 (periodic) in 4 s"}
+{"time": "2026-10-14 02:44:43", "event": "validation at step 54000: tau estimate 3.743, acc [0.798, 0.767, 0.748, 0.736, 0.723, 0.711, 0.697]"}
+{"time": "2026-10-14 02:56:12", "event": "checkpoint step0054354 (periodic) in 3 s"}
+{"time": "2026-10-14 03:41:16", "event": "checkpoint step0055767 (periodic) in 3 s"}
+{"time": "2026-10-14 03:49:50", "event": "validation at step 56000: tau estimate 3.750, acc [0.799, 0.767, 0.748, 0.736, 0.725, 0.712, 0.699]"}
+{"time": "2026-10-14 04:26:22", "event": "checkpoint step0057140 (periodic) in 3 s"}
+{"time": "2026-10-14 04:55:04", "event": "validation at step 58000: tau estimate 3.767, acc [0.8, 0.768, 0.751, 0.739, 0.728, 0.716, 0.702]"}
+{"time": "2026-10-14 05:11:26", "event": "checkpoint step0058512 (periodic) in 3 s"}
+{"time": "2026-10-14 05:56:31", "event": "checkpoint step0059915 (periodic) in 3 s"}
+{"time": "2026-10-14 06:00:23", "event": "validation at step 60000: tau estimate 3.768, acc [0.8, 0.768, 0.751, 0.74, 0.727, 0.716, 0.701]"}
+{"time": "2026-10-14 06:41:35", "event": "checkpoint step0061293 (periodic) in 3 s"}
+{"time": "2026-10-14 07:05:26", "event": "validation at step 62000: tau estimate 3.792, acc [0.803, 0.77, 0.753, 0.741, 0.731, 0.72, 0.706]"}
+{"time": "2026-10-14 07:26:40", "event": "checkpoint step0062663 (periodic) in 3 s"}
+{"time": "2026-10-14 08:10:58", "event": "validation at step 64000: tau estimate 3.796, acc [0.802, 0.771, 0.753, 0.742, 0.731, 0.721, 0.706]"}
+{"time": "2026-10-14 08:11:44", "event": "checkpoint step0064022 (periodic) in 3 s"}
+{"time": "2026-10-14 08:56:48", "event": "checkpoint step0065423 (periodic) in 3 s"}
+{"time": "2026-10-14 09:11:17", "event": "checkpoint step0065884 (session deadline) in 3 s"}
+{"time": "2026-10-14 09:11:17", "event": "stopped at step 65884 (resume later)"}
+{"time": "2026-10-14 12:00:05", "event": "resumed from step0065884: step 65884, epoch 0 position 527072"}
+{"time": "2026-10-14 12:04:55", "event": "validation at step 66000: tau estimate 3.812, acc [0.803, 0.772, 0.756, 0.744, 0.733, 0.721, 0.707]"}
+{"time": "2026-10-14 12:45:09", "event": "checkpoint step0067246 (periodic) in 4 s"}
+{"time": "2026-10-14 13:10:30", "event": "validation at step 68000: tau estimate 3.830, acc [0.804, 0.775, 0.759, 0.745, 0.735, 0.723, 0.709]"}
+{"time": "2026-10-14 13:22:05", "event": "validation at step 68325: tau estimate 3.828, acc [0.804, 0.774, 0.758, 0.746, 0.735, 0.723, 0.708]"}
+{"time": "2026-10-14 13:22:09", "event": "checkpoint step0068325 (plan finished) in 3 s"}
+{"time": "2026-10-14 13:22:09", "event": "stopped at step 68325 (plan finished)"}
