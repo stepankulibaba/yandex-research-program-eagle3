@@ -1,0 +1,8 @@
+{
+ "bench": "humaneval",
+ "temperature": 0,
+ "questions": 80,
+ "tau": 6.741071428571429,
+ "tokens_per_s": 98.08126059190762,
+ "gpu_shared": true
+}
